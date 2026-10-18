@@ -1,0 +1,82 @@
+services:
+    # PostgreSQL
+    postgres:
+        build:
+            context: ./db
+            dockerfile: Dockerfile
+        environment:
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                [
+                    'CMD-SHELL',
+                    'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}',
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        networks:
+            - private-network
+        restart: unless-stopped
+
+    # Web API server
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - '4001:4001'
+        environment:
+            - PROJECT_NAME=${PROJECT_NAME}
+            - NODE_ENV=${NODE_ENV}
+            - API_PORT=${API_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+            - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+            - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+        volumes:
+            - ./backend:/app
+            - /app/node_modules
+        networks:
+            - private-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: unless-stopped
+
+    # Frontend
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        command:
+            - pnpm
+            - dev
+            - -H
+            - 0.0.0.0
+        ports:
+            - '3000:3000'
+        environment:
+            - PROJECT_NAME=${PROJECT_NAME}
+            - NODE_ENV=${NODE_ENV}
+            - API_PORT=${API_PORT}
+            - JWT_SECRET=${JWT_SECRET}
+            - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api}
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+        networks:
+            - private-network
+        depends_on:
+            - backend
+        restart: unless-stopped
+
+networks:
+    private-network:
+        driver: bridge
+
+volumes:
+    postgres-data:
