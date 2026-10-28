@@ -42,6 +42,16 @@ public static class LandingPage
             <p>In-memory mock of the Lune backend. Demo login: <code>demo@example.com</code> / <code>Passw0rd!</code>.
             Add <code>?mock503=1</code> to games requests to simulate the provider being down.
             Full spec: <code>docs/API.md</code>.</p>
+            <form id="f" style="margin:1rem 0;display:flex;gap:.5rem;flex-wrap:wrap">
+            <input name="email" value="demo@example.com" placeholder="email"><input name="password" type="password" value="Passw0rd!" placeholder="password">
+            <button>Log in</button><button type="button" id="out">Log out</button><span id="msg"></span></form>
+            <script>
+            const msg=document.getElementById('msg');
+            document.getElementById('f').onsubmit=async e=>{e.preventDefault();const d=new FormData(e.target);
+            const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:d.get('email'),password:d.get('password')})});
+            msg.textContent=r.ok?'Logged in as '+(await r.json()).email:'Login failed ('+r.status+')'};
+            document.getElementById('out').onclick=async()=>{await fetch('/api/auth/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});msg.textContent='Logged out'};
+            </script>
             <table><tr><th>Method</th><th>Route</th><th>Auth</th></tr>
             """);
 
