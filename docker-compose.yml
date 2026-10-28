@@ -1,77 +1,88 @@
 services:
-    # PostgreSQL
-    postgres:
+    # Mock API (ASP.NET Core, in-memory). Starts by default so the frontend can be built without the real backend.
+    mock-api:
         build:
-            context: ./db
+            context: ./mock-api
             dockerfile: Dockerfile
-        environment:
-            - POSTGRES_DB=${POSTGRES_DB}
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        ports:
+            - '4001:4001'
         volumes:
-            - postgres-data:/var/lib/postgresql/data
+            - ./mock-api:/app
+            - /app/bin
+            - /app/obj
+        networks:
+            - private-network
+        healthcheck:
+            test: ['CMD-SHELL', 'curl -fs http://localhost:4001/health || exit 1']
+            interval: 5s
+            timeout: 3s
+            retries: 20
+        restart: unless-stopped
+
+    # SQL Server (real backend only: docker compose --profile real up)
+    sqlserver:
+        profiles: ['real']
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+        ports:
+            - '1433:1433'
+        volumes:
+            - sqlserver-data:/var/opt/mssql
+        networks:
+            - private-network
         healthcheck:
             test:
                 [
                     'CMD-SHELL',
-                    'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}',
+                    '/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1',
                 ]
-            interval: 5s
+            interval: 10s
             timeout: 5s
-            retries: 10
-        networks:
-            - private-network
+            retries: 12
+            start_period: 20s
         restart: unless-stopped
 
-    # Web API server
+    # ASP.NET Core Web API (real backend only: docker compose --profile real up)
     backend:
+        profiles: ['real']
         build:
             context: ./backend
             dockerfile: Dockerfile
         ports:
-            - '4001:4001'
+            - '3001:3001'
         environment:
-            - PROJECT_NAME=${PROJECT_NAME}
-            - NODE_ENV=${NODE_ENV}
-            - API_PORT=${API_PORT}
-            - JWT_SECRET=${JWT_SECRET}
-            - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
-            - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+            - Jwt__Key=${JWT_KEY}
+            - Rawg__ApiKey=${RAWG_API_KEY}
         volumes:
             - ./backend:/app
-            - /app/node_modules
+            - /app/bin
+            - /app/obj
         networks:
             - private-network
         depends_on:
-            postgres:
+            sqlserver:
                 condition: service_healthy
         restart: unless-stopped
 
-    # Frontend
+    # Angular frontend. /api is proxied to API_URL (the mock by default).
     frontend:
         build:
             context: ./frontend
             dockerfile: Dockerfile
-        command:
-            - pnpm
-            - dev
-            - -H
-            - 0.0.0.0
         ports:
-            - '3000:3000'
+            - '8080:8080'
         environment:
-            - PROJECT_NAME=${PROJECT_NAME}
-            - NODE_ENV=${NODE_ENV}
-            - API_PORT=${API_PORT}
-            - JWT_SECRET=${JWT_SECRET}
-            - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api}
+            - API_URL=${API_URL:-http://mock-api:4001}
         volumes:
             - ./frontend:/app
             - /app/node_modules
         networks:
             - private-network
         depends_on:
-            - backend
+            mock-api:
+                condition: service_healthy
         restart: unless-stopped
 
 networks:
@@ -79,4 +90,4 @@ networks:
         driver: bridge
 
 volumes:
-    postgres-data:
+    sqlserver-data:

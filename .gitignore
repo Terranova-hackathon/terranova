@@ -6,3 +6,7 @@ out
 npm-debug.log*
 .DS_Store
 postgres_data
+
+bin/
+obj/
+.angular

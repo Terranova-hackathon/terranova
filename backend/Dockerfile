@@ -1,13 +1,12 @@
-FROM node:20-alpine
+FROM mcr.microsoft.com/dotnet/sdk:10.0
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm@10.32.1 && pnpm install --frozen-lockfile
-
-# Source is bind-mounted in dev; this COPY is a fallback for production builds
+# Placeholder: the ASP.NET Core solution has not been added yet. The container
+# idles until a .csproj shows up under backend/, then runs it with hot reload.
 COPY . .
 
-EXPOSE 4001
+EXPOSE 3001
 
-CMD ["pnpm", "run", "dev:compose"]
+# Waits for a project to exist so the container doesn't crash-loop while backend/ is empty.
+CMD ["sh", "-c", "if ls /app/src/*/*.csproj >/dev/null 2>&1 || ls /app/*.csproj >/dev/null 2>&1; then dotnet watch run --non-interactive --urls http://0.0.0.0:3001; else echo 'No ASP.NET Core project in backend/ yet.'; sleep infinity; fi"]

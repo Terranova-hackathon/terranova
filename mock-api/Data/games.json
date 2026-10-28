@@ -1,0 +1,1930 @@
+[
+ {
+  "id": 3498,
+  "name": "Grand Theft Auto V",
+  "released": "2013-09-17",
+  "backgroundImage": "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
+  "rating": 4.47,
+  "metacritic": 92,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Grand Theft Auto V is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/grand-theft-auto-v",
+  "developers": [
+   "Rockstar North"
+  ],
+  "publishers": [
+   "Rockstar Games"
+  ],
+  "added": 6300
+ },
+ {
+  "id": 22511,
+  "name": "The Legend of Zelda: Breath of the Wild",
+  "released": "2017-03-03",
+  "backgroundImage": "https://media.rawg.io/media/games/cc1/cc196a5ad763955d6532cdba236f730c.jpg",
+  "rating": 4.38,
+  "metacritic": 97,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "Nintendo Switch",
+   "Wii U"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "The Legend of Zelda: Breath of the Wild is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/the-legend-of-zelda-breath-of-the-wild",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 6200
+ },
+ {
+  "id": 1074,
+  "name": "The Witcher 3: Wild Hunt",
+  "released": "2015-05-18",
+  "backgroundImage": "https://picsum.photos/seed/game1074/600/340",
+  "rating": 4.66,
+  "metacritic": 92,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "The Witcher 3: Wild Hunt is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/the-witcher-3-wild-hunt",
+  "developers": [
+   "CD PROJEKT RED"
+  ],
+  "publishers": [
+   "CD PROJEKT RED"
+  ],
+  "added": 6100
+ },
+ {
+  "id": 1111,
+  "name": "Portal 2",
+  "released": "2011-04-18",
+  "backgroundImage": "https://picsum.photos/seed/game1111/600/340",
+  "rating": 4.61,
+  "metacritic": 95,
+  "genres": [
+   "Puzzle",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Portal 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/portal-2",
+  "developers": [
+   "Valve"
+  ],
+  "publishers": [
+   "Valve"
+  ],
+  "added": 6000
+ },
+ {
+  "id": 1148,
+  "name": "Red Dead Redemption 2",
+  "released": "2018-10-26",
+  "backgroundImage": "https://picsum.photos/seed/game1148/600/340",
+  "rating": 4.59,
+  "metacritic": 97,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Red Dead Redemption 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/red-dead-redemption-2",
+  "developers": [
+   "Rockstar Games"
+  ],
+  "publishers": [
+   "Rockstar Games"
+  ],
+  "added": 5900
+ },
+ {
+  "id": 1185,
+  "name": "Half-Life 2",
+  "released": "2004-11-16",
+  "backgroundImage": "https://picsum.photos/seed/game1185/600/340",
+  "rating": 4.49,
+  "metacritic": 96,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   3
+  ],
+  "description": "Half-Life 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/half-life-2",
+  "developers": [
+   "Valve"
+  ],
+  "publishers": [
+   "Valve"
+  ],
+  "added": 5800
+ },
+ {
+  "id": 1222,
+  "name": "Hades",
+  "released": "2020-09-17",
+  "backgroundImage": "https://picsum.photos/seed/game1222/600/340",
+  "rating": 4.4,
+  "metacritic": 93,
+  "genres": [
+   "Action",
+   "Indie",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Hades is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/hades",
+  "developers": [
+   "Supergiant Games"
+  ],
+  "publishers": [
+   "Supergiant Games"
+  ],
+  "added": 5700
+ },
+ {
+  "id": 1259,
+  "name": "Celeste",
+  "released": "2018-01-25",
+  "backgroundImage": "https://picsum.photos/seed/game1259/600/340",
+  "rating": 4.37,
+  "metacritic": 94,
+  "genres": [
+   "Platformer",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Celeste is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/celeste",
+  "developers": [
+   "Maddy Makes Games"
+  ],
+  "publishers": [
+   "Maddy Makes Games"
+  ],
+  "added": 5600
+ },
+ {
+  "id": 1296,
+  "name": "Hollow Knight",
+  "released": "2017-02-24",
+  "backgroundImage": "https://picsum.photos/seed/game1296/600/340",
+  "rating": 4.37,
+  "metacritic": 87,
+  "genres": [
+   "Platformer",
+   "Indie",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Hollow Knight is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/hollow-knight",
+  "developers": [
+   "Team Cherry"
+  ],
+  "publishers": [
+   "Team Cherry"
+  ],
+  "added": 5500
+ },
+ {
+  "id": 1333,
+  "name": "Stardew Valley",
+  "released": "2016-02-26",
+  "backgroundImage": "https://picsum.photos/seed/game1333/600/340",
+  "rating": 4.41,
+  "metacritic": 89,
+  "genres": [
+   "Simulation",
+   "Indie",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Stardew Valley is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/stardew-valley",
+  "developers": [
+   "ConcernedApe"
+  ],
+  "publishers": [
+   "ConcernedApe"
+  ],
+  "added": 5400
+ },
+ {
+  "id": 1370,
+  "name": "Elden Ring",
+  "released": "2022-02-25",
+  "backgroundImage": "https://picsum.photos/seed/game1370/600/340",
+  "rating": 4.4,
+  "metacritic": 96,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Elden Ring is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/elden-ring",
+  "developers": [
+   "FromSoftware"
+  ],
+  "publishers": [
+   "Bandai Namco Entertainment"
+  ],
+  "added": 5300
+ },
+ {
+  "id": 1407,
+  "name": "Dark Souls III",
+  "released": "2016-04-11",
+  "backgroundImage": "https://picsum.photos/seed/game1407/600/340",
+  "rating": 4.38,
+  "metacritic": 89,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Dark Souls III is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/dark-souls-iii",
+  "developers": [
+   "FromSoftware"
+  ],
+  "publishers": [
+   "Bandai Namco Entertainment"
+  ],
+  "added": 5200
+ },
+ {
+  "id": 1444,
+  "name": "Bloodborne",
+  "released": "2015-03-24",
+  "backgroundImage": "https://picsum.photos/seed/game1444/600/340",
+  "rating": 4.4,
+  "metacritic": 92,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   2
+  ],
+  "description": "Bloodborne is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/bloodborne",
+  "developers": [
+   "FromSoftware"
+  ],
+  "publishers": [
+   "Sony Computer Entertainment"
+  ],
+  "added": 5100
+ },
+ {
+  "id": 1481,
+  "name": "God of War",
+  "released": "2018-04-20",
+  "backgroundImage": "https://picsum.photos/seed/game1481/600/340",
+  "rating": 4.57,
+  "metacritic": 94,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   1,
+   2
+  ],
+  "description": "God of War is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/god-of-war",
+  "developers": [
+   "Santa Monica Studio"
+  ],
+  "publishers": [
+   "Sony Interactive Entertainment"
+  ],
+  "added": 5000
+ },
+ {
+  "id": 1518,
+  "name": "Super Mario Odyssey",
+  "released": "2017-10-27",
+  "backgroundImage": "https://picsum.photos/seed/game1518/600/340",
+  "rating": 4.45,
+  "metacritic": 97,
+  "genres": [
+   "Platformer",
+   "Adventure"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Super Mario Odyssey is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/super-mario-odyssey",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 4900
+ },
+ {
+  "id": 1555,
+  "name": "Mario Kart 8 Deluxe",
+  "released": "2017-04-28",
+  "backgroundImage": "https://picsum.photos/seed/game1555/600/340",
+  "rating": 4.3,
+  "metacritic": 92,
+  "genres": [
+   "Racing"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Mario Kart 8 Deluxe is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/mario-kart-8-deluxe",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 4800
+ },
+ {
+  "id": 1592,
+  "name": "Animal Crossing: New Horizons",
+  "released": "2020-03-20",
+  "backgroundImage": "https://picsum.photos/seed/game1592/600/340",
+  "rating": 4.1,
+  "metacritic": 90,
+  "genres": [
+   "Simulation"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Animal Crossing: New Horizons is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/animal-crossing-new-horizons",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 4700
+ },
+ {
+  "id": 1629,
+  "name": "Metroid Dread",
+  "released": "2021-10-08",
+  "backgroundImage": "https://picsum.photos/seed/game1629/600/340",
+  "rating": 4.1,
+  "metacritic": 88,
+  "genres": [
+   "Action",
+   "Platformer"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Metroid Dread is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/metroid-dread",
+  "developers": [
+   "MercurySteam"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 4600
+ },
+ {
+  "id": 1666,
+  "name": "Fire Emblem: Three Houses",
+  "released": "2019-07-26",
+  "backgroundImage": "https://picsum.photos/seed/game1666/600/340",
+  "rating": 4.2,
+  "metacritic": 89,
+  "genres": [
+   "Strategy",
+   "RPG"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Fire Emblem: Three Houses is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/fire-emblem-three-houses",
+  "developers": [
+   "Intelligent Systems"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 4500
+ },
+ {
+  "id": 1703,
+  "name": "Doom Eternal",
+  "released": "2020-03-20",
+  "backgroundImage": "https://picsum.photos/seed/game1703/600/340",
+  "rating": 4.4,
+  "metacritic": 88,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Doom Eternal is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/doom-eternal",
+  "developers": [
+   "id Software"
+  ],
+  "publishers": [
+   "Bethesda Softworks"
+  ],
+  "added": 4400
+ },
+ {
+  "id": 1740,
+  "name": "Counter-Strike 2",
+  "released": "2023-09-27",
+  "backgroundImage": "https://picsum.photos/seed/game1740/600/340",
+  "rating": 3.6,
+  "metacritic": null,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC"
+  ],
+  "platformIds": [
+   1
+  ],
+  "description": "Counter-Strike 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/counter-strike-2",
+  "developers": [
+   "Valve"
+  ],
+  "publishers": [
+   "Valve"
+  ],
+  "added": 4300
+ },
+ {
+  "id": 1777,
+  "name": "Overwatch 2",
+  "released": "2022-10-04",
+  "backgroundImage": "https://picsum.photos/seed/game1777/600/340",
+  "rating": 3.0,
+  "metacritic": null,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Overwatch 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/overwatch-2",
+  "developers": [
+   "Blizzard Entertainment"
+  ],
+  "publishers": [
+   "Blizzard Entertainment"
+  ],
+  "added": 4200
+ },
+ {
+  "id": 1814,
+  "name": "Cyberpunk 2077",
+  "released": "2020-12-10",
+  "backgroundImage": "https://picsum.photos/seed/game1814/600/340",
+  "rating": 4.1,
+  "metacritic": 86,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Cyberpunk 2077 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/cyberpunk-2077",
+  "developers": [
+   "CD PROJEKT RED"
+  ],
+  "publishers": [
+   "CD PROJEKT RED"
+  ],
+  "added": 4100
+ },
+ {
+  "id": 1851,
+  "name": "Baldur's Gate 3",
+  "released": "2023-08-03",
+  "backgroundImage": "https://picsum.photos/seed/game1851/600/340",
+  "rating": 4.77,
+  "metacritic": 96,
+  "genres": [
+   "RPG",
+   "Strategy",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Baldur's Gate 3 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/baldur-s-gate-3",
+  "developers": [
+   "Larian Studios"
+  ],
+  "publishers": [
+   "Larian Studios"
+  ],
+  "added": 4000
+ },
+ {
+  "id": 1888,
+  "name": "Disco Elysium",
+  "released": "2019-10-15",
+  "backgroundImage": "https://picsum.photos/seed/game1888/600/340",
+  "rating": 4.4,
+  "metacritic": 91,
+  "genres": [
+   "RPG",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Disco Elysium is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/disco-elysium",
+  "developers": [
+   "ZA/UM"
+  ],
+  "publishers": [
+   "ZA/UM"
+  ],
+  "added": 3900
+ },
+ {
+  "id": 1925,
+  "name": "Undertale",
+  "released": "2015-09-15",
+  "backgroundImage": "https://picsum.photos/seed/game1925/600/340",
+  "rating": 4.2,
+  "metacritic": 92,
+  "genres": [
+   "RPG",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Undertale is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/undertale",
+  "developers": [
+   "tobyfox"
+  ],
+  "publishers": [
+   "tobyfox"
+  ],
+  "added": 3800
+ },
+ {
+  "id": 1962,
+  "name": "Cuphead",
+  "released": "2017-09-29",
+  "backgroundImage": "https://picsum.photos/seed/game1962/600/340",
+  "rating": 4.3,
+  "metacritic": 86,
+  "genres": [
+   "Platformer",
+   "Indie",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   3,
+   7
+  ],
+  "description": "Cuphead is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/cuphead",
+  "developers": [
+   "Studio MDHR"
+  ],
+  "publishers": [
+   "Studio MDHR"
+  ],
+  "added": 3700
+ },
+ {
+  "id": 1999,
+  "name": "Minecraft",
+  "released": "2011-11-18",
+  "backgroundImage": "https://picsum.photos/seed/game1999/600/340",
+  "rating": 4.4,
+  "metacritic": 93,
+  "genres": [
+   "Simulation",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Minecraft is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/minecraft",
+  "developers": [
+   "Mojang Studios"
+  ],
+  "publishers": [
+   "Mojang Studios"
+  ],
+  "added": 3600
+ },
+ {
+  "id": 2036,
+  "name": "Terraria",
+  "released": "2011-05-16",
+  "backgroundImage": "https://picsum.photos/seed/game2036/600/340",
+  "rating": 4.4,
+  "metacritic": 81,
+  "genres": [
+   "Action",
+   "Adventure",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Terraria is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/terraria",
+  "developers": [
+   "Re-Logic"
+  ],
+  "publishers": [
+   "Re-Logic"
+  ],
+  "added": 3500
+ },
+ {
+  "id": 2073,
+  "name": "Civilization VI",
+  "released": "2016-10-21",
+  "backgroundImage": "https://picsum.photos/seed/game2073/600/340",
+  "rating": 4.0,
+  "metacritic": 88,
+  "genres": [
+   "Strategy"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Civilization VI is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/civilization-vi",
+  "developers": [
+   "Firaxis Games"
+  ],
+  "publishers": [
+   "2K Games"
+  ],
+  "added": 3400
+ },
+ {
+  "id": 2110,
+  "name": "XCOM 2",
+  "released": "2016-02-04",
+  "backgroundImage": "https://picsum.photos/seed/game2110/600/340",
+  "rating": 4.1,
+  "metacritic": 88,
+  "genres": [
+   "Strategy",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "XCOM 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/xcom-2",
+  "developers": [
+   "Firaxis Games"
+  ],
+  "publishers": [
+   "2K Games"
+  ],
+  "added": 3300
+ },
+ {
+  "id": 2147,
+  "name": "StarCraft II: Wings of Liberty",
+  "released": "2010-07-27",
+  "backgroundImage": "https://picsum.photos/seed/game2147/600/340",
+  "rating": 4.2,
+  "metacritic": 93,
+  "genres": [
+   "Strategy"
+  ],
+  "platforms": [
+   "PC"
+  ],
+  "platformIds": [
+   1
+  ],
+  "description": "StarCraft II: Wings of Liberty is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/starcraft-ii-wings-of-liberty",
+  "developers": [
+   "Blizzard Entertainment"
+  ],
+  "publishers": [
+   "Blizzard Entertainment"
+  ],
+  "added": 3200
+ },
+ {
+  "id": 2184,
+  "name": "Slay the Spire",
+  "released": "2019-01-23",
+  "backgroundImage": "https://picsum.photos/seed/game2184/600/340",
+  "rating": 4.4,
+  "metacritic": 89,
+  "genres": [
+   "Strategy",
+   "Indie",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Slay the Spire is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/slay-the-spire",
+  "developers": [
+   "Mega Crit Games"
+  ],
+  "publishers": [
+   "Mega Crit Games"
+  ],
+  "added": 3100
+ },
+ {
+  "id": 2221,
+  "name": "Factorio",
+  "released": "2020-08-14",
+  "backgroundImage": "https://picsum.photos/seed/game2221/600/340",
+  "rating": 4.6,
+  "metacritic": 90,
+  "genres": [
+   "Simulation",
+   "Strategy",
+   "Indie"
+  ],
+  "platforms": [
+   "PC"
+  ],
+  "platformIds": [
+   1
+  ],
+  "description": "Factorio is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/factorio",
+  "developers": [
+   "Wube Software"
+  ],
+  "publishers": [
+   "Wube Software"
+  ],
+  "added": 3000
+ },
+ {
+  "id": 2258,
+  "name": "Forza Horizon 5",
+  "released": "2021-11-09",
+  "backgroundImage": "https://picsum.photos/seed/game2258/600/340",
+  "rating": 4.2,
+  "metacritic": 92,
+  "genres": [
+   "Racing"
+  ],
+  "platforms": [
+   "PC",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   3
+  ],
+  "description": "Forza Horizon 5 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/forza-horizon-5",
+  "developers": [
+   "Playground Games"
+  ],
+  "publishers": [
+   "Xbox Game Studios"
+  ],
+  "added": 2900
+ },
+ {
+  "id": 2295,
+  "name": "Gran Turismo 7",
+  "released": "2022-03-04",
+  "backgroundImage": "https://picsum.photos/seed/game2295/600/340",
+  "rating": 3.9,
+  "metacritic": 87,
+  "genres": [
+   "Racing",
+   "Simulation"
+  ],
+  "platforms": [
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   2
+  ],
+  "description": "Gran Turismo 7 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/gran-turismo-7",
+  "developers": [
+   "Polyphony Digital"
+  ],
+  "publishers": [
+   "Sony Interactive Entertainment"
+  ],
+  "added": 2800
+ },
+ {
+  "id": 2332,
+  "name": "FIFA 23",
+  "released": "2022-09-27",
+  "backgroundImage": "https://picsum.photos/seed/game2332/600/340",
+  "rating": 3.2,
+  "metacritic": 77,
+  "genres": [
+   "Sports"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "FIFA 23 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/fifa-23",
+  "developers": [
+   "EA Vancouver"
+  ],
+  "publishers": [
+   "Electronic Arts"
+  ],
+  "added": 2700
+ },
+ {
+  "id": 2369,
+  "name": "Rocket League",
+  "released": "2015-07-07",
+  "backgroundImage": "https://picsum.photos/seed/game2369/600/340",
+  "rating": 4.0,
+  "metacritic": 86,
+  "genres": [
+   "Sports",
+   "Racing"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Rocket League is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/rocket-league",
+  "developers": [
+   "Psyonix"
+  ],
+  "publishers": [
+   "Psyonix"
+  ],
+  "added": 2600
+ },
+ {
+  "id": 2406,
+  "name": "Street Fighter 6",
+  "released": "2023-06-02",
+  "backgroundImage": "https://picsum.photos/seed/game2406/600/340",
+  "rating": 4.2,
+  "metacritic": 92,
+  "genres": [
+   "Fighting"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Street Fighter 6 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/street-fighter-6",
+  "developers": [
+   "Capcom"
+  ],
+  "publishers": [
+   "Capcom"
+  ],
+  "added": 2500
+ },
+ {
+  "id": 2443,
+  "name": "Tekken 7",
+  "released": "2017-06-02",
+  "backgroundImage": "https://picsum.photos/seed/game2443/600/340",
+  "rating": 3.9,
+  "metacritic": 82,
+  "genres": [
+   "Fighting"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Tekken 7 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/tekken-7",
+  "developers": [
+   "Bandai Namco Studios"
+  ],
+  "publishers": [
+   "Bandai Namco Entertainment"
+  ],
+  "added": 2400
+ },
+ {
+  "id": 2480,
+  "name": "Super Smash Bros. Ultimate",
+  "released": "2018-12-07",
+  "backgroundImage": "https://picsum.photos/seed/game2480/600/340",
+  "rating": 4.3,
+  "metacritic": 93,
+  "genres": [
+   "Fighting",
+   "Action"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Super Smash Bros. Ultimate is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/super-smash-bros-ultimate",
+  "developers": [
+   "Sora Ltd."
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 2300
+ },
+ {
+  "id": 2517,
+  "name": "Resident Evil 4",
+  "released": "2023-03-24",
+  "backgroundImage": "https://picsum.photos/seed/game2517/600/340",
+  "rating": 4.5,
+  "metacritic": 93,
+  "genres": [
+   "Action",
+   "Shooter"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Resident Evil 4 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/resident-evil-4",
+  "developers": [
+   "Capcom"
+  ],
+  "publishers": [
+   "Capcom"
+  ],
+  "added": 2200
+ },
+ {
+  "id": 2554,
+  "name": "Control",
+  "released": "2019-08-27",
+  "backgroundImage": "https://picsum.photos/seed/game2554/600/340",
+  "rating": 3.9,
+  "metacritic": 82,
+  "genres": [
+   "Action",
+   "Adventure",
+   "Shooter"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Control is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/control",
+  "developers": [
+   "Remedy Entertainment"
+  ],
+  "publishers": [
+   "505 Games"
+  ],
+  "added": 2100
+ },
+ {
+  "id": 2591,
+  "name": "Outer Wilds",
+  "released": "2019-05-28",
+  "backgroundImage": "https://picsum.photos/seed/game2591/600/340",
+  "rating": 4.4,
+  "metacritic": 85,
+  "genres": [
+   "Adventure",
+   "Puzzle",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Outer Wilds is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/outer-wilds",
+  "developers": [
+   "Mobius Digital"
+  ],
+  "publishers": [
+   "Annapurna Interactive"
+  ],
+  "added": 2000
+ },
+ {
+  "id": 2628,
+  "name": "Portal",
+  "released": "2007-10-09",
+  "backgroundImage": "https://picsum.photos/seed/game2628/600/340",
+  "rating": 4.5,
+  "metacritic": 90,
+  "genres": [
+   "Puzzle",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Portal is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/portal",
+  "developers": [
+   "Valve"
+  ],
+  "publishers": [
+   "Valve"
+  ],
+  "added": 1900
+ },
+ {
+  "id": 2665,
+  "name": "The Witness",
+  "released": "2016-01-26",
+  "backgroundImage": "https://picsum.photos/seed/game2665/600/340",
+  "rating": 4.0,
+  "metacritic": 87,
+  "genres": [
+   "Puzzle",
+   "Adventure",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "The Witness is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/the-witness",
+  "developers": [
+   "Thekla, Inc."
+  ],
+  "publishers": [
+   "Thekla, Inc."
+  ],
+  "added": 1800
+ },
+ {
+  "id": 2702,
+  "name": "Return of the Obra Dinn",
+  "released": "2018-10-18",
+  "backgroundImage": "https://picsum.photos/seed/game2702/600/340",
+  "rating": 4.1,
+  "metacritic": 88,
+  "genres": [
+   "Puzzle",
+   "Adventure",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Return of the Obra Dinn is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/return-of-the-obra-dinn",
+  "developers": [
+   "Lucas Pope"
+  ],
+  "publishers": [
+   "3909"
+  ],
+  "added": 1700
+ },
+ {
+  "id": 2739,
+  "name": "Ori and the Will of the Wisps",
+  "released": "2020-03-11",
+  "backgroundImage": "https://picsum.photos/seed/game2739/600/340",
+  "rating": 4.4,
+  "metacritic": 88,
+  "genres": [
+   "Platformer",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   3,
+   7
+  ],
+  "description": "Ori and the Will of the Wisps is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/ori-and-the-will-of-the-wisps",
+  "developers": [
+   "Moon Studios"
+  ],
+  "publishers": [
+   "Xbox Game Studios"
+  ],
+  "added": 1600
+ },
+ {
+  "id": 2776,
+  "name": "Sekiro: Shadows Die Twice",
+  "released": "2019-03-22",
+  "backgroundImage": "https://picsum.photos/seed/game2776/600/340",
+  "rating": 4.4,
+  "metacritic": 90,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Sekiro: Shadows Die Twice is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/sekiro-shadows-die-twice",
+  "developers": [
+   "FromSoftware"
+  ],
+  "publishers": [
+   "Activision"
+  ],
+  "added": 1500
+ },
+ {
+  "id": 2813,
+  "name": "Persona 5 Royal",
+  "released": "2020-03-31",
+  "backgroundImage": "https://picsum.photos/seed/game2813/600/340",
+  "rating": 4.6,
+  "metacritic": 95,
+  "genres": [
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Persona 5 Royal is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/persona-5-royal",
+  "developers": [
+   "Atlus"
+  ],
+  "publishers": [
+   "Atlus"
+  ],
+  "added": 1400
+ },
+ {
+  "id": 2850,
+  "name": "Final Fantasy VII Remake",
+  "released": "2020-04-10",
+  "backgroundImage": "https://picsum.photos/seed/game2850/600/340",
+  "rating": 4.2,
+  "metacritic": 87,
+  "genres": [
+   "RPG",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   1,
+   2
+  ],
+  "description": "Final Fantasy VII Remake is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/final-fantasy-vii-remake",
+  "developers": [
+   "Square Enix"
+  ],
+  "publishers": [
+   "Square Enix"
+  ],
+  "added": 1300
+ },
+ {
+  "id": 2887,
+  "name": "Mass Effect 2",
+  "released": "2010-01-26",
+  "backgroundImage": "https://picsum.photos/seed/game2887/600/340",
+  "rating": 4.5,
+  "metacritic": 96,
+  "genres": [
+   "RPG",
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Mass Effect 2 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/mass-effect-2",
+  "developers": [
+   "BioWare"
+  ],
+  "publishers": [
+   "Electronic Arts"
+  ],
+  "added": 1200
+ },
+ {
+  "id": 2924,
+  "name": "Fallout: New Vegas",
+  "released": "2010-10-19",
+  "backgroundImage": "https://picsum.photos/seed/game2924/600/340",
+  "rating": 4.3,
+  "metacritic": 84,
+  "genres": [
+   "RPG",
+   "Shooter"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Fallout: New Vegas is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/fallout-new-vegas",
+  "developers": [
+   "Obsidian Entertainment"
+  ],
+  "publishers": [
+   "Bethesda Softworks"
+  ],
+  "added": 1100
+ },
+ {
+  "id": 2961,
+  "name": "The Elder Scrolls V: Skyrim",
+  "released": "2011-11-11",
+  "backgroundImage": "https://picsum.photos/seed/game2961/600/340",
+  "rating": 4.4,
+  "metacritic": 94,
+  "genres": [
+   "Action",
+   "RPG"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "The Elder Scrolls V: Skyrim is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/the-elder-scrolls-v-skyrim",
+  "developers": [
+   "Bethesda Game Studios"
+  ],
+  "publishers": [
+   "Bethesda Softworks"
+  ],
+  "added": 1000
+ },
+ {
+  "id": 2998,
+  "name": "Valorant",
+  "released": "2020-06-02",
+  "backgroundImage": "https://picsum.photos/seed/game2998/600/340",
+  "rating": 3.6,
+  "metacritic": null,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "PC"
+  ],
+  "platformIds": [
+   1
+  ],
+  "description": "Valorant is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/valorant",
+  "developers": [
+   "Riot Games"
+  ],
+  "publishers": [
+   "Riot Games"
+  ],
+  "added": 900
+ },
+ {
+  "id": 3035,
+  "name": "Among Us",
+  "released": "2018-06-15",
+  "backgroundImage": "https://picsum.photos/seed/game3035/600/340",
+  "rating": 3.4,
+  "metacritic": null,
+  "genres": [
+   "Strategy",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   7
+  ],
+  "description": "Among Us is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/among-us",
+  "developers": [
+   "InnerSloth"
+  ],
+  "publishers": [
+   "InnerSloth"
+  ],
+  "added": 800
+ },
+ {
+  "id": 3072,
+  "name": "Vampire Survivors",
+  "released": "2022-10-20",
+  "backgroundImage": "https://picsum.photos/seed/game3072/600/340",
+  "rating": 4.3,
+  "metacritic": null,
+  "genres": [
+   "Action",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Vampire Survivors is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/vampire-survivors",
+  "developers": [
+   "poncle"
+  ],
+  "publishers": [
+   "poncle"
+  ],
+  "added": 700
+ },
+ {
+  "id": 3109,
+  "name": "Dead Cells",
+  "released": "2018-08-07",
+  "backgroundImage": "https://picsum.photos/seed/game3109/600/340",
+  "rating": 4.2,
+  "metacritic": 89,
+  "genres": [
+   "Action",
+   "Platformer",
+   "Indie"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One",
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3,
+   7
+  ],
+  "description": "Dead Cells is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/dead-cells",
+  "developers": [
+   "Motion Twin"
+  ],
+  "publishers": [
+   "Motion Twin"
+  ],
+  "added": 600
+ },
+ {
+  "id": 3146,
+  "name": "Sea of Thieves",
+  "released": "2018-03-20",
+  "backgroundImage": "https://picsum.photos/seed/game3146/600/340",
+  "rating": 3.8,
+  "metacritic": 69,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5",
+   "Xbox One"
+  ],
+  "platformIds": [
+   1,
+   2,
+   3
+  ],
+  "description": "Sea of Thieves is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/sea-of-thieves",
+  "developers": [
+   "Rare"
+  ],
+  "publishers": [
+   "Xbox Game Studios"
+  ],
+  "added": 500
+ },
+ {
+  "id": 3183,
+  "name": "Death Stranding",
+  "released": "2019-11-08",
+  "backgroundImage": "https://picsum.photos/seed/game3183/600/340",
+  "rating": 3.8,
+  "metacritic": 82,
+  "genres": [
+   "Action",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   1,
+   2
+  ],
+  "description": "Death Stranding is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/death-stranding",
+  "developers": [
+   "Kojima Productions"
+  ],
+  "publishers": [
+   "Sony Interactive Entertainment"
+  ],
+  "added": 400
+ },
+ {
+  "id": 3220,
+  "name": "Horizon Zero Dawn",
+  "released": "2017-02-28",
+  "backgroundImage": "https://picsum.photos/seed/game3220/600/340",
+  "rating": 4.2,
+  "metacritic": 89,
+  "genres": [
+   "Action",
+   "RPG",
+   "Adventure"
+  ],
+  "platforms": [
+   "PC",
+   "PlayStation 5"
+  ],
+  "platformIds": [
+   1,
+   2
+  ],
+  "description": "Horizon Zero Dawn is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/horizon-zero-dawn",
+  "developers": [
+   "Guerrilla Games"
+  ],
+  "publishers": [
+   "Sony Interactive Entertainment"
+  ],
+  "added": 300
+ },
+ {
+  "id": 3257,
+  "name": "Splatoon 3",
+  "released": "2022-09-09",
+  "backgroundImage": "https://picsum.photos/seed/game3257/600/340",
+  "rating": 4.0,
+  "metacritic": 83,
+  "genres": [
+   "Shooter",
+   "Action"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Splatoon 3 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/splatoon-3",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 200
+ },
+ {
+  "id": 3294,
+  "name": "Pikmin 4",
+  "released": "2023-07-21",
+  "backgroundImage": "https://picsum.photos/seed/game3294/600/340",
+  "rating": 4.1,
+  "metacritic": 87,
+  "genres": [
+   "Strategy",
+   "Adventure"
+  ],
+  "platforms": [
+   "Nintendo Switch"
+  ],
+  "platformIds": [
+   7
+  ],
+  "description": "Pikmin 4 is a mock game entry used to build the GameHub UI. It has no real description.",
+  "website": "https://example.com/games/pikmin-4",
+  "developers": [
+   "Nintendo EPD"
+  ],
+  "publishers": [
+   "Nintendo"
+  ],
+  "added": 100
+ }
+]
