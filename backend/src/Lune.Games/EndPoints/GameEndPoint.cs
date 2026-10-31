@@ -19,6 +19,7 @@ public static  partial class GameEndPoint
         var group = endpoints.MapGroup("/api/games").WithTags("Games");
 
         group.MapGet("/", Search);
+        group.MapGet("/{id:int}", GetById);
 
     }
 
@@ -27,5 +28,21 @@ public static  partial class GameEndPoint
     {
         pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
         return Results.Ok(await games.SearchAsync(search, page, pageSize, null, ct));
+    }
+
+    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken ct)
+    {
+        try
+        {
+            var game = await games.GetByIdAsync(id, ct);
+            return game is null ? Results.NotFound() : Results.Ok(game);
+        }
+        catch (GamesUnavailableException ex)
+        {
+            return Results.Problem(
+                title: "Game data is currently unavailable.",
+                detail: ex.Message,
+                statusCode: StatusCodes.Status503ServiceUnavailable);
+        }
     }
 }

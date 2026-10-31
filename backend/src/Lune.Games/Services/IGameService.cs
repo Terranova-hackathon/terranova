@@ -9,6 +9,8 @@ public interface IGamesService
         string? search, int page, int pageSize, GameSearchFilters? filters = null,
         CancellationToken cancellationToken = default);
 
+    Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
     //TODO: implent filter search for games based on GameSearchFilters
 }
 

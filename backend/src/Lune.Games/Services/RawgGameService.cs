@@ -33,6 +33,31 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     }
     
     /// <summary>
+    /// Gets one game by id, or null when RAWG does not know it.
+    /// </summary>
+    public async Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var response = await http.GetAsync(
+                $"games/{id}?key={Uri.EscapeDataString(RequireKey())}", cancellationToken);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+            var game = await response.Content.ReadFromJsonAsync<Rawg.RawgGame>(cancellationToken);
+            return game is null ? null : ToDetails(game);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new GamesUnavailableException("The game data service could not be reached.", ex);
+        }
+    }
+
+    /// <summary>
     /// Ensures that the RAWG API key is configured and returns it.
     /// </summary>
     private string RequireKey() =>
@@ -58,4 +83,12 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     private static GameSummary ToSummary(Rawg.RawgGame g) => new(
         g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
         Names(g.Genres), PlatformNames(g.Platforms));
+
+    /// <summary>
+    /// Converts a RAWG game object to full game details.
+    /// </summary>
+    private static GameDetails ToDetails(Rawg.RawgGame g) => new(
+        g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
+        g.DescriptionRaw, g.Website,
+        Names(g.Genres), PlatformNames(g.Platforms), Names(g.Developers), Names(g.Publishers));
 }

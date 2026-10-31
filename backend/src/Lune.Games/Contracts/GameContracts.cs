@@ -1,5 +1,8 @@
 namespace Lune.Games.Contracts;
 
+/// <summary>
+/// Contains contract definitions for game-related data.
+/// </summary>
 public sealed record GameSummary(
     int Id,
     string Name,
@@ -10,6 +13,9 @@ public sealed record GameSummary(
     IReadOnlyList<string> Genres,
     IReadOnlyList<string> Platforms);
 
+/// <summary>
+/// Represents detailed information about a game.
+/// </summary>
 public sealed record GameDetails(
     int Id,
     string Name,
