@@ -21,7 +21,6 @@ services:
 
     # SQL Server (real backend only: docker compose --profile real up)
     sqlserver:
-        profiles: ['real']
         image: mcr.microsoft.com/mssql/server:2022-latest
         environment:
             - ACCEPT_EULA=Y
@@ -47,7 +46,6 @@ services:
 
     # ASP.NET Core Web API (real backend only: docker compose --profile real up)
     backend:
-        profiles: ['real']
         build:
             context: ./backend
             dockerfile: Dockerfile
