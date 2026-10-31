@@ -47,5 +47,4 @@ internal sealed class RawgPlatformEntry
     [JsonPropertyName("platform")] public RawgNamed? Platform { get; set; }
 }
 
-
 // TODO: Implement Filter options for the RAWG API.

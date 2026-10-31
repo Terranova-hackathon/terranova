@@ -36,5 +36,3 @@ public sealed record GameSearchFilters(
     string? Ordering,
     int? MetacriticMin,
     int? MetacriticMax);
-
-

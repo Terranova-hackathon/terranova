@@ -59,4 +59,3 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
         g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
         Names(g.Genres), PlatformNames(g.Platforms));
 }
-
