@@ -1,9 +1,7 @@
-
-using Lune.Games.Services;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Lune.Games.Services;
 
 namespace Lune.Games.EndPoints;
 

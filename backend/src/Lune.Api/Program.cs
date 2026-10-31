@@ -1,6 +1,10 @@
 using Lune.Games;
 using Lune.Shared.Modules;
 
+/// <summary>
+/// Entry point for the Lune API application.
+/// </summary>
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();

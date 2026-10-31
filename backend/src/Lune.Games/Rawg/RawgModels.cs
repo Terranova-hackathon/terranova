@@ -1,4 +1,3 @@
-
 using System.Text.Json.Serialization;
 
 namespace Lune.Games.Rawg;
@@ -49,23 +48,4 @@ internal sealed class RawgPlatformEntry
 }
 
 
-// TODO: Implement Filters
-/// <summary>
-/// Represents a list of filter options returned by the RAWG API.
-/// </summary>
-// internal sealed class RawgFilterList
-// {
-//     [JsonPropertyName("results")] public List<RawgNamed>? Results { get; set; }
-// }
-
-
-// /// <summary>
-// /// Represents a single filter option returned by the RAWG API.
-// /// </summary>
-// internal sealed class RawgFilterOptions
-// {
-//     [JsonPropertyName("id")] public int Id { get; set; }
-//     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-//     [JsonPropertyName("slug")] public string Slug { get; set; } = string.Empty;
-//     [JsonPropertyName("games_count")] public int GamesCount { get; set; }
-// }
+// TODO: Implement Filter options for the RAWG API.

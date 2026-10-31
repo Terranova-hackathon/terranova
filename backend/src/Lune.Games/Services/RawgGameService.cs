@@ -12,6 +12,9 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     private readonly string _apiKey = options.Value.ApiKey;
 
 
+    /// <summary>
+    /// Searches for games using the RAWG API.  
+    /// </summary>
     public async Task<PagedResult<GameSummary>> SearchAsync(
         string? search, int page, int pageSize, GameSearchFilters? filters = null,
         CancellationToken cancellationToken = default)
@@ -29,18 +32,29 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             (response.Results?.Select(ToSummary) ?? []).ToList(), page, pageSize, response.Count);
     }
     
-
+    /// <summary>
+    /// Ensures that the RAWG API key is configured and returns it.
+    /// </summary>
     private string RequireKey() =>
             string.IsNullOrWhiteSpace(_apiKey)
                 ? throw new GamesUnavailableException("The RAWG API key is not configured (Rawg__ApiKey).")
                 : _apiKey;
     
+    /// <summary>
+    /// Extracts the names from a list of RAWG named items.
+    /// </summary>
     private static IReadOnlyList<string> Names(List<Rawg.RawgNamed>? items) =>
     items?.Select(i => i.Name).ToList() ?? [];
 
+    /// <summary>
+    /// Extracts the platform names from a list of RAWG platform entries.
+    /// </summary>
     private static IReadOnlyList<string> PlatformNames(List<Rawg.RawgPlatformEntry>? items) =>
         items?.Where(p => p.Platform is not null).Select(p => p.Platform!.Name).ToList() ?? [];
 
+    /// <summary>
+    /// Converts a RAWG game object to a game summary.
+    /// </summary>
     private static GameSummary ToSummary(Rawg.RawgGame g) => new(
         g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
         Names(g.Genres), PlatformNames(g.Platforms));
