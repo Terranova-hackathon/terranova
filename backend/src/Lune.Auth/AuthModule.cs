@@ -1,5 +1,6 @@
 using Lune.Shared.Modules;
-using Microsoft.AspNetCore.Builder;
+using Lune.Auth.Endpoints;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
