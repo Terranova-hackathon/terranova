@@ -87,10 +87,9 @@ services:
         networks:
             - private-network
         depends_on:
-            backend:
+            mock-api:
                 condition: service_healthy
         restart: unless-stopped
-    
 
 networks:
     private-network:
