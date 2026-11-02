@@ -1,0 +1,68 @@
+<main class="auth-page">
+	<section class="auth-card">
+		<h1>Welcome back</h1>
+		<p>Login in to your account</p>
+
+		<form [formGroup]="form" (ngSubmit)="onSubmit()">
+			<div class="mb-3">
+				<label for="login-email" class="form-label">
+					Email
+				</label>
+
+				<input
+					id="login-email"
+					type="email"
+					class="form-control"
+					formControlName="email"
+					autocomplete="email"
+					[class.is.invalid]="form.controls.email.touched && form.controls.email.invalid"
+				/>
+
+				@if (form.controls.email.touched && form.controls.email.invalid) {
+					<div class="invalid-feedback">
+						Enter a valid mail address.
+					</div>
+				}
+			</div>
+
+			<div class="mb-3">
+				<label for="password" class="form-lable">
+					Password
+				</label>
+
+				<input
+					id="login-password"
+					type="password"
+					class="form-control"
+					formControlName="password"
+					autocomplete="current-password"
+					[class.is.invalid]="form.controls.password.touched && form.controls.password.invalid"
+				/>
+
+				@if (form.controls.password.touched && form.controls.password.invalid) {
+					<div class="invalid-feedback">
+						Enter a valid password
+					</div>
+				}
+			</div>
+
+			@if (error()) {
+				<div class="alert alert-danger" role="alert">
+					{{ error() }}
+				</div>
+			}
+			<button
+				type="submit"
+				class="btn btn-primary w-100"
+				[disabled]="loading()"
+			>
+				{{ loading() ? 'Logging in...' : 'Log in' }}
+			</button>
+		</form>
+
+		<p class="auth-footer">
+			Not registered yet?
+			<a routerLink="/register">Sign up</a>
+		</p>
+	</section>
+</main>
