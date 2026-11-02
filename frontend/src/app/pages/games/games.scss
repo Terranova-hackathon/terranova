@@ -1,0 +1,21 @@
+.pagination-controls {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 24px;
+
+	span {
+		color: #cbd5e1;
+		font-weight: 500;
+	}
+	button {
+		min-width: 100px;
+	}
+}
+
+@media (max-width: 576px) {
+	.pagination-controls {
+		gap: 12px;
+	}
+}
