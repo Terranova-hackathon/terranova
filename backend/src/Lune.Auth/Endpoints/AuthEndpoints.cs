@@ -1,8 +1,13 @@
-using Lune.Auth.Contracts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Lune.Auth.Contracts;
 using Lune.Auth.Options;
+using Lune.Auth.Data;
+using Lune.Auth.Services;
+using Lune.Shared.Validation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Lune.Auth.Endpoints;
 
@@ -20,32 +25,83 @@ public static class AuthEndpoints
         //TODO: decide if we want to make add tese end points as well.
         // group.MapPost("/delete-account", DeleteAccount);
         // group.MapPost("/forgot-password", ForgotPassword);
-    
-        // TODO: Map authentication-related endpoints here
     }
 
-    private static async Task Register(HttpContext context)
+    /// <summary>
+    /// these end points only do jwt for now, will need to make a new genaric interface and add the other Services like OAuth if we want to add other login methods. 
+    /// </summary>
+    private static async Task<IResult> Register(
+        RegisterRequest req, 
+        UserManager<AppUser> users, 
+        JwtTokenService tokens, 
+        IOptions<JwtOptions> jwtOptions, 
+        HttpContext context)
     {
-        // TODO: Implement registration logic here
-        await context.Response.WriteAsync("Register endpoint");
+        if(!RequestValidator.TryValidate(req, out var errors))
+        {
+            return Results.ValidationProblem(errors);
+        }
+        
+        var user = new AppUser
+        {
+            Email = req.Email, 
+            UserName = req.Email,
+            DisplayName = req.DisplayName,
+        };
+
+        var res = await users.CreateAsync(user, req.Password);
+
+        ///<summary>
+        /// Groups erros together by their code so no duplicate error messages are returned.
+        /// </summary>
+        if(!res.Succeeded)
+        {
+            return Results.ValidationProblem(res.Errors.GroupBy(e => e.Code).ToDictionary(
+                group => group.Key,
+                group => group.Select(e => e.Description).ToArray()
+            ));
+        }
+
+        AuthCookies.SetAuthCookie(context, jwtOptions.Value, tokens.CreateToken(user));
+        return Results.Created("/api/auth/me", MakeResponse(user));
     }
 
-    private static async Task Login(HttpContext context)
+        ///<summary>
+        /// Simple Auth for getting the user and trying to validate the password.
+        /// we can addd more validations  in the future if needed. eg. login attempts tracking.
+        /// </summary>
+    private static async Task<IResult> Login(
+        LoginRequest req,
+        UserManager<AppUser> users,
+        JwtTokenService tokens,
+        IOptions<JwtOptions> jwtOptions,
+        HttpContext context)
     {
-        // TODO: Implement login logic here
-        await context.Response.WriteAsync("Login endpoint");
+        if(!RequestValidator.TryValidate(req, out var errors))
+        {
+            return Results.ValidationProblem(errors);
+        }
+
+        var user = await users.FindByEmailAsync(req.Email);
+        if(user == null || !await users.CheckPasswordAsync(user, req.Password))
+        {
+            return InvalidCredentials();
+        }
+
+        AuthCookies.SetAuthCookie(context, jwtOptions.Value, tokens.CreateToken(user));
+        return Results.Ok(MakeResponse(user));
     }
 
-    private static async Task Logout(HttpContext context)
+
+    private static async Task<IResult> Logout( IOptions<JwtOptions> jwtOptions, HttpContext context)
     {
-        // TODO: Implement logout logic here
-        await context.Response.WriteAsync("Logout endpoint");
+        AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
+        return await Task.FromResult(Results.NoContent());
     }
 
     private static async Task GetCurrentUser(HttpContext context)
     {
         // TODO: Implement logic to get the current authenticated user
-        await context.Response.WriteAsync("Current user endpoint");
     }
 
     // private static async Task DeleteAccount(HttpContext context)
@@ -59,6 +115,14 @@ public static class AuthEndpoints
     //     // TODO: Implement Forgot Password logic here
     //     await context.Response.WriteAsync("Forgot password endpoint");
     // }
+
+    internal static IResult InvalidCredentials() =>
+        Results.Problem(
+            title: "Invalid email or password.",
+            statusCode: StatusCodes.Status401Unauthorized);
+
+    internal static UserResponse MakeResponse(AppUser user) =>
+        new(user.Id, user.Email ?? string.Empty, user.DisplayName);
 }
 
 

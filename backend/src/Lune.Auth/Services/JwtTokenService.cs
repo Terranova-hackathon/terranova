@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 using Lune.Auth.Options;
 using Lune.Auth.Data;
-using Lune.Auth.Contracts;
 
 namespace Lune.Auth.Services;
 
