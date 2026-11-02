@@ -20,8 +20,7 @@ internal sealed class JwtTokenService(IOptions<JwtOptions> options)
     /// </summary>
     public string CreateToken(AppUser user)
     {
-        //TODO: Implement JWT token creation logic here
-                var claims = new List<Claim>
+        var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id),
             new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
