@@ -13,4 +13,7 @@ public interface IModule
 {
     void AddServices(IServiceCollection services, IConfiguration configuration);
     void MapEndpoints(IEndpointRouteBuilder endpoints);
+
+    /// <summary>Runs once at startup after the app is built (e.g. database migrations).</summary>
+    Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken = default) => Task.CompletedTask;
 }

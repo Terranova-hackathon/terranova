@@ -53,7 +53,7 @@ services:
             - '3001:3001'
         environment:
             - ConnectionStrings__Default=Server=sqlserver,1433;Database=Lune;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
-            - Jwt__Key=${JWT_KEY}
+            - Jwt__Secret=${JWT_SECRET}
             - Rawg__ApiKey=${RAWG_API_KEY}
         volumes:
             - ./backend:/app

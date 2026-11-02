@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Lune.Auth;
@@ -55,4 +56,26 @@ public sealed class AuthModule : IModule
     }
 
     public void MapEndpoints(IEndpointRouteBuilder endpoints) => AuthEndpoints.Map(endpoints);
+
+    public async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken = default)
+    {
+        await using var scope = services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<AuthModule>();
+
+        // SQL Server in Docker can take a while to accept connections, so retry.
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                await db.Database.MigrateAsync(cancellationToken);
+                return;
+            }
+            catch (Exception ex) when (attempt < 15)
+            {
+                logger.LogWarning(ex, "Database not ready (attempt {Attempt}), retrying in 4s...", attempt);
+                await Task.Delay(TimeSpan.FromSeconds(4), cancellationToken);
+            }
+        }
+    }
 }
