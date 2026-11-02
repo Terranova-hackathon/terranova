@@ -15,7 +15,7 @@
 					class="form-control"
 					formControlName="email"
 					autocomplete="email"
-					[class.is.invalid]="form.controls.email.touched && form.controls.email.invalid"
+					[class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
 				/>
 
 				@if (form.controls.email.touched && form.controls.email.invalid) {
@@ -36,7 +36,7 @@
 					class="form-control"
 					formControlName="password"
 					autocomplete="current-password"
-					[class.is.invalid]="form.controls.password.touched && form.controls.password.invalid"
+					[class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
 				/>
 
 				@if (form.controls.password.touched && form.controls.password.invalid) {

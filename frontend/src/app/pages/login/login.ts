@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
-import { email } from '@angular/forms/signals';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({

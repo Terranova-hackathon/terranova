@@ -1,1 +1,90 @@
-<p>register works!</p>
+<main class="auth-page">
+	<section class="auth-card">
+		<h1>Create an account</h1>
+		<p>Join GameHub and start your collction.</p>
+
+		<form [formGroup]="form" (ngSubmit)="onSubit()">
+			<div class="mb-3">
+				<label class="form-label" for="register-name">
+					Display name (optional)
+				</label>
+
+				<input
+					id="register-name"
+					type="text"
+					class="form-control"
+					formControlName="displayName"
+					autocomplete="nickname"
+				/>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label" for="register-email">
+					Email
+				</label>
+
+				<input
+					id="register-email"
+					type="email"
+					class="form-control"
+					formControlName="email"
+					autocomplete="email"
+					[class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+				/>
+
+				@if (form.controls.email.touched && form.controls.email.invalid) {
+					<div class="invalid-feedback">
+						Enter a valid email address.
+					</div>
+				}
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label" for="register-password">
+					Password
+				</label>
+
+				<input
+					id="register-password"
+					type="password"
+					class="form-control"
+					formControlName="password"
+					autocomplete="new-password"
+					[class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+				/>
+				<small class="form-text">
+					Minimum 8 characters,including uppercase, lowercase, a digit and a special character.
+				</small>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label" for="confirm-password">
+					Confirm password
+				</label>
+
+				<input
+					id="confirm-password"
+					type="password"
+					class="form-control"
+					formControlName="confirmPassword"
+					autocomplete="new-password"
+				/>
+			</div>
+
+			@if (error()) {
+				<div class="alert alert-danger" role="alert">
+					{{ error() }}
+				</div>
+			}
+
+			<button class="btn btn-primary w-100" type="submit" [disabled]="loading()">
+				{{ loading() ? 'Creating account...' : 'Create account' }}
+			</button>
+		</form>
+
+		<p class="auth-footer">
+			Already have an account?
+			<a routerLink="/login">Log in</a>
+		</p>
+	</section>
+</main>
