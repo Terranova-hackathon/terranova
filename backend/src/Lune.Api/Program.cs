@@ -1,4 +1,5 @@
 using Lune.Games;
+using Lune.Auth;
 using Lune.Shared.Modules;
 
 /// <summary>
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-var modules = new IModule[] { new GamesModule() };
+var modules = new IModule[] { new GamesModule(), new AuthModule() };
 
 foreach (var m in modules) m.AddServices(builder.Services, builder.Configuration);
 
