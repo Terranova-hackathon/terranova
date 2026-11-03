@@ -24,7 +24,18 @@ public static class FavoritesEndpoints
 
             var name = game.Name.Length > 300 ? game.Name[..300] : game.Name;
             var image = game.BackgroundImage is { Length: <= 500 } url ? url : null;
-            var result = store.Add(new FavoriteRow { UserId = http.CurrentUserId(), RawgId = rawgId, Name = name, ImageUrl = image });
+            var result = store.Add(new FavoriteRow
+            {
+                UserId = http.CurrentUserId(),
+                RawgId = rawgId,
+                Name = name,
+                ImageUrl = image,
+                Released = game.Released,
+                Rating = game.Rating,
+                Metacritic = game.Metacritic,
+                Genres = game.Genres,
+                Platforms = game.Platforms,
+            });
 
             return result == FavoriteStore.AddResult.LimitReached
                 ? Problems.Problem(409, "Favorites limit reached.")

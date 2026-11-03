@@ -350,14 +350,19 @@ No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
 
 ## 5. Favorites
 
-A per-user bookmark. The server stores a **snapshot** of the game's name and image when saved. Both come from the game catalog, never from the request. The user always comes from the cookie.
+A per-user bookmark. The server stores a **snapshot** of the game summary (name, image, release date, rating, Metacritic, genres, platforms) when saved. All of it comes from the game catalog, never from the request. The user always comes from the cookie.
 
 ```ts
 interface Favorite {
   id: number;            // game id
   name: string;
-  imageUrl: string | null;
-  addedAtUtc: string;    // "2026-10-28T12:04:41.123Z"
+  imageUrl: string | null;  // the game's backgroundImage
+  released: string | null;  // "2013-09-17"
+  rating: number;           // 0-5
+  metacritic: number | null; // 0-100
+  genres: string[];         // names
+  platforms: string[];      // names
+  addedAtUtc: string;       // "2026-10-28T12:04:41.123Z"
 }
 ```
 

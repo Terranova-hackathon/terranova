@@ -11,6 +11,7 @@
     <ProjectReference Include="..\Lune.Games\Lune.Games.csproj" />
     <ProjectReference Include="..\Lune.Shared\Lune.Shared.csproj" />
     <ProjectReference Include="..\Lune.Auth\Lune.Auth.csproj" />
+    <ProjectReference Include="..\Lune.Favorites\Lune.Favorites.csproj" />
   </ItemGroup>
 
 </Project>
