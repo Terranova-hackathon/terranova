@@ -8,7 +8,6 @@ public class Favorite
 
     public int RawgId { get; set; }
 
-    // Snapshot of the game summary taken when saved, so the favorites list does not need one RAWG call per game.
     public string Name { get; set; } = string.Empty;
 
     public string? ImageUrl { get; set; }

@@ -1,5 +1,6 @@
 using Lune.Favorites.Data;
 using Lune.Favorites.Endpoints;
+using Lune.Favorites.Services;
 using Lune.Shared.Modules;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ public sealed class FavoritesModule : IModule
             options.UseSqlServer(
                 configuration.GetConnectionString("Default"),
                 sql => sql.MigrationsHistoryTable("__EFMigrationsHistory", FavoritesDbContext.Schema)));
+
+        services.AddScoped<FavoritesService>();
     }
 
     public void MapEndpoints(IEndpointRouteBuilder endpoints) => FavoritesEndpoints.Map(endpoints);

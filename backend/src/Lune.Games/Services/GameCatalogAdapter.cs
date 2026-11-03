@@ -5,7 +5,7 @@ namespace Lune.Games.Services;
 /// <summary>Exposes the games service to other modules through the shared <see cref="IGameCatalog"/> contract.</summary>
 internal sealed class GameCatalogAdapter(IGamesService games) : IGameCatalog
 {
-    public async Task<GameSnapshot?> GetSnapshotAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<GameSnapshot?> FindAsync(int id, CancellationToken cancellationToken = default)
     {
         var game = await games.GetByIdAsync(id, cancellationToken);
         return game is null
