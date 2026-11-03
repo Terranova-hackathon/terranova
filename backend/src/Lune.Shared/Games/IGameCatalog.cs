@@ -14,8 +14,9 @@ public sealed record GameSnapshot(
 /// <summary>Lets modules look up a game without referencing the Games module.</summary>
 public interface IGameCatalog
 {
-    /// <summary>Returns null when the game doesn't exist. Throws <see cref="GameCatalogUnavailableException"/> when the provider is down or misconfigured.</summary>
-    Task<GameSnapshot?> GetSnapshotAsync(int id, CancellationToken cancellationToken = default);
+    /// <summary>Returns null if the game does not exist.</summary>
+    /// <exception cref="GameCatalogUnavailableException">The game data provider is misconfigured or could not be reached.</exception>
+    Task<GameSnapshot?> FindAsync(int id, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Raised when the game data provider is misconfigured or unreachable.</summary>

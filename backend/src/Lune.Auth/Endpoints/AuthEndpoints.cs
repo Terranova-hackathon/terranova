@@ -5,11 +5,11 @@ using Lune.Auth.Contracts;
 using Lune.Auth.Options;
 using Lune.Auth.Data;
 using Lune.Auth.Services;
+using Lune.Shared.Identity;
 using Lune.Shared.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Lune.Auth.Endpoints;
 
@@ -103,13 +103,12 @@ public static class AuthEndpoints
 
 
     /// <summary>
-    /// principal representing the current user. FindFIrstValue is used to get the user ID from the JWT token.
-    /// JwtRegisteredClaimNames.Sub is used to get the user ID from the JWT token.
     /// Gets the current authenticated user based on the JWT token in the request.
+    /// The user id is read with the shared <see cref="UserClaims.GetUserId"/> helper (the JWT "sub" claim).
     /// </summary>
     private static async Task<IResult> GetCurrentUser(ClaimsPrincipal principal, UserManager<AppUser> users)
     {
-        var id = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        var id = principal.GetUserId();
 
         if( id == null)
             return Results.Unauthorized();
