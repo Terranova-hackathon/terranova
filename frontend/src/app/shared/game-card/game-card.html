@@ -1,0 +1,29 @@
+<article class="game-card">
+	<img
+		class="game-card__image"
+		[src]="game().backgroundImage || 'images/placeholder.jpg'"
+		[alt]="game().name"
+	/>
+
+	<div class="game-card__content">
+		<h3>{{ game().name }}</h3>
+
+		<p class="game-card__release">
+			Released: {{ game().released || 'unknown' }}
+		</p>
+
+		<p class="game-card__rating">
+			* {{ game().rating }}
+		</p>
+
+		<p class="game-card__metacritic">
+			Metactritic: {{ game().metacritic || 'unknown' }}
+		</p>
+
+		<div class="game-card__platforms">
+			@for (platform of game().platforms; track platform) {
+				<span>{{ platform }}</span>
+			}
+		</div>
+	</div>
+</article>
