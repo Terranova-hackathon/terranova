@@ -1,4 +1,5 @@
 using Lune.Games.Contracts;
+using Lune.Shared.Games;
 using Lune.Shared.Paging;
 
 namespace Lune.Games.Services;
@@ -16,4 +17,4 @@ public interface IGamesService
 
 /// <summary>Raised when the upstream game API is misconfigured or unreachable.</summary>
 public sealed class GamesUnavailableException(string message, Exception? inner = null)
-    : Exception(message, inner);
+    : GameCatalogUnavailableException(message, inner);

@@ -29,13 +29,13 @@ Press `Ctrl+C` to stop, or run `docker compose down`.
 
 ### Real backend
 
-The SQL Server and ASP.NET Core services sit behind the `real` profile. Set `SA_PASSWORD`, `JWT_KEY` and `RAWG_API_KEY` in `.env`, then:
+The SQL Server and ASP.NET Core services sit behind the `real` profile. Set `SA_PASSWORD`, `JWT_SECRET` and `RAWG_API_KEY` in `.env`, then:
 
 ```bash
 API_URL=http://backend:3001 docker compose --profile real up --build
 ```
 
-The backend is published on port 3001 (the mock keeps 4001). The `backend/` folder is currently empty; its container idles until an ASP.NET Core project is added.
+The backend is published on port 3001 (the mock keeps 4001). It is a modular ASP.NET Core API in [backend/src/](./backend/src) (`Lune.Api`, `Auth`, `Games`, `Favorites`, `Shared`). Each module owns its own database schema and applies its EF migrations at startup. All routes live under `/api` (for example `/api/favorites`), and auth is an HttpOnly `Lune_auth` cookie, so log in first (`POST /api/auth/login`) before calling the favorites endpoints. See [docs/API.md](./docs/API.md) and [docs/DATABASE.md](./docs/DATABASE.md).
 
 ## Without Docker
 

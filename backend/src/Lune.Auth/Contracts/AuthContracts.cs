@@ -21,4 +21,3 @@ public sealed record UserResponse(
     [property: Required] string Id,
     [property: Required] string Email,
     [property: Required] string? DisplayName);
-
