@@ -10,19 +10,36 @@
 				routerLink="/"
 				routerLinkActive="active"
 				[routerLinkActiveOptions]="{exact: true}">
-			Home
+				Home
 			</a>
 
 			<a routerLink="/games" routerLinkActive="active">
 				Games
 			</a>
 
-			<a routerLink="/favorites" routerLinkActive="active">
-				Favorites
-			</a>
-			<a routerLink="/login" routerLinkActive="active">
-				Login
-			</a>
+			@if (auth.isLoggedin()) {
+				<a routerLink="/favorites" routerLinkActive="active">
+					Favorites
+				</a>
+
+				<span class="navbar-user">
+					{{ auth.user()?.displayName || auth.user()?.email }}
+				</span>
+
+				<button type="button" class="btn btn-outline-light btn-sm"
+					[disabled]="loggingOut()" (click)="logout()"
+				>
+					Log out
+				</button>
+			} @else {
+				<a routerLink="/login" routerLinkActive="active">
+					Log in
+				</a>
+
+				<a routerLink="/register" routerLinkActive="active">
+					Sign up
+				</a>
+			}
 		</div>
 	</nav>
 </header>
