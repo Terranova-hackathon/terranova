@@ -16,7 +16,7 @@ export class FavoriteService {
 
 	loadFavoriteIds(): Observable<number[]> {
 		return this.http.get<number[]>(
-			`S{this.apiUrl}/ids`
+			`${this.apiUrl}/ids`
 		).pipe(
 			tap(ids => this.favoriteIds.set(new Set(ids)))
 		);

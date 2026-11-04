@@ -24,10 +24,56 @@
 		padding: 16px;
 	}
 
-	h3 {
-		font-size: 1.1rem;
-		font-weight: 600;
+	&__heading {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 12px;
 		margin-bottom: 12px;
+
+		h3 {
+			flex: 1;
+			min-width: 0;
+			margin: 0;
+			font-size: 1.1rem;
+			font-weight: 600;
+		}
+	}
+
+	&__favorite {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		flex-shrink: 0;
+		padding: 4px;
+
+		border: none;
+		background: transparent;
+		color: #9ca3af;
+		font-size: 1.4rem;
+		line-height: 1;
+		cursor: pointer;
+
+		transition: color 0.2s ease;
+
+		&:hover:not(:disabled) {
+			color: #f472b6;
+		}
+	
+		&.is-favorite {
+			color: #f43f5e;
+		}
+	
+		&:disabled {
+			opacity: 0.5;
+			cursor: wait;
+		}
+		&:focus-visible {
+			outline: 2px solid #a5b4fc;
+			outline-offset: 3px;
+			border-radius: 4px;
+		}
 	}
 
 	&__release {
@@ -42,8 +88,8 @@
 
 	&__metacritic {
 
-		color: #facc15;
-		font-weight: 400;
+		color: #aab2c5;
+		font-size: 0.85rem;
 	}
 
 	&__platforms {

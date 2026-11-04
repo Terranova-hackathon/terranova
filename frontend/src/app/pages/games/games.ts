@@ -4,6 +4,7 @@ import { GameModel } from '../../core/models/game.model';
 import { GameService } from '../../core/services/game-service';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FavoriteService } from '../../core/services/favorite-service';
 
 @Component({
   imports: [GameCard, RouterLink],
@@ -12,8 +13,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './games.html',
 })
 export class Games implements OnInit {
+
   private readonly gameService = inject(GameService);
+  private readonly favoriteService = inject(FavoriteService);
+
   readonly pageSize = 12;
+  readonly favoriteIds = this.favoriteService.favoriteIds;
 
   games = signal<GameModel[]>([]);
   currentPage = signal(1);
@@ -21,9 +26,12 @@ export class Games implements OnInit {
   totalGames = signal(0);
   loading = signal(false);
   error = signal('');
+  favoriteBusyIds = signal<Set<number>>(new Set());
+  favoriteError = signal('');
 
   ngOnInit(): void {
     this.loadGames();
+    this.loadFavorites();
   }
 
   loadGames(): void {
@@ -50,6 +58,7 @@ export class Games implements OnInit {
       }
     });
   }
+
   changePage(page: number): void {
     if (this.loading()) return;
     if (page < 1 || page > this.totalPages()) return;
@@ -57,5 +66,48 @@ export class Games implements OnInit {
 
     this.currentPage.set(page);
     this.loadGames();
+  }
+
+  loadFavorites(): void {
+    this.favoriteService.loadFavoriteIds().subscribe({
+      error: () => {
+        this.favoriteError.set(
+          'Could not load your favorite games.'
+        );
+      }
+    });
+  }
+
+  toggleFavorite(id: number): void {
+    if (this.favoriteBusyIds().has(id)) return;
+
+    this.favoriteError.set('');
+    this.favoriteBusyIds.update(ids => new Set([...ids, id]));
+
+    const request = this.favoriteIds().has(id) ? this.favoriteService.removeFavorite(id)
+      : this.favoriteService.addFavorite(id);
+    request.subscribe({
+      next: () => {
+        this.clearFavoriteBusy(id);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.clearFavoriteBusy(id);
+
+        if (err.status === 409) {
+          this.favoriteError.set('You have reached Favorites limit.');
+        } else if (err.status === 401) {
+          this.favoriteError.set('Please log in to browse your favorite games.');
+        } else {
+          this.favoriteError.set('Could not update favorites. Try again.');
+        }
+      }
+    });
+  }
+  private clearFavoriteBusy(id: number): void {
+    this.favoriteBusyIds.update(ids => {
+      const updated = new Set(ids);
+      updated.delete(id);
+      return updated;
+    });
   }
 }
