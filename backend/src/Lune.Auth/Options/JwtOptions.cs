@@ -14,5 +14,5 @@ public sealed class JwtOptions
     [Required]
     public int ExpirationMinutes { get; set; } = 60;
     //TODO: need to choose name for cookie, example: "game_explorer_auth" or similar    
-    public string CookieName { get; set; } = "game_explorer_auth";
+    public string CookieName { get; set; } = "Lune_auth";
 }

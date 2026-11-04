@@ -8,7 +8,7 @@ One SQL Server database (`Lune`). Each backend module owns its own **schema** an
 | Favorites | `favorites` | `Favorites` |
 | Games | none | Nothing stored. Data comes from the RAWG API, cached in memory. |
 
-Game data is not in the database. That is why `Favorites` keeps a snapshot of the game's name and image.
+Game data is not in the database. That is why `Favorites` keeps a snapshot of the game summary (name, image, rating, genres, etc.).
 
 ## ER diagram
 
@@ -33,7 +33,13 @@ erDiagram
         int RawgId PK
         nvarchar300 Name
         nvarchar500 ImageUrl
+        nvarchar10 Released
+        float Rating
+        int Metacritic
+        nvarchar_max Genres "JSON array"
+        nvarchar_max Platforms "JSON array"
         datetime2 CreatedAtUtc
+        datetime2 SnapshotUpdatedAtUtc
     }
 ```
 
@@ -93,8 +99,15 @@ Indexes: `PK_AspNetUsers (Id)`, `UserNameIndex (NormalizedUserName) UNIQUE WHERE
 | `RawgId` | int | No | **PK part 2.** RAWG game id. |
 | `Name` | nvarchar(300) | No | Game name snapshot (truncated to 300) |
 | `ImageUrl` | nvarchar(500) | Yes | Cover image snapshot. `null` if the URL is over 500 chars. |
+| `Released` | nvarchar(10) | Yes | Release date snapshot (`yyyy-MM-dd`) |
+| `Rating` | float | No | RAWG rating snapshot |
+| `Metacritic` | int | Yes | Metacritic score snapshot |
+| `Genres` | nvarchar(max) | No | JSON array of genre names, e.g. `["RPG","Action"]` |
+| `Platforms` | nvarchar(max) | No | JSON array of platform names |
 | `CreatedAtUtc` | datetime2 | No | When it was favorited. The list is sorted by this, newest first. |
+| `SnapshotUpdatedAtUtc` | datetime2 | No | When the snapshot was last copied from RAWG. Lets a later job refresh stale rows. |
 
+- The snapshot columns are copied by the backend from RAWG when a game is favorited, never taken from the client.
 - PK `(UserId, RawgId)`: a user can favorite a game only once. This is also how duplicate or racing inserts are handled.
 - Index `IX_Favorites_RawgId (RawgId)`, non-unique.
 - Rule enforced in code, not in the DB: at most **1000** rows per user.
@@ -134,7 +147,13 @@ CREATE TABLE favorites.Favorites (
     RawgId       int           NOT NULL,
     Name         nvarchar(300) NOT NULL,
     ImageUrl     nvarchar(500) NULL,
+    Released     nvarchar(10)  NULL,
+    Rating       float         NOT NULL,
+    Metacritic   int           NULL,
+    Genres       nvarchar(max) NOT NULL,
+    Platforms    nvarchar(max) NOT NULL,
     CreatedAtUtc datetime2     NOT NULL,
+    SnapshotUpdatedAtUtc datetime2 NOT NULL,
     CONSTRAINT PK_Favorites PRIMARY KEY (UserId, RawgId)
 );
 CREATE INDEX IX_Favorites_RawgId ON favorites.Favorites (RawgId);
@@ -162,6 +181,11 @@ interface FavoriteRow {
   rawgId: number;        // key part 2, unique together with userId
   name: string;
   imageUrl: string | null;
+  released: string | null;
+  rating: number;
+  metacritic: number | null;
+  genres: string[];
+  platforms: string[];
   createdAtUtc: string;
 }
 ```
@@ -170,4 +194,4 @@ Notes:
 - Enforce the unique email, case-insensitively. `NormalizedEmail` is just the uppercased email.
 - Enforce the unique `(userId, rawgId)` pair.
 - Games are a static JSON file. They are **not** in the database.
-- The API returns `FavoriteRow` as `{ id: rawgId, name, imageUrl, addedAtUtc: createdAtUtc }`. The `userId` is never returned.
+- The API returns `FavoriteRow` as `{ id: rawgId, name, imageUrl, released, rating, metacritic, genres, platforms, addedAtUtc: createdAtUtc }`. The `userId` is never returned.

@@ -1,5 +1,6 @@
 
 
+using Lune.Shared.Games;
 using Lune.Shared.Modules;
 using Lune.Games.EndPoints;
 using Lune.Games.Services;
@@ -23,6 +24,8 @@ public sealed class GamesModule : IModule
             var opts = sp.GetRequiredService<IOptions<RawgServiceOptions>>().Value;
             client.BaseAddress = new Uri(opts.BaseUrl);
         });
+
+        services.AddScoped<IGameCatalog, GameCatalogAdapter>();
     }
 
     public void MapEndpoints(IEndpointRouteBuilder endpoints) => GameEndPoint.Map(endpoints);
