@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FavoriteService } from '../../core/services/favorite-service';
+import { Favorite } from '../../core/models/favorite.model';
+import { NgClass } from '../../../../node_modules/@angular/common/types/_common_module-chunk';
 
 @Component({
   imports: [RouterLink],
@@ -7,6 +10,58 @@ import { RouterLink } from '@angular/router';
   styleUrl: './favorites.scss',
   templateUrl: './favorites.html',
 })
-export class Favorites {
-  
+export class Favorites implements OnInit {
+  private readonly favoriteService = inject(FavoriteService);
+
+  favorites = signal<Favorite[]>([]);
+  loading = signal(false);
+  error = signal('');
+  removingIds = signal<Set<number>>(new Set());
+
+  ngOnInit(): void {
+    this.loadFavorites();
+  }
+
+  loadFavorites(): void {
+    this.loading.set(true);
+    this.error.set('');
+
+    this.favoriteService.getFavorites().subscribe({
+      next: (favorites) => {
+        this.favorites.set(favorites);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.error.set('Unable to load favorites.');
+      }
+    });
+  }
+
+  removeFavorite(id: number): void {
+    if (this.removingIds().has(id)) return;
+
+    this.removingIds.update(ids => new Set([...ids, id]));
+    this.error.set('');
+
+    this.favoriteService.removeFavorite(id).subscribe({
+      next: () => {
+        this.favorites.update(favorites => 
+          favorites.filter(f => f.id !== id)
+        );
+        this.clearRemoving(id);
+      },
+      error: () => {
+        this.clearRemoving(id);
+        this.error.set('Unable to remove the game.');
+      }
+    });
+  }
+  private clearRemoving(id: number): void {
+    this.removingIds.update(ids => {
+      const updated = new Set(ids);
+      updated.delete(id);
+      return updated;
+    });
+  }
 }

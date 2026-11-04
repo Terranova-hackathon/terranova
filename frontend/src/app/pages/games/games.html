@@ -33,7 +33,7 @@
 				<app-game-card 
 					[game]="game"
 					[isFavorite]="favoriteIds().has(game.id)"
-					[favoriteBusy]="favoriteBusyIds().has(game.id)"
+					[favoriteBusy]="!favoritesReady() || favoriteBusyIds().has(game.id)"
 					(favoriteToggled)="toggleFavorite($event)"
 				/>
 			</div>

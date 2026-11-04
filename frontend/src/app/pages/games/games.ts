@@ -26,6 +26,7 @@ export class Games implements OnInit {
   totalGames = signal(0);
   loading = signal(false);
   error = signal('');
+  favoritesReady = signal(false);
   favoriteBusyIds = signal<Set<number>>(new Set());
   favoriteError = signal('');
 
@@ -69,7 +70,13 @@ export class Games implements OnInit {
   }
 
   loadFavorites(): void {
+    this.favoritesReady.set(false);
+    this.favoriteError.set('');
+
     this.favoriteService.loadFavoriteIds().subscribe({
+      next: () => {
+        this.favoritesReady.set(true);
+      },
       error: () => {
         this.favoriteError.set(
           'Could not load your favorite games.'
@@ -79,6 +86,7 @@ export class Games implements OnInit {
   }
 
   toggleFavorite(id: number): void {
+    if (!this.favoritesReady()) return;
     if (this.favoriteBusyIds().has(id)) return;
 
     this.favoriteError.set('');
