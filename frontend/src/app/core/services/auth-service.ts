@@ -10,7 +10,7 @@ export class AuthService {
 
 	private readonly currentUser = signal<User | null>(null);
 	readonly user = this.currentUser.asReadonly();
-	readonly isLoggedin = computed(() => this.user() !== null);
+	readonly isLoggedIn = computed(() => this.user() !== null);
 
 	login(credentials: LoginRequest): Observable<User> {
 		return this.http.post<User>(
