@@ -37,29 +37,16 @@
 		}@else {
 			<p>{{ favorites().length }} saved game</p>
 
+<!-- After mapping fav to games i re-use the GameCard -->
 			<div class="row g-4">
-				@for (favorite of favorites(); track favorite.id) {
+				@for (game of games(); track game.id) {
 					<div class="col-12 col-md-6 col-lg-4 col-xl-3">
-						<article class="favorite-card">
-							<img
-								[src]="favorite.imageUrl || 'images/placeholder.jpg'"
-								[alt]="favorite.name"
-							/>
-
-							<div class="favorite-card__content">
-								<h2>{{ favorite.name }}</h2>
-
-								<button
-									type="button"
-									class="btn btn-outline-danger"
-									[disabled]="removingIds().has(favorite.id)"
-									(click)="removeFavorite(favorite.id)"
-								>
-									{{ removingIds().has(favorite.id)
-										? 'Removing...' : 'Remove favorite' }}
-								</button>
-							</div>
-						</article>
+						<app-game-card
+							[game]="game"
+							[isFavorite]="true"
+							[favoriteBusy]="removingIds().has(game.id)"
+							(favoriteToggled)="removeFavorite($event)"
+						/>
 					</div>
 				}
 			</div>

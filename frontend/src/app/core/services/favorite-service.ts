@@ -1,7 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { Favorite } from '../models/favorite.model';
+import { FavoriteModel } from '../models/favorite.model';
 
 @Service()
 export class FavoriteService {
@@ -10,8 +10,8 @@ export class FavoriteService {
 
 	readonly favoriteIds = signal<Set<number>>(new Set());
 
-	getFavorites(): Observable<Favorite[]> {
-		return this.http.get<Favorite[]>(this.apiUrl);
+	getFavorites(): Observable<FavoriteModel[]> {
+		return this.http.get<FavoriteModel[]>(this.apiUrl);
 	}
 
 	loadFavoriteIds(): Observable<number[]> {
