@@ -23,13 +23,13 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(FavoriteLimits.MaxPerUser)
-            .Select(f => new { f.RawgId, f.Name, f.ImageUrl, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms, f.CreatedAtUtc })
+            .Select(f => new { f.RawgId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms, f.CreatedAtUtc })
             .ToListAsync(cancellationToken);
 
         // SQL Server returns Kind=Unspecified; mark it UTC so the JSON gets a "Z" suffix.
         return rows
             .Select(f => new FavoriteResponse(
-                f.RawgId, f.Name, f.ImageUrl, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
+                f.RawgId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
                 DateTime.SpecifyKind(f.CreatedAtUtc, DateTimeKind.Utc)))
             .ToList();
     }
@@ -68,7 +68,7 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
             UserId = userId,
             RawgId = game.Id,
             Name = Truncate(game.Name, FavoriteLimits.NameLength),
-            ImageUrl = game.ImageUrl is { Length: <= FavoriteLimits.ImageUrlLength } ? game.ImageUrl : null,
+            BackgroundImage = game.BackgroundImage is { Length: <= FavoriteLimits.BackgroundImageLength } ? game.BackgroundImage : null,
             Released = game.Released is { } released ? Truncate(released, FavoriteLimits.ReleasedLength) : null,
             Rating = game.Rating,
             Metacritic = game.Metacritic,
