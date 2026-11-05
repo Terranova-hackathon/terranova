@@ -20,7 +20,7 @@ public class FavoritesDbContext(DbContextOptions<FavoritesDbContext> options) : 
             favorite.HasKey(f => new { f.UserId, f.IgdbId });
             favorite.Property(f => f.UserId).HasMaxLength(450);
             favorite.Property(f => f.Name).HasMaxLength(FavoriteLimits.NameLength).IsRequired();
-            favorite.Property(f => f.ImageUrl).HasMaxLength(FavoriteLimits.ImageUrlLength);
+            favorite.Property(f => f.BackgroundImage).HasMaxLength(FavoriteLimits.BackgroundImageLength);
             favorite.Property(f => f.Released).HasMaxLength(FavoriteLimits.ReleasedLength);
 
             // Genres and Platforms are stored as JSON arrays in an nvarchar(max) column.

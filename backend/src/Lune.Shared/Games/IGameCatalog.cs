@@ -5,7 +5,7 @@ public sealed record GameSnapshot(
     int Id,
     string Name,
     string? Released,
-    string? ImageUrl,
+    string? BackgroundImage,
     double Rating,
     int? Metacritic,
     IReadOnlyList<string> Genres,

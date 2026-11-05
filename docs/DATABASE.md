@@ -32,7 +32,7 @@ erDiagram
         nvarchar450 UserId PK "logical ref to AspNetUsers.Id, no FK"
         int IgdbId PK
         nvarchar300 Name
-        nvarchar500 ImageUrl
+        nvarchar500 BackgroundImage
         nvarchar10 Released
         float Rating
         int Metacritic
@@ -98,7 +98,7 @@ Indexes: `PK_AspNetUsers (Id)`, `UserNameIndex (NormalizedUserName) UNIQUE WHERE
 | `UserId` | nvarchar(450) | No | **PK part 1.** The `auth.AspNetUsers.Id` of the owner. No FK. |
 | `IgdbId` | int | No | **PK part 2.** IGDB game id. |
 | `Name` | nvarchar(300) | No | Game name snapshot (truncated to 300) |
-| `ImageUrl` | nvarchar(500) | Yes | Cover image snapshot. `null` if the URL is over 500 chars. |
+| `BackgroundImage` | nvarchar(500) | Yes | Cover image snapshot. `null` if the URL is over 500 chars. |
 | `Released` | nvarchar(10) | Yes | Release date snapshot (`yyyy-MM-dd`) |
 | `Rating` | float | No | RAWG rating snapshot |
 | `Metacritic` | int | Yes | Metacritic score snapshot |
@@ -146,7 +146,7 @@ CREATE TABLE favorites.Favorites (
     UserId       nvarchar(450) NOT NULL,
     IgdbId       int           NOT NULL,
     Name         nvarchar(300) NOT NULL,
-    ImageUrl     nvarchar(500) NULL,
+    BackgroundImage     nvarchar(500) NULL,
     Released     nvarchar(10)  NULL,
     Rating       float         NOT NULL,
     Metacritic   int           NULL,
@@ -180,7 +180,7 @@ interface FavoriteRow {
   userId: string;        // key part 1
   igdbId: number;        // key part 2, unique together with userId
   name: string;
-  imageUrl: string | null;
+  BackgroundImage: string | null;
   released: string | null;
   rating: number;
   metacritic: number | null;
@@ -194,4 +194,4 @@ Notes:
 - Enforce the unique email, case-insensitively. `NormalizedEmail` is just the uppercased email.
 - Enforce the unique `(userId, igdbId)` pair.
 - Games are a static JSON file. They are **not** in the database.
-- The API returns `FavoriteRow` as `{ id: igdbId, name, imageUrl, released, rating, metacritic, genres, platforms, addedAtUtc: createdAtUtc }`. The `userId` is never returned.
+- The API returns `FavoriteRow` as `{ id: IgdbId, name, BackgroundImage, released, rating, metacritic, genres, platforms, addedAtUtc: createdAtUtc }`. The `userId` is never returned.

@@ -4,7 +4,7 @@ namespace Lune.Favorites.Contracts;
 public sealed record FavoriteResponse(
     int Id,
     string Name,
-    string? ImageUrl,
+    string? BackgroundImage,
     string? Released,
     double Rating,
     int? Metacritic,

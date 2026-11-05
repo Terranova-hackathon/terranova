@@ -13,7 +13,7 @@ public class Favorite
 
     public string Name { get; set; } = string.Empty;
 
-    public string? ImageUrl { get; set; }
+    public string? BackgroundImage { get; set; }
 
     public string? Released { get; set; }
 
