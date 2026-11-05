@@ -55,6 +55,8 @@ services:
             - ConnectionStrings__Default=Server=sqlserver,1433;Database=Lune;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
             - Jwt__Secret=${JWT_SECRET}
             - Rawg__ApiKey=${RAWG_API_KEY}
+            - Igdb__ClientId=${IGDB_CLIENT_ID}
+            - Igdb__ApiSecret=${IGDB_API_SECRET}
         volumes:
             - ./backend:/app
             - /app/bin

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Lune.Games.Rawg;
+namespace Lune.Games.Models;
 
 /// <summary>
 /// Represents the response returned by the RAWG API.

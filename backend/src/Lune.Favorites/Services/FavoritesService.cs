@@ -23,13 +23,13 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(FavoriteLimits.MaxPerUser)
-            .Select(f => new { f.RawgId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms, f.CreatedAtUtc })
+            .Select(f => new { f.IgdbId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms, f.CreatedAtUtc })
             .ToListAsync(cancellationToken);
 
         // SQL Server returns Kind=Unspecified; mark it UTC so the JSON gets a "Z" suffix.
         return rows
             .Select(f => new FavoriteResponse(
-                f.RawgId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
+                f.IgdbId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
                 DateTime.SpecifyKind(f.CreatedAtUtc, DateTimeKind.Utc)))
             .ToList();
     }
@@ -39,13 +39,13 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
         await db.Favorites
             .AsNoTracking()
             .Where(f => f.UserId == userId)
-            .Select(f => f.RawgId)
+            .Select(f => f.IgdbId)
             .ToListAsync(cancellationToken);
 
     /// <summary>Idempotent: favoriting something that is already a favorite succeeds without changes.</summary>
-    public async Task<AddFavoriteResult> AddAsync(string userId, int rawgId, CancellationToken cancellationToken = default)
+    public async Task<AddFavoriteResult> AddAsync(string userId, int igdbId, CancellationToken cancellationToken = default)
     {
-        if (await db.Favorites.AnyAsync(f => f.UserId == userId && f.RawgId == rawgId, cancellationToken))
+        if (await db.Favorites.AnyAsync(f => f.UserId == userId && f.IgdbId == igdbId, cancellationToken))
         {
             return AddFavoriteResult.AlreadyFavorite;
         }
@@ -56,7 +56,7 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
         }
 
         // The snapshot comes from our own catalog, never from the request, so clients cannot store arbitrary values.
-        var game = await catalog.FindAsync(rawgId, cancellationToken);
+        var game = await catalog.FindAsync(igdbId, cancellationToken);
         if (game is null)
         {
             return AddFavoriteResult.GameNotFound;
@@ -66,7 +66,8 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
         db.Favorites.Add(new Favorite
         {
             UserId = userId,
-            RawgId = game.Id,
+            // This is set to Igdb for now but if we wanted to add both rawg we would have to build a separet system to handle both.
+            IgdbId = game.Id,
             Name = Truncate(game.Name, FavoriteLimits.NameLength),
             BackgroundImage = game.BackgroundImage is { Length: <= FavoriteLimits.BackgroundImageLength } ? game.BackgroundImage : null,
             Released = game.Released is { } released ? Truncate(released, FavoriteLimits.ReleasedLength) : null,
@@ -86,7 +87,7 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
         {
             // Two requests raced and the other one won; the primary key kept it to a single row.
             db.ChangeTracker.Clear();
-            if (await db.Favorites.AnyAsync(f => f.UserId == userId && f.RawgId == rawgId, cancellationToken))
+            if (await db.Favorites.AnyAsync(f => f.UserId == userId && f.IgdbId == igdbId, cancellationToken))
             {
                 return AddFavoriteResult.AlreadyFavorite;
             }
@@ -98,9 +99,9 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
     }
 
     /// <summary>Idempotent: removing something that is not a favorite is not an error.</summary>
-    public Task<int> RemoveAsync(string userId, int rawgId, CancellationToken cancellationToken = default) =>
+    public Task<int> RemoveAsync(string userId, int igdbId, CancellationToken cancellationToken = default) =>
         db.Favorites
-            .Where(f => f.UserId == userId && f.RawgId == rawgId)
+            .Where(f => f.UserId == userId && f.IgdbId == igdbId)
             .ExecuteDeleteAsync(cancellationToken);
 
     private static string Truncate(string value, int max) => value.Length <= max ? value : value[..max];

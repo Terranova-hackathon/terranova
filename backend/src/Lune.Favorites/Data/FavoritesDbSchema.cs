@@ -6,7 +6,10 @@ public class Favorite
     /// <summary>The Lune user id. A plain column, not a foreign key, so this module owns its data alone.</summary>
     public string UserId { get; set; } = string.Empty;
 
-    public int RawgId { get; set; }
+    // this RawgId is not being used until we decide we want it back in the table in SQL server is deleted but we can add it back later
+    // public int RawgId { get; set; }
+
+    public int IgdbId {get; set; }
 
     public string Name { get; set; } = string.Empty;
 
