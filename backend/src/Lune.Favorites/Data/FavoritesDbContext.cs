@@ -17,7 +17,7 @@ public class FavoritesDbContext(DbContextOptions<FavoritesDbContext> options) : 
 
         builder.Entity<Favorite>(favorite =>
         {
-            favorite.HasKey(f => new { f.UserId, f.RawgId });
+            favorite.HasKey(f => new { f.UserId, f.IgdbId });
             favorite.Property(f => f.UserId).HasMaxLength(450);
             favorite.Property(f => f.Name).HasMaxLength(FavoriteLimits.NameLength).IsRequired();
             favorite.Property(f => f.ImageUrl).HasMaxLength(FavoriteLimits.ImageUrlLength);
@@ -28,7 +28,7 @@ public class FavoritesDbContext(DbContextOptions<FavoritesDbContext> options) : 
             favorite.PrimitiveCollection(f => f.Platforms);
 
             // Answers "how many people favorited this game?" for future social features.
-            favorite.HasIndex(f => f.RawgId);
+            favorite.HasIndex(f => f.IgdbId);
         });
     }
 }

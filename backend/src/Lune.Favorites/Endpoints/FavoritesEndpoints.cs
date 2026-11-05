@@ -28,26 +28,26 @@ internal static class FavoritesEndpoints
                 ? Results.Ok(await favorites.IdsAsync(userId, ct))
                 : Results.Unauthorized());
 
-        group.MapPut("/{rawgId:int}", Add);
-        group.MapDelete("/{rawgId:int}", Remove);
+        group.MapPut("/{igdbId:int}", Add);
+        group.MapDelete("/{igdbId:int}", Remove);
     }
 
     private static async Task<IResult> Add(
-        int rawgId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
+        int igdbId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
     {
         if (http.User.GetUserId() is not { } userId)
         {
             return Results.Unauthorized();
         }
 
-        if (rawgId <= 0)
+        if (igdbId <= 0)
         {
             return Results.NotFound();
         }
 
         try
         {
-            return await favorites.AddAsync(userId, rawgId, cancellationToken) switch
+            return await favorites.AddAsync(userId, igdbId, cancellationToken) switch
             {
                 AddFavoriteResult.GameNotFound => Results.NotFound(),
                 AddFavoriteResult.LimitReached => Results.Problem(
@@ -67,14 +67,14 @@ internal static class FavoritesEndpoints
     }
 
     private static async Task<IResult> Remove(
-        int rawgId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
+        int igdbId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
     {
         if (http.User.GetUserId() is not { } userId)
         {
             return Results.Unauthorized();
         }
 
-        await favorites.RemoveAsync(userId, rawgId, cancellationToken);
+        await favorites.RemoveAsync(userId, igdbId, cancellationToken);
         return Results.NoContent();
     }
 }

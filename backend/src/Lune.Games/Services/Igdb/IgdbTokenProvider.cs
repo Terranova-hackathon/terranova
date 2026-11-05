@@ -6,11 +6,9 @@ using Microsoft.Extensions.Options;
 namespace Lune.Games.Services;
 /// <summary>
 /// Gets and caches the Twitch app access token that IGDB requires on every request.
-///TODO: read through code and make usre its caching correctly. 
 /// </summary>
 internal sealed class IgdbTokenProvider(IHttpClientFactory httpFactory, IOptions<IgdbServiceOptions> options)
 {
-    // Refresh a little before the real expiry so a token never expires mid-request.
     private static readonly TimeSpan RefreshMargin = TimeSpan.FromMinutes(5);
 
     private readonly SemaphoreSlim _lock = new(1, 1);

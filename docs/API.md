@@ -88,8 +88,8 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | GET | `/api/games/{id}` | Yes | One game's details |
 | GET | `/api/favorites` | Yes | Current user's favorites |
 | GET | `/api/favorites/ids` | Yes | Favorited game ids only |
-| PUT | `/api/favorites/{rawgId}` | Yes | Add a favorite |
-| DELETE | `/api/favorites/{rawgId}` | Yes | Remove a favorite |
+| PUT | `/api/favorites/{igdbId}` | Yes | Add a favorite |
+| DELETE | `/api/favorites/{igdbId}` | Yes | Remove a favorite |
 | GET | `/health` | No | Text `Healthy` |
 
 Any other `/api/*` path returns an empty `404`. Non-`/api` paths without a file extension return Angular's `index.html`.

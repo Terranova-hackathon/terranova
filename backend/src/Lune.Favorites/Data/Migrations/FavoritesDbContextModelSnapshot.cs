@@ -29,7 +29,7 @@ namespace Lune.Favorites.Data.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RawgId")
+                    b.Property<int>("IgdbId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAtUtc")
@@ -65,9 +65,9 @@ namespace Lune.Favorites.Data.Migrations
                     b.Property<DateTime>("SnapshotUpdatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "RawgId");
+                    b.HasKey("UserId", "IgdbId");
 
-                    b.HasIndex("RawgId");
+                    b.HasIndex("IgdbId");
 
                     b.ToTable("Favorites", "favorites");
                 });
