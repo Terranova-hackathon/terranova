@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { GameModel } from '../../core/models/game.model';
 
 
@@ -11,4 +11,10 @@ import { GameModel } from '../../core/models/game.model';
 })
 export class GameCard {
   game = input.required<GameModel>();
+  isFavorite = input(false);
+  favoriteBusy = input(false);
+  favoriteToggled = output<number>();
+  toggleFavorite(): void {
+    this.favoriteToggled.emit(this.game().id);
+  }
 }

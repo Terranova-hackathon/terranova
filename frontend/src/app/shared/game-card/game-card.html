@@ -6,7 +6,27 @@
 	/>
 
 	<div class="game-card__content">
-		<h3>{{ game().name }}</h3>
+		<div class="game-card__heading">
+			<h3>{{ game().name }}</h3>
+
+			<button
+				type="button"
+				class="game-card__favorite"
+				[class.is-favorite]="isFavorite()"
+				[disabled]="favoriteBusy()"
+				[attr.aria-label]="isFavorite() ? 'Remove' + game().name + ' from favorites'
+					: 'Add ' + game().name + ' to favorites'"
+				[attr.aria-pressed]="isFavorite()"
+				(click)="toggleFavorite()"
+			>
+				<i 
+					class="bi"
+					[class.bi-heart-fill]="isFavorite()"
+					[class.bi-heart]="!isFavorite()"
+					aria-hidden="true"
+				></i>
+			</button>
+		</div>
 
 		<p class="game-card__release">
 			Released: {{ game().released || 'unknown' }}
@@ -17,7 +37,7 @@
 		</p>
 
 		<p class="game-card__metacritic">
-			Metactritic: {{ game().metacritic || 'unknown' }}
+			Metactritic: {{ game().metacritic ?? 'unknown' }}
 		</p>
 
 		<div class="game-card__platforms">

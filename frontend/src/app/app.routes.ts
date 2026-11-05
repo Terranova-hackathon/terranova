@@ -4,6 +4,7 @@ import { Games } from './pages/games/games';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { authGuard } from './core/guards/auth-guard';
+import { Favorites } from './pages/favorites/favorites';
 
 
 export const routes: Routes = [
@@ -14,6 +15,11 @@ export const routes: Routes = [
 	{
 		path: 'games',
 		component: Games,
+		canActivate: [authGuard]
+	},
+	{
+		path: 'favorites',
+		component: Favorites,
 		canActivate: [authGuard]
 	},
 	{

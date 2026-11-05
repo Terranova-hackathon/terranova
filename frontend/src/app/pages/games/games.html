@@ -2,6 +2,11 @@
 	<h1>Explore Thousands of Games</h1>
 	<p>Discover your next adventure.</p>
 
+	@if (favoriteError()) {
+		<div class="alert alert-danger" role="alert">
+			{{ favoriteError() }}
+		</div>
+	}
 	@if (loading()) {
 		<div class="text-center py-5" role="status">
 			<div class="spinner-border text-primary"></div>
@@ -23,13 +28,17 @@
 		<p class="text-center py-5">No games found.</p>
 	} @else {
 	<div class="row g-4 mt-2">
-	@for (game of games(); track game.id) {
-		<div class="col-12 col-md-6 col-lg-4 col-xl-3">
-			<app-game-card [game]="game" />
+		@for (game of games(); track game.id) {
+			<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+				<app-game-card 
+					[game]="game"
+					[isFavorite]="favoriteIds().has(game.id)"
+					[favoriteBusy]="!favoritesReady() || favoriteBusyIds().has(game.id)"
+					(favoriteToggled)="toggleFavorite($event)"
+				/>
+			</div>
+		}
 		</div>
-	}
-	</div>
-
 	<nav class="pagination-controls mt-5"
 			aria-label="Games pagination">
 		<button

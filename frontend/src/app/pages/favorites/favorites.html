@@ -1,0 +1,55 @@
+<main class="container py-5">
+	<div class="mb-4">
+		<h1>My Favorites</h1>
+		<p>Your collection of saved games.</p>
+	</div>
+
+	@if (loading()) {
+		<div class="text-center py-5" role="status">
+			<div class="spinner-border text-primary"></div>
+			<p>Loading favorites...</p>
+		</div>
+	} @else if(error() && favorites().length === 0) {
+		<div class="alert alert-danger" role="alert">
+			{{ error() }}
+			<button
+				class="btn btn-outline-danger ms-2"
+				(click)="loadFavorites()"
+			>
+				Retry
+			</button>
+		</div>
+	} @else {
+		@if (error()) {
+			<div class="alert alert-danger" role="alert">
+				{{ error() }}
+			</div>
+		}
+
+		@if (favorites().length === 0) {
+			<div class="text-center py-5">
+				<h2>No favorites yet</h2>
+				<p>Explore games and find your favorite ones.</p>
+				<a routerLink="/games" class="btn btn-primary">
+					Explore games
+				</a>
+			</div>
+		}@else {
+			<p>{{ favorites().length }} saved game</p>
+
+<!-- After mapping fav to games i re-use the GameCard -->
+			<div class="row g-4">
+				@for (game of games(); track game.id) {
+					<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+						<app-game-card
+							[game]="game"
+							[isFavorite]="true"
+							[favoriteBusy]="removingIds().has(game.id)"
+							(favoriteToggled)="removeFavorite($event)"
+						/>
+					</div>
+				}
+			</div>
+		}
+	}
+</main>
