@@ -1,6 +1,7 @@
 using Lune.Games.Options;
 using Lune.Games.Contracts;
 using Lune.Shared.Paging;
+using Lune.Games.Rawg;
 using System.Net.Http.Json;
 using System.Net;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             url += $"&search={Uri.EscapeDataString(search.Trim())}";
         }
 
-        var response = await http.GetFromJsonAsync<Rawg.RawgResponse>(url, cancellationToken) ?? new Rawg.RawgResponse(); 
+        var response = await GetAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
 
 
         return new PagedResult<GameSummary>(
@@ -58,6 +59,46 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     }
 
     /// <summary>
+    /// Gets the genre and platform options from RAWG, plus the fixed sort orders.
+    /// </summary>
+    public async Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default)
+    {
+        var key = Uri.EscapeDataString(RequireKey());
+        var genres = await GetAsync<RawgOptionList>($"genres?key={key}", cancellationToken);
+        var platforms = await GetAsync<RawgOptionList>($"platforms/lists/parents?key={key}", cancellationToken);
+
+        return new GameFilterOptions(
+            (genres?.Results ?? []).Select(g => new FilterOption(g.Slug, g.Name)).ToList(),
+            (platforms?.Results ?? []).Select(p => new FilterOption(p.Id.ToString(), p.Name)).ToList(),
+            GameOrderings.All);
+    }
+
+    private async Task<T?> GetAsync<T>(string url, CancellationToken cancellationToken) where T : class
+    {
+        try
+        {
+            using var response = await http.GetAsync(url, cancellationToken);
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new GamesUnavailableException("The game data service could not be reached.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Searches RAWG developers or publishers by name and returns at most 10 matches.
+    /// </summary>
+    // public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
+    /// TODO: implement actual search company method here. 
+
+    /// <summary>
     /// Ensures that the RAWG API key is configured and returns it.
     /// </summary>
     private string RequireKey() =>
@@ -68,7 +109,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// <summary>
     /// Extracts the names from a list of RAWG named items.
     /// </summary>
-    private static IReadOnlyList<string> Names(List<Rawg.RawgNamed>? items) =>
+    private static IReadOnlyList<string> Names(List<Rawg.RawgOption>? items) =>
     items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>

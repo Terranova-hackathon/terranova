@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Lune.Games.Contracts;
 using Lune.Games.Services;
 
 namespace Lune.Games.EndPoints;
@@ -20,6 +21,8 @@ public static  partial class GameEndPoint
 
         group.MapGet("/", Search);
         group.MapGet("/{id:int}", GetById);
+        group.MapGet("/filters", GetFilters);
+        // group.MapGet("/companies", SearchCompanies);
 
     }
 
@@ -27,7 +30,14 @@ public static  partial class GameEndPoint
     IGamesService games, string? search, int page = 1, int pageSize = 20, CancellationToken ct = default)
     {
         pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
-        return Results.Ok(await games.SearchAsync(search, page, pageSize, null, ct));
+        try
+        {
+            return Results.Ok(await games.SearchAsync(search, page, pageSize, null, ct));
+        }
+        catch (GamesUnavailableException e)
+        {
+            return Unavailable(e);
+        }
     }
 
     private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken ct)
@@ -45,4 +55,34 @@ public static  partial class GameEndPoint
                 statusCode: StatusCodes.Status503ServiceUnavailable);
         }
     }
+
+    /// <summary>
+    /// Grabs all the filterable options form the rawg.io so the front end can diplsay al the filter options.
+    /// </summary>
+        private static async Task<IResult> GetFilters(IGamesService games, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return Results.Ok(await games.GetFilterOptionsAsync(cancellationToken));
+        }
+        catch (GamesUnavailableException e)
+        {
+            return Unavailable(e);
+        }
+    }
+
+    /// <summary>
+    /// Search end point for the all the developer sand publishers. 
+    /// </summary>
+    // private static async Task<IResult> SearchCompanies(
+    //     IGamesService games, CancellationToken cancellationToken, string? kind = null, string? search = null)
+    // {
+    //     ///TODO: add search company method here. 
+    // }
+
+    private static IResult Unavailable(GamesUnavailableException e) => 
+        Results.Problem(            
+            title: "Game data is currently unavailable.",
+            detail: e.Message,
+            statusCode: StatusCodes.Status503ServiceUnavailable);
 }
