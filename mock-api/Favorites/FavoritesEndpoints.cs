@@ -29,7 +29,7 @@ public static class FavoritesEndpoints
                 UserId = http.CurrentUserId(),
                 RawgId = rawgId,
                 Name = name,
-                ImageUrl = image,
+                BackgroundImage = image,
                 Released = game.Released,
                 Rating = game.Rating,
                 Metacritic = game.Metacritic,
