@@ -4,9 +4,9 @@ using Lune.Games.Options;
 using Microsoft.Extensions.Options;
 
 namespace Lune.Games.Services;
-
 /// <summary>
 /// Gets and caches the Twitch app access token that IGDB requires on every request.
+///TODO: read through code and make usre its caching correctly. 
 /// </summary>
 internal sealed class IgdbTokenProvider(IHttpClientFactory httpFactory, IOptions<IgdbServiceOptions> options)
 {
