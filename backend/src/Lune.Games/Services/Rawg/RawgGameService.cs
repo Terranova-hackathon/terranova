@@ -95,8 +95,22 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// <summary>
     /// Searches RAWG developers or publishers by name and returns at most 10 matches.
     /// </summary>
-    // public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
-    /// TODO: implement actual search company method here. 
+    public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
+        CompanyKind kind, string search, CancellationToken cancellationToken = default)
+    {
+        var endpoint = kind switch
+        {
+            CompanyKind.Developer => "developers",
+            CompanyKind.Publisher => "publishers",
+            _ => throw new ArgumentOutOfRangeException(nameof(kind))
+        };
+        var url = $"{endpoint}?key={Uri.EscapeDataString(RequireKey())}&search={Uri.EscapeDataString(search)}&page_size=10";
+        var response = await GetAsync<RawgOptionList>(url, cancellationToken)
+            ?? throw new GamesUnavailableException("The game data service returned an empty company response.");
+
+        return response.Results.Select(company =>
+            new CompanyOption(company.Slug, company.Name, company.GamesCount)).ToList();
+    }
 
     /// <summary>
     /// Ensures that the RAWG API key is configured and returns it.

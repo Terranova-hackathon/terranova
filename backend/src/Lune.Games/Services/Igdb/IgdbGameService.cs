@@ -7,7 +7,6 @@ using Lune.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
 using Lune.Shared.Paging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
@@ -122,9 +121,28 @@ internal sealed class IgdbGamesService(
             return new GameFilterOptions(genres, platforms, GameOrderings.All);
         })!;
 
-    public Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(CompanyKind kind, string search, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
+        CompanyKind kind, string search, CancellationToken cancellationToken = default)
     {
-        return Results.Ok();;
+        var role = kind switch
+        {
+            CompanyKind.Developer => "developed",
+            CompanyKind.Publisher => "published",
+            _ => throw new ArgumentOutOfRangeException(nameof(kind))
+        };
+        // The IGDB companies endpoint ignores "search", so match the name with a case-insensitive wildcard.
+        // IGDB cannot sort by array size, so fetch extra matches and keep the 10 with the most games.
+        var companies = await PostAsync<List<IgdbCompany>>(
+            "companies", $"fields name,slug,{role}; where name ~ *\"{Escape(search)}\"* & {role} != null; limit 50;",
+            cancellationToken) ?? throw new GamesUnavailableException("The game data service returned an empty company response.");
+
+        return companies
+            .Select(company => new CompanyOption(
+                company.Slug, company.Name,
+                (kind == CompanyKind.Developer ? company.Developed : company.Published)?.Count ?? 0))
+            .OrderByDescending(c => c.GamesCount).ThenBy(c => c.Name)
+            .Take(10)
+            .ToList();
     }
 
 

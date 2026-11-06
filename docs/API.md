@@ -292,6 +292,15 @@ No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
 | `kind` | Yes | `developer` or `publisher` (case-insensitive) |
 | `search` | Yes | 2-60 chars after trimming |
 
+- Example quearies
+```
+### Search developers
+GET {{baseUrl}}/api/games/companies?kind=developer&search=Nintendo
+
+### Search publishers
+GET {{baseUrl}}/api/games/companies?kind=publisher&search=Nintendo
+```
+
 - **200:** up to **10** `CompanyOption`:
 
 ```json
@@ -303,6 +312,9 @@ No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
 
 - **400:** `errors.kind` and/or `errors.search`
 - **503**
+
+Company slugs come from the configured provider. With IGDB, `gamesCount` is the number of games
+associated with the requested role (developed or published).
 
 ### `GET /api/games/featured`
 
@@ -389,4 +401,3 @@ Angular sends `{}`. **Idempotent.**
 ### `DELETE /api/favorites/{rawgId}`
 - **204** always when logged in (idempotent)
 - **401**
-

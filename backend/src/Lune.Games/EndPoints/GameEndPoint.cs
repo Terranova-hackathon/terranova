@@ -22,7 +22,12 @@ public static  partial class GameEndPoint
         group.MapGet("/", Search);
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
-        group.MapGet("/companies", SearchCompanies);
+        group.MapGet("/companies", SearchCompanies)
+            .WithName("SearchCompanies")
+            .WithSummary("Search developers or publishers by name")
+            .Produces<IReadOnlyList<CompanyOption>>()
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
 
     }
 
@@ -71,16 +76,29 @@ public static  partial class GameEndPoint
         }
     }
 
-    // / <summary>
-    // / Search end point for the all the developer and publishers. 
-    // / </summary>
     private static async Task<IResult> SearchCompanies(
         IGamesService games, CancellationToken cancellationToken, string? kind = null, string? search = null)
     {
-        ///TODO: add search company method here. 
+        var errors = new Dictionary<string, string[]>();
+        var companyKind = kind?.Trim().ToLowerInvariant() switch
+        {
+            "developer" => CompanyKind.Developer,
+            "publisher" => CompanyKind.Publisher,
+            _ => (CompanyKind?)null
+        };
+        if (companyKind is null)
+            errors["kind"] = ["kind must be 'developer' or 'publisher'."];
+
+        var term = search?.Trim() ?? string.Empty;
+        if (term.Length is < 2 or > 60)
+            errors["search"] = ["search must be between 2 and 60 characters."];
+
+        if (errors.Count > 0)
+            return Results.ValidationProblem(errors);
+
         try
         {
-            return Results.Ok(await games.SearchCompaniesAsync(cancellationToken));
+            return Results.Ok(await games.SearchCompaniesAsync(companyKind!.Value, term, cancellationToken));
         }
         catch (GamesUnavailableException e)
         {

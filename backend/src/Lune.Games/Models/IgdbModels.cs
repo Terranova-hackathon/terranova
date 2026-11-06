@@ -50,6 +50,17 @@ internal sealed class IgdbFilterItem
 }
 
 /// <summary>
+/// A company and its game IDs for the requested role.
+/// </summary>
+internal sealed class IgdbCompany
+{
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("slug")] public string Slug { get; set; } = string.Empty;
+    [JsonPropertyName("developed")] public List<int>? Developed { get; set; }
+    [JsonPropertyName("published")] public List<int>? Published { get; set; }
+}
+
+/// <summary>
 /// Represents a game's cover. IGDB only gives an image id, the URL has to be built from it.
 /// </summary>
 internal sealed class IgdbCover
