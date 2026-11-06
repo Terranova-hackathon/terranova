@@ -4,17 +4,17 @@
   justify-content: center;
   align-items: center;
   padding: 48px 16px;
-  background: linear-gradient(135deg, #101421, #211735);
+  background: var(--auth-gradient);
 }
 
 .auth-card {
   width: 100%;
   max-width: 430px;
   padding: 36px;
-  border: 1px solid #343b52;
+  border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: #171b2b;
-  color: #f5f5f5;
+  background: var(--color-surface);
+  color: var(--color-text);
 
   h1 {
     font-weight: 700;
@@ -22,31 +22,42 @@
   }
 
   > p {
-    color: #adb5c9;
+    color: var(--color-muted);
     text-align: center;
     margin-bottom: 28px;
   }
 
   .form-control {
-    background: #101421;
-    color: white;
-    border-color: #424960;
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    border-color: var(--color-input-border);
     padding: 12px;
 
     &:focus {
-      border-color: #818cf8;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-focus-ring);
+    }
+
+    &::placeholder {
+      color: var(--color-muted);
+      opacity: 1;
     }
   }
 
   .form-label {
-    color: #e2e6f0;
+    color: var(--color-text);
   }
 
   .btn-primary {
-    background: #5558df;
-    border-color: #5558df;
+    background: var(--color-button-bg);
+    border-color: var(--color-button-bg);
+    color: var(--color-button-text);
     padding: 12px;
+
+    &:hover {
+      background: var(--color-button-hover);
+      border-color: var(--color-button-hover);
+    }
   }
 
   .auth-footer {
@@ -55,14 +66,14 @@
     text-align: center;
 
     a {
-      color: #a5b4fc;
-	  transition: color 0.2s ease;
+      color: var(--color-primary);
+      transition: color 0.2s ease;
 
-	  &:hover,
-	  &:focus-visible {
-		color: #ffffff;
-		text-decoration: underline;
-	  }
+      &:hover,
+      &:focus-visible {
+        color: var(--color-primary-hover);
+        text-decoration: underline;
+      }
     }
   }
 }

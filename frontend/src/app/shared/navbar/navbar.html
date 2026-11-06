@@ -26,7 +26,7 @@
 					{{ auth.user()?.displayName || auth.user()?.email }}
 				</span>
 
-				<button type="button" class="btn btn-outline-light btn-sm"
+				<button type="button" class="btn btn-outline-primary btn-sm"
 					[disabled]="loggingOut()" (click)="logout()"
 				>
 					Log out
@@ -40,6 +40,19 @@
 					Sign up
 				</a>
 			}
+			<button
+				type="button"
+				class="navbar__theme-toggle"
+				(click)="themeService.toggleTheme()"
+				[attr.aria-label]="themeService.theme() === 'dark'
+					? 'Light mode' : 'Dark mode'"
+			>
+				@if (themeService.theme() === 'dark') {
+					<i class="bi bi-sun-fill" aria-hidden="true"></i>
+				} @else {
+					<i class="bi bi-moon-fill" aria-hidden="true"></i>
+				}
+			</button>
 		</div>
 	</nav>
 </header>
