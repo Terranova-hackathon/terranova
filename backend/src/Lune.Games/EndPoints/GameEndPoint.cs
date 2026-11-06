@@ -12,22 +12,15 @@ public static  partial class GameEndPoint
     private const int MaxPageSize = 50;
     private const int MaxValuePerPage = 20;
 
-    //TODO: implement SlugPattern validation utility function.
-
     public static void Map(IEndpointRouteBuilder endpoints)
     {
-        //TODO: require authentication for game endpoints.
         var group = endpoints.MapGroup("/api/games").WithTags("Games");
 
+        //can add OpenApi metat data here if we want. 
         group.MapGet("/", Search);
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
         group.MapGet("/companies", SearchCompanies);
-            // .WithName("SearchCompanies")
-            // .WithSummary("Search developers or publishers by name")
-            // .Produces<IReadOnlyList<CompanyOption>>()
-            // .ProducesValidationProblem()
-            // .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
 
     }
 
