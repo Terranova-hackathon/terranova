@@ -1,12 +1,13 @@
 using Lune.Games.Options;
 using Lune.Games.Contracts;
+using Lune.Games.Models;
 using Lune.Shared.Paging;
 using Lune.Games.Rawg;
 using System.Net.Http.Json;
 using System.Net;
 using Microsoft.Extensions.Options;
 
-namespace Lune.Games.Services;
+namespace Lune.Games.Services.Rawg;
 
 internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOptions> options) : IGamesService
 {
@@ -26,7 +27,11 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             url += $"&search={Uri.EscapeDataString(search.Trim())}";
         }
 
+<<<<<<< HEAD:backend/src/Lune.Games/Services/RawgGameService.cs
         var response = await GetAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
+=======
+        var response = await http.GetFromJsonAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
+>>>>>>> main:backend/src/Lune.Games/Services/Rawg/RawgGameService.cs
 
 
         return new PagedResult<GameSummary>(
@@ -49,7 +54,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             }
 
             response.EnsureSuccessStatusCode();
-            var game = await response.Content.ReadFromJsonAsync<Rawg.RawgGame>(cancellationToken);
+            var game = await response.Content.ReadFromJsonAsync<RawgGame>(cancellationToken);
             return game is null ? null : ToDetails(game);
         }
         catch (HttpRequestException ex)
@@ -109,26 +114,30 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// <summary>
     /// Extracts the names from a list of RAWG named items.
     /// </summary>
+<<<<<<< HEAD:backend/src/Lune.Games/Services/RawgGameService.cs
     private static IReadOnlyList<string> Names(List<Rawg.RawgOption>? items) =>
+=======
+    private static IReadOnlyList<string> Names(List<RawgNamed>? items) =>
+>>>>>>> main:backend/src/Lune.Games/Services/Rawg/RawgGameService.cs
     items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>
     /// Extracts the platform names from a list of RAWG platform entries.
     /// </summary>
-    private static IReadOnlyList<string> PlatformNames(List<Rawg.RawgPlatformEntry>? items) =>
+    private static IReadOnlyList<string> PlatformNames(List<RawgPlatformEntry>? items) =>
         items?.Where(p => p.Platform is not null).Select(p => p.Platform!.Name).ToList() ?? [];
 
     /// <summary>
     /// Converts a RAWG game object to a game summary.
     /// </summary>
-    private static GameSummary ToSummary(Rawg.RawgGame g) => new(
+    private static GameSummary ToSummary(RawgGame g) => new(
         g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
         Names(g.Genres), PlatformNames(g.Platforms));
 
     /// <summary>
     /// Converts a RAWG game object to full game details.
     /// </summary>
-    private static GameDetails ToDetails(Rawg.RawgGame g) => new(
+    private static GameDetails ToDetails(RawgGame g) => new(
         g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
         g.DescriptionRaw, g.Website,
         Names(g.Genres), PlatformNames(g.Platforms), Names(g.Developers), Names(g.Publishers));

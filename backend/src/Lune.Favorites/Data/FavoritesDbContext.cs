@@ -17,10 +17,10 @@ public class FavoritesDbContext(DbContextOptions<FavoritesDbContext> options) : 
 
         builder.Entity<Favorite>(favorite =>
         {
-            favorite.HasKey(f => new { f.UserId, f.RawgId });
+            favorite.HasKey(f => new { f.UserId, f.IgdbId });
             favorite.Property(f => f.UserId).HasMaxLength(450);
             favorite.Property(f => f.Name).HasMaxLength(FavoriteLimits.NameLength).IsRequired();
-            favorite.Property(f => f.ImageUrl).HasMaxLength(FavoriteLimits.ImageUrlLength);
+            favorite.Property(f => f.BackgroundImage).HasMaxLength(FavoriteLimits.BackgroundImageLength);
             favorite.Property(f => f.Released).HasMaxLength(FavoriteLimits.ReleasedLength);
 
             // Genres and Platforms are stored as JSON arrays in an nvarchar(max) column.
@@ -28,7 +28,7 @@ public class FavoritesDbContext(DbContextOptions<FavoritesDbContext> options) : 
             favorite.PrimitiveCollection(f => f.Platforms);
 
             // Answers "how many people favorited this game?" for future social features.
-            favorite.HasIndex(f => f.RawgId);
+            favorite.HasIndex(f => f.IgdbId);
         });
     }
 }

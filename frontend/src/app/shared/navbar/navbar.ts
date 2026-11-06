@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
+import { ThemeService } from '../../core/services/theme-service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -11,6 +12,7 @@ import { AuthService } from '../../core/services/auth-service';
 export class Navbar {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  readonly themeService = inject(ThemeService);
 
   readonly loggingOut = signal(false);
 

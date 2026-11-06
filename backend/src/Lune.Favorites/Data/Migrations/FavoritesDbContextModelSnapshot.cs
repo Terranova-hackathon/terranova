@@ -29,8 +29,12 @@ namespace Lune.Favorites.Data.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("RawgId")
+                    b.Property<int>("IgdbId")
                         .HasColumnType("int");
+
+                    b.Property<string>("BackgroundImage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
@@ -38,10 +42,6 @@ namespace Lune.Favorites.Data.Migrations
                     b.PrimitiveCollection<string>("Genres")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("Metacritic")
                         .HasColumnType("int");
@@ -65,9 +65,9 @@ namespace Lune.Favorites.Data.Migrations
                     b.Property<DateTime>("SnapshotUpdatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "RawgId");
+                    b.HasKey("UserId", "IgdbId");
 
-                    b.HasIndex("RawgId");
+                    b.HasIndex("IgdbId");
 
                     b.ToTable("Favorites", "favorites");
                 });

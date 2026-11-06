@@ -88,8 +88,8 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | GET | `/api/games/{id}` | Yes | One game's details |
 | GET | `/api/favorites` | Yes | Current user's favorites |
 | GET | `/api/favorites/ids` | Yes | Favorited game ids only |
-| PUT | `/api/favorites/{rawgId}` | Yes | Add a favorite |
-| DELETE | `/api/favorites/{rawgId}` | Yes | Remove a favorite |
+| PUT | `/api/favorites/{igdbId}` | Yes | Add a favorite |
+| DELETE | `/api/favorites/{igdbId}` | Yes | Remove a favorite |
 | GET | `/health` | No | Text `Healthy` |
 
 Any other `/api/*` path returns an empty `404`. Non-`/api` paths without a file extension return Angular's `index.html`.
@@ -356,7 +356,7 @@ A per-user bookmark. The server stores a **snapshot** of the game summary (name,
 interface Favorite {
   id: number;            // game id
   name: string;
-  imageUrl: string | null;  // the game's backgroundImage
+  BackgroundImage: string | null;  // the game's backgroundImage
   released: string | null;  // "2013-09-17"
   rating: number;           // 0-5
   metacritic: number | null; // 0-100
@@ -385,8 +385,6 @@ Angular sends `{}`. **Idempotent.**
 | User already has 1000 | 409 | `{ "title": "Favorites limit reached.", "status": 409 }` |
 | Provider unavailable | 503 | games 503 body |
 | Not logged in | 401 | empty |
-
-The new favorite's `imageUrl` is the game's `backgroundImage`. Name is truncated to 300 chars, and an image URL longer than 500 chars is stored as `null`.
 
 ### `DELETE /api/favorites/{rawgId}`
 - **204** always when logged in (idempotent)

@@ -30,9 +30,9 @@ erDiagram
     }
     Favorites {
         nvarchar450 UserId PK "logical ref to AspNetUsers.Id, no FK"
-        int RawgId PK
+        int IgdbId PK
         nvarchar300 Name
-        nvarchar500 ImageUrl
+        nvarchar500 BackgroundImage
         nvarchar10 Released
         float Rating
         int Metacritic
@@ -96,9 +96,9 @@ Indexes: `PK_AspNetUsers (Id)`, `UserNameIndex (NormalizedUserName) UNIQUE WHERE
 | Column | Type | Null | Notes |
 |---|---|:-:|---|
 | `UserId` | nvarchar(450) | No | **PK part 1.** The `auth.AspNetUsers.Id` of the owner. No FK. |
-| `RawgId` | int | No | **PK part 2.** RAWG game id. |
+| `IgdbId` | int | No | **PK part 2.** IGDB game id. |
 | `Name` | nvarchar(300) | No | Game name snapshot (truncated to 300) |
-| `ImageUrl` | nvarchar(500) | Yes | Cover image snapshot. `null` if the URL is over 500 chars. |
+| `BackgroundImage` | nvarchar(500) | Yes | Cover image snapshot. `null` if the URL is over 500 chars. |
 | `Released` | nvarchar(10) | Yes | Release date snapshot (`yyyy-MM-dd`) |
 | `Rating` | float | No | RAWG rating snapshot |
 | `Metacritic` | int | Yes | Metacritic score snapshot |
@@ -108,8 +108,8 @@ Indexes: `PK_AspNetUsers (Id)`, `UserNameIndex (NormalizedUserName) UNIQUE WHERE
 | `SnapshotUpdatedAtUtc` | datetime2 | No | When the snapshot was last copied from RAWG. Lets a later job refresh stale rows. |
 
 - The snapshot columns are copied by the backend from RAWG when a game is favorited, never taken from the client.
-- PK `(UserId, RawgId)`: a user can favorite a game only once. This is also how duplicate or racing inserts are handled.
-- Index `IX_Favorites_RawgId (RawgId)`, non-unique.
+- PK `(UserId, IgdbId)`: a user can favorite a game only once. This is also how duplicate or racing inserts are handled.
+- Index `IX_Favorites_IgdbId (IgdbId)`, non-unique.
 - Rule enforced in code, not in the DB: at most **1000** rows per user.
 
 ## DDL reference (SQL Server)
@@ -144,9 +144,9 @@ CREATE INDEX EmailIndex ON auth.AspNetUsers (NormalizedEmail);
 
 CREATE TABLE favorites.Favorites (
     UserId       nvarchar(450) NOT NULL,
-    RawgId       int           NOT NULL,
+    IgdbId       int           NOT NULL,
     Name         nvarchar(300) NOT NULL,
-    ImageUrl     nvarchar(500) NULL,
+    BackgroundImage     nvarchar(500) NULL,
     Released     nvarchar(10)  NULL,
     Rating       float         NOT NULL,
     Metacritic   int           NULL,
@@ -154,9 +154,9 @@ CREATE TABLE favorites.Favorites (
     Platforms    nvarchar(max) NOT NULL,
     CreatedAtUtc datetime2     NOT NULL,
     SnapshotUpdatedAtUtc datetime2 NOT NULL,
-    CONSTRAINT PK_Favorites PRIMARY KEY (UserId, RawgId)
+    CONSTRAINT PK_Favorites PRIMARY KEY (UserId, IgdbId)
 );
-CREATE INDEX IX_Favorites_RawgId ON favorites.Favorites (RawgId);
+CREATE INDEX IX_Favorites_IgdbId ON favorites.Favorites (IgdbId);
 ```
 
 The remaining Identity tables are in `backend/src/Lune.Auth/Data/Migrations/20261023092055_InitialIdentity.cs`. A mock doesn't need them.
@@ -178,9 +178,9 @@ interface UserRow {
 
 interface FavoriteRow {
   userId: string;        // key part 1
-  rawgId: number;        // key part 2, unique together with userId
+  igdbId: number;        // key part 2, unique together with userId
   name: string;
-  imageUrl: string | null;
+  BackgroundImage: string | null;
   released: string | null;
   rating: number;
   metacritic: number | null;
@@ -192,6 +192,6 @@ interface FavoriteRow {
 
 Notes:
 - Enforce the unique email, case-insensitively. `NormalizedEmail` is just the uppercased email.
-- Enforce the unique `(userId, rawgId)` pair.
+- Enforce the unique `(userId, igdbId)` pair.
 - Games are a static JSON file. They are **not** in the database.
-- The API returns `FavoriteRow` as `{ id: rawgId, name, imageUrl, released, rating, metacritic, genres, platforms, addedAtUtc: createdAtUtc }`. The `userId` is never returned.
+- The API returns `FavoriteRow` as `{ id: IgdbId, name, BackgroundImage, released, rating, metacritic, genres, platforms, addedAtUtc: createdAtUtc }`. The `userId` is never returned.
