@@ -27,6 +27,7 @@ public sealed class GamesModule : IModule
         
         // this is the new Igdb intigration. old rawgio should still work as long as the APi is up and running. 
         services.Configure<IgdbServiceOptions>(configuration.GetSection(IgdbServiceOptions.SectionName));
+        services.AddMemoryCache(); // caches the filter options
         services.AddHttpClient(); // lets IgdbTokenProvider use IHttpClientFactory
         services.AddSingleton<IgdbTokenProvider>();
 

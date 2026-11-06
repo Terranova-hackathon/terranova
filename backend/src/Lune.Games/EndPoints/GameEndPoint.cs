@@ -57,7 +57,7 @@ public static  partial class GameEndPoint
     }
 
     /// <summary>
-    /// Grabs all the filterable options form the rawg.io so the front end can diplsay al the filter options.
+    /// Grabs all the filterable options form the third party API so the front end can diplsay all the filter options.
     /// </summary>
         private static async Task<IResult> GetFilters(IGamesService games, CancellationToken cancellationToken)
     {
@@ -72,7 +72,7 @@ public static  partial class GameEndPoint
     }
 
     /// <summary>
-    /// Search end point for the all the developer sand publishers. 
+    /// Search end point for the all the developer and publishers. 
     /// </summary>
     // private static async Task<IResult> SearchCompanies(
     //     IGamesService games, CancellationToken cancellationToken, string? kind = null, string? search = null)

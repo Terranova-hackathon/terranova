@@ -2,7 +2,6 @@ using Lune.Games.Options;
 using Lune.Games.Contracts;
 using Lune.Games.Models;
 using Lune.Shared.Paging;
-using Lune.Games.Rawg;
 using System.Net.Http.Json;
 using System.Net;
 using Microsoft.Extensions.Options;
@@ -27,11 +26,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             url += $"&search={Uri.EscapeDataString(search.Trim())}";
         }
 
-<<<<<<< HEAD:backend/src/Lune.Games/Services/RawgGameService.cs
         var response = await GetAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
-=======
-        var response = await http.GetFromJsonAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
->>>>>>> main:backend/src/Lune.Games/Services/Rawg/RawgGameService.cs
 
 
         return new PagedResult<GameSummary>(
@@ -114,11 +109,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// <summary>
     /// Extracts the names from a list of RAWG named items.
     /// </summary>
-<<<<<<< HEAD:backend/src/Lune.Games/Services/RawgGameService.cs
-    private static IReadOnlyList<string> Names(List<Rawg.RawgOption>? items) =>
-=======
-    private static IReadOnlyList<string> Names(List<RawgNamed>? items) =>
->>>>>>> main:backend/src/Lune.Games/Services/Rawg/RawgGameService.cs
+    private static IReadOnlyList<string> Names(List<RawgOption>? items) =>
     items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>

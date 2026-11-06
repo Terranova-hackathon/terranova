@@ -7,18 +7,24 @@ using Lune.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
 using Lune.Shared.Paging;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace Lune.Games.Services;
 
 internal sealed class IgdbGamesService(
-    HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens) : IGamesService
+    HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens, IMemoryCache cache) : IGamesService
 {
     private const string SummaryFields =
         "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,platforms.name";
 
     private const string DetailFields =
         SummaryFields + ",summary,url,involved_companies.developer,involved_companies.publisher,involved_companies.company.name";
+
+    // IGDB lists 200+ platforms, most of them retro or obscure. The filter dropdown only offers current and
+    // last-generation platforms: PC (Windows), Mac, Linux, PS5, PS4, PS3, Xbox Series X|S, Xbox One, Xbox 360,
+    // Switch 2, Switch, Wii U, Wii, 3DS, Android, iOS.
+    private const string FilterPlatformIds = "6,14,3,167,48,9,169,49,12,508,130,41,5,37,34,39";
 
     private readonly IgdbServiceOptions _options = options.Value;
 
@@ -97,6 +103,35 @@ internal sealed class IgdbGamesService(
             throw new GamesUnavailableException("The game data service could not be reached.", ex);
         }
     }
+
+    /// <summary>
+    /// Gets the genre and platform options from IGDB, plus the fixed sort orders.
+    /// </summary>
+    public Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default) =>
+        cache.GetOrCreateAsync("igdb:filter-options", async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+
+            var genresTask = PostAsync<List<IgdbFilterItem>>(
+                "genres", "fields id,name,slug; sort name asc; limit 500;", cancellationToken);
+            var platformsTask = PostAsync<List<IgdbFilterItem>>(
+                "platforms", $"fields id,name; where id = ({FilterPlatformIds}); sort name asc; limit 500;",
+                cancellationToken);
+
+            await Task.WhenAll(genresTask, platformsTask);
+
+            var genres = (genresTask.Result ?? [])
+                .Where(g => !string.IsNullOrWhiteSpace(g.Slug))
+                .Select(g => new FilterOption(g.Slug!, g.Name))
+                .ToList();
+
+            var platforms = (platformsTask.Result ?? [])
+                .Select(p => new FilterOption(p.Id.ToString(CultureInfo.InvariantCulture), p.Name))
+                .ToList();
+
+            return new GameFilterOptions(genres, platforms, GameOrderings.All);
+        })!;
+
 
     /// <summary>
     /// Escapes text so it can sit inside a quoted IGDB string.

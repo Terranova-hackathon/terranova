@@ -40,6 +40,16 @@ internal sealed class IgdbNamed
 }
 
 /// <summary>
+/// A genre or platform from IGDB's lookup endpoints. Genres have a slug, platforms do not need one.
+/// </summary>
+internal sealed class IgdbFilterItem
+{
+    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("slug")] public string? Slug { get; set; }
+}
+
+/// <summary>
 /// Represents a game's cover. IGDB only gives an image id, the URL has to be built from it.
 /// </summary>
 internal sealed class IgdbCover
