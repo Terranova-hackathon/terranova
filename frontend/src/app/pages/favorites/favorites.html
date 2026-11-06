@@ -36,15 +36,14 @@
 			</div>
 		}@else {
 			<p>{{ favorites().length }} saved game</p>
-
-<!-- After mapping fav to games i re-use the GameCard -->
+			<!-- Favorites use the same game-cards as the Games page -->
 			<div class="row g-4">
-				@for (game of games(); track game.id) {
+				@for (favorite of favorites(); track favorite.id) {
 					<div class="col-12 col-md-6 col-lg-4 col-xl-3">
 						<app-game-card
-							[game]="game"
+							[game]="favorite"
 							[isFavorite]="true"
-							[favoriteBusy]="removingIds().has(game.id)"
+							[favoriteBusy]="removingIds().has(favorite.id)"
 							(favoriteToggled)="removeFavorite($event)"
 						/>
 					</div>

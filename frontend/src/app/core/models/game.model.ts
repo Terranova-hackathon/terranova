@@ -12,6 +12,6 @@ export interface GameModel {
 export interface GameDetails extends GameModel {
 	description: string | null;
 	website: string | null;
-	developer: string[];
+	developers: string[];
 	publishers: string[];
 }

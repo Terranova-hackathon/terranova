@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { FavoriteService } from '../../core/services/favorite-service';
 import { FavoriteModel } from '../../core/models/favorite.model';
 import { GameCard } from '../../shared/game-card/game-card';
-import { favoriteToGame } from '../../core/models/favorite.mapper';
 
 @Component({
   imports: [RouterLink, GameCard],
@@ -15,7 +14,6 @@ export class Favorites implements OnInit {
   private readonly favoriteService = inject(FavoriteService);
 
   favorites = signal<FavoriteModel[]>([]);
-  games = computed(() => this.favorites().map(favoriteToGame));
   loading = signal(false);
   error = signal('');
   removingIds = signal<Set<number>>(new Set());
