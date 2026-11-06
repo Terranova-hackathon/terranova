@@ -22,12 +22,12 @@ public static  partial class GameEndPoint
         group.MapGet("/", Search);
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
-        group.MapGet("/companies", SearchCompanies)
-            .WithName("SearchCompanies")
-            .WithSummary("Search developers or publishers by name")
-            .Produces<IReadOnlyList<CompanyOption>>()
-            .ProducesValidationProblem()
-            .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
+        group.MapGet("/companies", SearchCompanies);
+            // .WithName("SearchCompanies")
+            // .WithSummary("Search developers or publishers by name")
+            // .Produces<IReadOnlyList<CompanyOption>>()
+            // .ProducesValidationProblem()
+            // .ProducesProblem(StatusCodes.Status503ServiceUnavailable);
 
     }
 
