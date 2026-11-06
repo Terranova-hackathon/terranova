@@ -43,7 +43,7 @@
 			aria-label="Games pagination">
 		<button
 			type="button"
-			class="btn btn-outline-light"
+			class="btn btn-outline-secondary"
 			[disabled]="currentPage() === 1 || loading()"
 			(click)="changePage(currentPage() - 1)"
 		>Previous</button>
@@ -54,7 +54,7 @@
 
 		<button
 			type="button"
-			class="btn btn-outline-light"
+			class="btn btn-outline-secondary"
 			[disabled]="currentPage() >= totalPages() || loading()"
 			(click)="changePage(currentPage() + 1)"
 		>Next</button>

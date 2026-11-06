@@ -1,16 +1,16 @@
 .game-card {
 	height: 100%;
-	background: #171b2b;
-	border: 1px solid #2a3045;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
 	border-radius: 12px;
 	overflow: hidden;
-	color: #f5f5f5;
+	color: var(--color-text);
 
 	transition: transform 0.2s ease, border-color 0.2s ease;
 
 	&:hover {
 		transform: translateY(-4px);
-		border-color: #6366f1;
+		border-color: var(--color-primary);
 	}
 
 	&__image {
@@ -50,7 +50,7 @@
 
 		border: none;
 		background: transparent;
-		color: #9ca3af;
+		color: var(--color-muted);
 		font-size: 1.4rem;
 		line-height: 1;
 		cursor: pointer;
@@ -58,11 +58,11 @@
 		transition: color 0.2s ease;
 
 		&:hover:not(:disabled) {
-			color: #f472b6;
+			color: var(--color-heart);
 		}
 	
 		&.is-favorite {
-			color: #f43f5e;
+			color: var(--color-heart);
 		}
 	
 		&:disabled {
@@ -70,25 +70,25 @@
 			cursor: wait;
 		}
 		&:focus-visible {
-			outline: 2px solid #a5b4fc;
+			outline: 2px solid var(--color-primary);
 			outline-offset: 3px;
 			border-radius: 4px;
 		}
 	}
 
 	&__release {
-		color: #aab2c5;
+		color: var(--color-muted);
 		font-size: 0.85rem;
 	}
 
 	&__rating {
-		color: #facc15;
+		color: var(--color-rating);
 		font-weight: 600;
 	}
 
 	&__metacritic {
 
-		color: #aab2c5;
+		color: var(--color-muted);
 		font-size: 0.85rem;
 	}
 
@@ -99,9 +99,9 @@
 
 		span {
 			padding: 4px 8px;
-			background: #30364b;
+			background: var(--color-surface-alt);
 			border-radius: 5px;
-			color: #cbd5e1;
+			color: var(--color-text);
 			font-size: 0.75rem;
 		}
 	}
