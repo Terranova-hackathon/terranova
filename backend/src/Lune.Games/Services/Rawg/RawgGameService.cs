@@ -26,7 +26,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
             url += $"&search={Uri.EscapeDataString(search.Trim())}";
         }
 
-        var response = await http.GetFromJsonAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
+        var response = await GetAsync<RawgResponse>(url, cancellationToken) ?? new RawgResponse();
 
 
         return new PagedResult<GameSummary>(
@@ -59,6 +59,60 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     }
 
     /// <summary>
+    /// Gets the genre and platform options from RAWG, plus the fixed sort orders.
+    /// </summary>
+    public async Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default)
+    {
+        var key = Uri.EscapeDataString(RequireKey());
+        var genres = await GetAsync<RawgOptionList>($"genres?key={key}", cancellationToken);
+        var platforms = await GetAsync<RawgOptionList>($"platforms/lists/parents?key={key}", cancellationToken);
+
+        return new GameFilterOptions(
+            (genres?.Results ?? []).Select(g => new FilterOption(g.Slug, g.Name)).ToList(),
+            (platforms?.Results ?? []).Select(p => new FilterOption(p.Id.ToString(), p.Name)).ToList(),
+            GameOrderings.All);
+    }
+
+    private async Task<T?> GetAsync<T>(string url, CancellationToken cancellationToken) where T : class
+    {
+        try
+        {
+            using var response = await http.GetAsync(url, cancellationToken);
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new GamesUnavailableException("The game data service could not be reached.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Searches RAWG developers or publishers by name and returns at most 10 matches.
+    /// </summary>
+    public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
+        CompanyKind kind, string search, CancellationToken cancellationToken = default)
+    {
+        var endpoint = kind switch
+        {
+            CompanyKind.Developer => "developers",
+            CompanyKind.Publisher => "publishers",
+            _ => throw new ArgumentOutOfRangeException(nameof(kind))
+        };
+        var url = $"{endpoint}?key={Uri.EscapeDataString(RequireKey())}&search={Uri.EscapeDataString(search)}&page_size=10";
+        var response = await GetAsync<RawgOptionList>(url, cancellationToken)
+            ?? throw new GamesUnavailableException("The game data service returned an empty company response.");
+
+        return response.Results.Select(company =>
+            new CompanyOption(company.Slug, company.Name, company.GamesCount)).ToList();
+    }
+
+    /// <summary>
     /// Ensures that the RAWG API key is configured and returns it.
     /// </summary>
     private string RequireKey() =>
@@ -69,7 +123,7 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// <summary>
     /// Extracts the names from a list of RAWG named items.
     /// </summary>
-    private static IReadOnlyList<string> Names(List<RawgNamed>? items) =>
+    private static IReadOnlyList<string> Names(List<RawgOption>? items) =>
     items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>

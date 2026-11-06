@@ -24,27 +24,36 @@ internal sealed class RawgGame
     [JsonPropertyName("metacritic")] public int? Metacritic { get; set; }
     [JsonPropertyName("description_raw")] public string? DescriptionRaw { get; set; }
     [JsonPropertyName("website")] public string? Website { get; set; }
-    [JsonPropertyName("genres")] public List<RawgNamed>? Genres { get; set; }
-    [JsonPropertyName("developers")] public List<RawgNamed>? Developers { get; set; }
-    [JsonPropertyName("publishers")] public List<RawgNamed>? Publishers { get; set; }
+    [JsonPropertyName("genres")] public List<RawgOption>? Genres { get; set; }
+    [JsonPropertyName("developers")] public List<RawgOption>? Developers { get; set; }
+    [JsonPropertyName("publishers")] public List<RawgOption>? Publishers { get; set; }
     [JsonPropertyName("platforms")] public List<RawgPlatformEntry>? Platforms { get; set; }
-}
-
-/// <summary>
-/// Represents a named entity returned by the RAWG API.
-/// </summary>
-internal sealed class RawgNamed
-{
-    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
 }
 
 /// <summary>
 /// Represents a platform entry returned by the RAWG API.
 /// </summary>
-
 internal sealed class RawgPlatformEntry
 {
-    [JsonPropertyName("platform")] public RawgNamed? Platform { get; set; }
+    [JsonPropertyName("platform")] public RawgOption? Platform { get; set; }
 }
 
-// TODO: Implement Filter options for the RAWG API.
+/// <summary>
+/// Represents the list response of RAWG's genres, platforms, developers and publishers endpoints.
+/// </summary>
+internal sealed class RawgOptionList
+{
+    [JsonPropertyName("results")] public List<RawgOption> Results { get; set; } = [];
+}
+
+/// <summary>
+/// Represents a genre, platform, developer or publisher returned by the RAWG API.
+/// Fields RAWG omits in a given context keep their defaults.
+/// </summary>
+internal sealed class RawgOption
+{
+    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("slug")] public string Slug { get; set; } = string.Empty;
+    [JsonPropertyName("games_count")] public int GamesCount { get; set; }
+}

@@ -7,19 +7,14 @@ using Lune.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
 using Lune.Shared.Paging;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace Lune.Games.Services;
 
 internal sealed class IgdbGamesService(
-    HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens) : IGamesService
+    HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens, IMemoryCache cache) : IGamesService
 {
-    private const string SummaryFields =
-        "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,platforms.name";
-
-    private const string DetailFields =
-        SummaryFields + ",summary,url,involved_companies.developer,involved_companies.publisher,involved_companies.company.name";
-
     private readonly IgdbServiceOptions _options = options.Value;
 
     /// <summary>
@@ -38,7 +33,7 @@ internal sealed class IgdbGamesService(
         var order = string.IsNullOrWhiteSpace(search) ? " sort total_rating_count desc;" : string.Empty;
 
         var games = await PostAsync<List<IgdbGame>>(
-            "games", $"fields {SummaryFields}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
+            "games", $"fields {IgdbGameFields.Summary}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
         var count = await PostAsync<IgdbCount>("games/count", criteria, cancellationToken);
 
         return new PagedResult<GameSummary>(
@@ -51,7 +46,7 @@ internal sealed class IgdbGamesService(
     public async Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var games = await PostAsync<List<IgdbGame>>(
-            "games", $"fields {DetailFields}; where id = {id}; limit 1;", cancellationToken);
+            "games", $"fields {IgdbGameFields.Detail}; where id = {id}; limit 1;", cancellationToken);
 
         var game = games?.FirstOrDefault();
         return game is null ? null : ToDetails(game);
@@ -97,6 +92,59 @@ internal sealed class IgdbGamesService(
             throw new GamesUnavailableException("The game data service could not be reached.", ex);
         }
     }
+
+    /// <summary>
+    /// Gets the genre and platform options from IGDB, plus the fixed sort orders.
+    /// </summary>
+    public Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default) =>
+        cache.GetOrCreateAsync("igdb:filter-options", async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+
+            var genresTask = PostAsync<List<IgdbFilterItem>>(
+                "genres", "fields id,name,slug; sort name asc; limit 500;", cancellationToken);
+            var platformsTask = PostAsync<List<IgdbFilterItem>>(
+                "platforms", $"fields id,name; where id = ({IgdbGameFields.PlatformIds}); sort name asc; limit 500;",
+                cancellationToken);
+
+            await Task.WhenAll(genresTask, platformsTask);
+
+            var genres = (genresTask.Result ?? [])
+                .Where(g => !string.IsNullOrWhiteSpace(g.Slug))
+                .Select(g => new FilterOption(g.Slug!, g.Name))
+                .ToList();
+
+            var platforms = (platformsTask.Result ?? [])
+                .Select(p => new FilterOption(p.Id.ToString(CultureInfo.InvariantCulture), p.Name))
+                .ToList();
+
+            return new GameFilterOptions(genres, platforms, GameOrderings.All);
+        })!;
+
+    public async Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
+        CompanyKind kind, string search, CancellationToken cancellationToken = default)
+    {
+        var role = kind switch
+        {
+            CompanyKind.Developer => "developed",
+            CompanyKind.Publisher => "published",
+            _ => throw new ArgumentOutOfRangeException(nameof(kind))
+        };
+        // The IGDB companies endpoint ignores "search", so match the name with a case-insensitive wildcard.
+        // IGDB cannot sort by array size, so fetch extra matches and keep the 10 with the most games.
+        var companies = await PostAsync<List<IgdbCompany>>(
+            "companies", $"fields name,slug,{role}; where name ~ *\"{Escape(search)}\"* & {role} != null; limit 50;",
+            cancellationToken) ?? throw new GamesUnavailableException("The game data service returned an empty company response.");
+
+        return companies
+            .Select(company => new CompanyOption(
+                company.Slug, company.Name,
+                (kind == CompanyKind.Developer ? company.Developed : company.Published)?.Count ?? 0))
+            .OrderByDescending(c => c.GamesCount).ThenBy(c => c.Name)
+            .Take(10)
+            .ToList();
+    }
+
 
     /// <summary>
     /// Escapes text so it can sit inside a quoted IGDB string.
