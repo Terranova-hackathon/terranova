@@ -22,7 +22,7 @@ public static  partial class GameEndPoint
         group.MapGet("/", Search);
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
-        // group.MapGet("/companies", SearchCompanies);
+        group.MapGet("/companies", SearchCompanies);
 
     }
 
@@ -71,14 +71,22 @@ public static  partial class GameEndPoint
         }
     }
 
-    /// <summary>
-    /// Search end point for the all the developer and publishers. 
-    /// </summary>
-    // private static async Task<IResult> SearchCompanies(
-    //     IGamesService games, CancellationToken cancellationToken, string? kind = null, string? search = null)
-    // {
-    //     ///TODO: add search company method here. 
-    // }
+    // / <summary>
+    // / Search end point for the all the developer and publishers. 
+    // / </summary>
+    private static async Task<IResult> SearchCompanies(
+        IGamesService games, CancellationToken cancellationToken, string? kind = null, string? search = null)
+    {
+        ///TODO: add search company method here. 
+        try
+        {
+            return Results.Ok(await games.SearchCompaniesAsync(cancellationToken));
+        }
+        catch (GamesUnavailableException e)
+        {
+            return Unavailable(e);
+        }
+    }
 
     private static IResult Unavailable(GamesUnavailableException e) => 
         Results.Problem(            

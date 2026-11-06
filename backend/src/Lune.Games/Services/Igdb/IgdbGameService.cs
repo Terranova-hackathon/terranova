@@ -7,6 +7,7 @@ using Lune.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
 using Lune.Shared.Paging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
@@ -15,17 +16,6 @@ namespace Lune.Games.Services;
 internal sealed class IgdbGamesService(
     HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens, IMemoryCache cache) : IGamesService
 {
-    private const string SummaryFields =
-        "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,platforms.name";
-
-    private const string DetailFields =
-        SummaryFields + ",summary,url,involved_companies.developer,involved_companies.publisher,involved_companies.company.name";
-
-    // IGDB lists 200+ platforms, most of them retro or obscure. The filter dropdown only offers current and
-    // last-generation platforms: PC (Windows), Mac, Linux, PS5, PS4, PS3, Xbox Series X|S, Xbox One, Xbox 360,
-    // Switch 2, Switch, Wii U, Wii, 3DS, Android, iOS.
-    private const string FilterPlatformIds = "6,14,3,167,48,9,169,49,12,508,130,41,5,37,34,39";
-
     private readonly IgdbServiceOptions _options = options.Value;
 
     /// <summary>
@@ -44,7 +34,7 @@ internal sealed class IgdbGamesService(
         var order = string.IsNullOrWhiteSpace(search) ? " sort total_rating_count desc;" : string.Empty;
 
         var games = await PostAsync<List<IgdbGame>>(
-            "games", $"fields {SummaryFields}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
+            "games", $"fields {IgdbGameFields.Summary}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
         var count = await PostAsync<IgdbCount>("games/count", criteria, cancellationToken);
 
         return new PagedResult<GameSummary>(
@@ -57,7 +47,7 @@ internal sealed class IgdbGamesService(
     public async Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var games = await PostAsync<List<IgdbGame>>(
-            "games", $"fields {DetailFields}; where id = {id}; limit 1;", cancellationToken);
+            "games", $"fields {IgdbGameFields.Detail}; where id = {id}; limit 1;", cancellationToken);
 
         var game = games?.FirstOrDefault();
         return game is null ? null : ToDetails(game);
@@ -115,7 +105,7 @@ internal sealed class IgdbGamesService(
             var genresTask = PostAsync<List<IgdbFilterItem>>(
                 "genres", "fields id,name,slug; sort name asc; limit 500;", cancellationToken);
             var platformsTask = PostAsync<List<IgdbFilterItem>>(
-                "platforms", $"fields id,name; where id = ({FilterPlatformIds}); sort name asc; limit 500;",
+                "platforms", $"fields id,name; where id = ({IgdbGameFields.PlatformIds}); sort name asc; limit 500;",
                 cancellationToken);
 
             await Task.WhenAll(genresTask, platformsTask);
@@ -131,6 +121,11 @@ internal sealed class IgdbGamesService(
 
             return new GameFilterOptions(genres, platforms, GameOrderings.All);
         })!;
+
+    public Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(CompanyKind kind, string search, CancellationToken cancellationToken)
+    {
+        return Results.Ok();;
+    }
 
 
     /// <summary>

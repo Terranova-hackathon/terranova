@@ -14,8 +14,7 @@ public interface IGamesService
 
     Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default);
 
-    // Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(
-    //     CompanyKind kind, string search, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(CompanyKind kind, string search, CancellationToken cancellationToken = default);
 
     //TODO: implent filter search for games based on GameSearchFilters
 }
