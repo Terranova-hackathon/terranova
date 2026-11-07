@@ -21,16 +21,17 @@ public static  partial class GameEndPoint
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
         group.MapGet("/companies", SearchCompanies);
+        group.MapGet("/featured", GetFeatured);
 
     }
 
     private static async Task<IResult> Search(
-    IGamesService games, string? search, int page = 1, int pageSize = 20, CancellationToken ct = default)
+    IGamesService games, string? search, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
         pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
         try
         {
-            return Results.Ok(await games.SearchAsync(search, page, pageSize, null, ct));
+            return Results.Ok(await games.SearchAsync(search, page, pageSize, null, cancellationToken));
         }
         catch (GamesUnavailableException e)
         {
@@ -38,11 +39,11 @@ public static  partial class GameEndPoint
         }
     }
 
-    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken ct)
+    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken cancellationToken)
     {
         try
         {
-            var game = await games.GetByIdAsync(id, ct);
+            var game = await games.GetByIdAsync(id, cancellationToken);
             return game is null ? Results.NotFound() : Results.Ok(game);
         }
         catch (GamesUnavailableException ex)
@@ -92,6 +93,20 @@ public static  partial class GameEndPoint
         try
         {
             return Results.Ok(await games.SearchCompaniesAsync(companyKind!.Value, term, cancellationToken));
+        }
+        catch (GamesUnavailableException e)
+        {
+            return Unavailable(e);
+        }
+    }
+
+    private static async Task<IResult> GetFeatured(
+        IGamesService games, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var game = await games.GetFeaturedAsync(cancellationToken);
+            return game is null ? Results.NotFound() : Results.Ok(game);
         }
         catch (GamesUnavailableException e)
         {

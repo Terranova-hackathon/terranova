@@ -111,6 +111,20 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
         return response.Results.Select(company =>
             new CompanyOption(company.Slug, company.Name, company.GamesCount)).ToList();
     }
+    public async Task<GameDetails?> GetFeaturedAsync(CancellationToken cancellationToken = default)
+    {
+        var candidates = await GetAsync<RawgResponse>(
+            $"games?key={Uri.EscapeDataString(RequireKey())}&ordering=-rating&page_size=50",
+            cancellationToken);
+        var games = candidates?.Results;
+        if (games is null || games.Count == 0)
+        {
+            return null;
+        }
+
+        var selectedGame = games[Random.Shared.Next(games.Count)];
+        return await GetByIdAsync(selectedGame.Id, cancellationToken);
+    }
 
     /// <summary>
     /// Ensures that the RAWG API key is configured and returns it.
