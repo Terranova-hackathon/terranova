@@ -16,7 +16,7 @@ docker compose up --build mock-api frontend
 |---|---|---|
 | Frontend (Angular) | [http://localhost:8080](http://localhost:8080) | `/api` is proxied to the mock API |
 | Mock API (ASP.NET Core) | [http://localhost:4001](http://localhost:4001) | In-memory, resets on restart |
-| Backend (Asp.net Core) | [http://localhost:3001](http://localhost:3001) | Persistant data | 
+| Backend (Asp.net Core) | [http://localhost:3001](http://localhost:3001) | Persistant data |
 
 Press `Ctrl+C` to stop, or run `docker compose down`.
 
@@ -51,3 +51,13 @@ Frontend (Node.js 22):
 ```bash
 cd frontend && npm install && npm start
 ```
+
+## Backend Dependencies
+
+### Linux
+To develop outside of docker containers, you will need to install dotnet
+`sudo apt install -y dotnet-sdk-10.0`
+
+Only one external package is used in this project (Scalar for API documentation and testing)
+To install  backend/src/Lune.Api run:
+`dotnet add package Scalar.AspNetCore`
