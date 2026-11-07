@@ -52,7 +52,6 @@ Frontend (Node.js 22):
 cd frontend && npm install && npm start
 ```
 
-
 ## Dev Dependencies
 
 Backend development requires Microsofts dotnet sdk (version 10.0)
@@ -61,3 +60,7 @@ Install with:
 ```sudo apt-get update && \
   sudo apt-get install -y dotnet-sdk-10.0
 ```
+
+Only one external package is used in this project (Scalar for API documentation and testing)
+To install  backend/src/Lune.Api run:
+`dotnet add package Scalar.AspNetCore`
