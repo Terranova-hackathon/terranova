@@ -13,6 +13,13 @@
 		min-width: 100px;
 	}
 }
+// highlights the selected card that is scrolled into view
+[id^='game-']:target {
+	border-radius: 12px;
+	outline: 2px solid var(--color-primary);
+	outline-offset: 4px;
+	scroll-margin-top: 100px;
+}
 
 @media (max-width: 576px) {
 	.pagination-controls {

@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,6 +14,7 @@ export class Login {
 	private readonly buildform = inject(FormBuilder);
 	private readonly auth = inject(AuthService);
 	private readonly router = inject(Router);
+	private readonly route = inject(ActivatedRoute);
 
 	readonly loading = signal(false);
 	readonly error = signal<string | null>(null);
@@ -30,11 +31,22 @@ export class Login {
 		}
 		this.error.set(null);
 		this.loading.set(true);
+// requestedUrl destination after login. The games page sets returnUrl when a guest tries
+// to favorite a game, so we can bring them back to the same search/page/card.
+// follows returnUrl if it's a /games URL (prevents open redirects); otherwise go to /games
+// navigateByUrl because returnUrl is a full URL string that already includes
+// its query params and fragment
+
 
 		this.auth.login(this.form.getRawValue()).subscribe({
 			next: () => {
 				this.loading.set(false);
-				this.router.navigateByUrl('/games');
+				const requestedUrl = 
+					this.route.snapshot.queryParamMap.get('returnUrl');
+				const returnUrl =
+					requestedUrl && /^\/games(?:[?#]|$)/.test(requestedUrl)
+						? requestedUrl : '/games';
+				this.router.navigateByUrl(returnUrl);
 			},
 			error: (err: HttpErrorResponse) => {
 				this.loading.set(false);

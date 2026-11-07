@@ -13,9 +13,9 @@ export const routes: Routes = [
 		component: Home
 	},
 	{
+// removed guard to allow guest users to navigate
 		path: 'games',
-		component: Games,
-		canActivate: [authGuard]
+		component: Games
 	},
 	{
 		path: 'favorites',
