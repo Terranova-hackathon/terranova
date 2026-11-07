@@ -2,6 +2,7 @@ using Lune.Games;
 using Lune.Auth;
 using Lune.Favorites;
 using Lune.Shared.Modules;
+using Scalar.AspNetCore;
 
 /// <summary>
 /// Entry point for the Lune API application.
@@ -22,6 +23,7 @@ foreach (var m in modules) await m.InitializeAsync(app.Services);
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference("/docs");
 }
 
 app.UseAuthentication();
