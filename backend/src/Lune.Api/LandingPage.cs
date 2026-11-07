@@ -28,7 +28,7 @@ public static class LandingPage
             {
                 rows.Append($"<tr><td><span class=\"m {method}\">{method}</span></td>")
                     .Append($"<td><code>{WebUtility.HtmlEncode(route)}</code></td>")
-                    .Append($"<td>{(auth ? "🔒 auth required" : "Public")}</td></tr>");
+                    .Append($"<td>{(auth ? "🔒 auth" : "")}</td></tr>");
             }
 
             return Results.Content(Html.Replace("{{ROWS}}", rows.ToString()), "text/html; charset=utf-8");
@@ -46,7 +46,7 @@ public static class LandingPage
   header { display: flex; justify-content: space-between; align-items: center; }
   button { padding: .5rem 1rem; margin-left: .5rem; cursor: pointer; }
   table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-  th, td { padding: .4rem; border-bottom: 1px solid #ddd; text-align: left; }
+  td { padding: .4rem; border-bottom: 1px solid #ddd; }
   .m { font-weight: bold; font-size: .8rem; padding: 2px 6px; border-radius: 4px; color: #fff; background: #666; }
   .GET { background: #2e7d32; } .POST { background: #1565c0; } .PUT { background: #ef6c00; } .DELETE { background: #c62828; }
   dialog form { display: flex; flex-direction: column; gap: .5rem; min-width: 260px; }
@@ -63,11 +63,7 @@ public static class LandingPage
   </div>
 </header>
 
-<p>Registered API routes. A lock marks routes that require authentication.</p>
-<table>
-  <thead><tr><th>Method</th><th>Route</th><th>Access</th></tr></thead>
-  <tbody>{{ROWS}}</tbody>
-</table>
+<table>{{ROWS}}</table>
 <pre id="out" hidden></pre>
 
 <dialog id="registerDlg">
