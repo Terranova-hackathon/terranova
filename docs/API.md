@@ -172,7 +172,7 @@ Angular sends `{}`. No auth required.
 
 ```ts
 interface GameSummary {
-  id: number;                 // RAWG game id
+  id: number;                 // game ID from the configured provider
   name: string;
   released: string | null;    // "2013-09-17"
   backgroundImage: string | null;
@@ -203,25 +203,77 @@ interface CompanyOption { slug: string; name: string; gamesCount: number; }
 
 ### `GET /api/games`
 
-All parameters optional.
+Searches the game catalog. All query parameters are optional.
 
 | Param | Type | Default | Rules |
 |---|---|---|---|
-| `search` | string | none | Trimmed, ignored if blank |
-| `page` | int | `1` | Below 1 becomes 1 |
-| `pageSize` | int | `20` | Clamped to 1-40 |
-| `genres` | comma list of slugs | none | Max 10, each `^[a-z0-9][a-z0-9_-]{0,79}$` (lowercased, deduped) |
-| `platforms` | comma list of ints | none | Max 10, positive integers |
-| `developers` | comma list of slugs | none | Same as `genres` |
-| `publishers` | comma list of slugs | none | Same as `genres` |
-| `ordering` | string | none | One of the six values from `/filters` |
-| `metacriticMin` | int | none | 0-100 |
-| `metacriticMax` | int | none | 0-100, must be >= `metacriticMin` (UI only sends min) |
+| `search` | string | none | Trimmed; blank values are ignored. |
+| `page` | int | `1` | Values below 1 are treated as 1. |
+| `pageSize` | int | `20` | Clamped to 1-40. |
+| `genres` | comma-separated slugs | none | Up to 10 distinct slugs. Values are trimmed and lowercased. Must match `^[a-z0-9][a-z0-9_-]{0,79}$`. |
+| `platforms` | comma-separated positive integers | none | Up to 10 distinct platform IDs. |
+| `developers` | comma-separated company slugs | none | Up to 10 distinct slugs; same format and normalization as `genres`. |
+| `publishers` | comma-separated company slugs | none | Up to 10 distinct slugs; same format and normalization as `genres`. |
+| `ordering` | string | none | One of the six values returned by `/api/games/filters`. Leading `-` means descending. |
+| `metacriticMin` | int | none | Inclusive minimum score from 0 to 100. With IGDB, this filters IGDB's aggregated critic rating, which is exposed as `metacritic`. |
+| `metacriticMax` | int | none | Inclusive maximum score from 0 to 100; must be greater than or equal to `metacriticMin`. With IGDB, this filters IGDB's aggregated critic rating. |
 
-Logic: values **within** one filter are OR, **different** filters are AND.
+#### How search and filters combine
+
+- Multiple values for one list filter are alternatives (OR). For example, `genres=action,adventure` matches either genre.
+- Different filters are combined (AND). For example, `genres=action&platforms=6` requires both a matching genre and platform.
+- `search` is combined with the selected filters.
+- If no search term is provided, the IGDB provider excludes games with no rating count and defaults to most-rated first.
+- With a search term and no `ordering`, IGDB uses its full-text search. With both `search` and `ordering`, IGDB uses a name-substring match instead, because IGDB does not allow sorting full-text search results. The substring behavior may return different matches than full-text search.
+- `ordering` values mean: `-rating` highest rating first; `-metacritic` highest critic score first; `-released` newest release first; `released` oldest release first; `-added` most popular first; `name` A-Z.
+
+Use `/api/games/filters` to discover available genre slugs and platform IDs, and `/api/games/companies` to discover developer and publisher slugs. The set of options depends on the configured provider.
+
+#### Example requests
+
+These examples use the backend's HTTP development URL. When using Postman or a browser, replace `{{baseUrl}}` with `http://localhost:3001`.
 
 ```http
-GET /api/games?search=zelda&page=1&pageSize=20&genres=action,adventure&platforms=7&ordering=-rating&metacriticMin=80
+@baseUrl = http://localhost:3001
+
+### Default listing (page 1, 20 results)
+GET {{baseUrl}}/api/games
+
+### Search by text
+GET {{baseUrl}}/api/games?search=zelda
+
+### Search with paging
+GET {{baseUrl}}/api/games?search=mario&page=2&pageSize=10
+
+### Match either genre, and require one of the selected platforms
+GET {{baseUrl}}/api/games?genres=action,adventure&platforms=6,167
+
+### Sort by rating and restrict the score range
+GET {{baseUrl}}/api/games?ordering=-rating&metacriticMin=70&metacriticMax=95
+
+### Search, filter, sort, and page results together
+GET {{baseUrl}}/api/games?search=zelda&genres=action,adventure&platforms=130&ordering=-released&metacriticMin=80&page=1&pageSize=20
+
+### Get the available genre, platform, and ordering options
+GET {{baseUrl}}/api/games/filters
+
+### Filter by developer (use a slug returned by the companies endpoint)
+GET {{baseUrl}}/api/games?developers=nintendo
+
+### Filter by publisher
+GET {{baseUrl}}/api/games?publishers=nintendo
+
+### A-Z ordering
+GET {{baseUrl}}/api/games?ordering=name
+
+### Check validation: unsupported ordering
+GET {{baseUrl}}/api/games?ordering=popular
+
+### Check validation: invalid platform ID
+GET {{baseUrl}}/api/games?platforms=pc
+
+### Check validation: incompatible score bounds
+GET {{baseUrl}}/api/games?metacriticMin=90&metacriticMax=50
 ```
 
 - **200:** `PagedResult<GameSummary>`
@@ -247,12 +299,14 @@ GET /api/games?search=zelda&page=1&pageSize=20&genres=action,adventure&platforms
 }
 ```
 
-No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
+No matches return **200** with an empty `items` array and `totalCount: 0`. `totalPages` is calculated from the result count and page size.
 
-- **400:** `errors` keyed by param name, e.g. `{ "ordering": ["ordering is not one of the supported sort orders."] }`. Other messages: lists must be "a comma-separated list of slugs", "accepts at most 10 values", `platforms` must be "a comma-separated list of platform ids", metacritic "must be between 0 and 100", "metacriticMin cannot be greater than metacriticMax." (Exact wording is not UI-critical.)
+- **400:** validation problem with an `errors` object keyed by parameter name. Invalid slugs, more than 10 distinct values, invalid platform IDs, unsupported orderings, scores outside 0-100, or a minimum greater than the maximum are rejected.
 - **503:** see below.
 
 ### `GET /api/games/filters`
+
+Returns the filter options available from the configured provider and the supported ordering choices.
 
 - **200:**
 
@@ -281,8 +335,8 @@ No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
 }
 ```
 
-- Genre `value` is a slug. Platform `value` is a numeric id **as a string**. Send these as the `genres` / `platforms` params.
-- `orderings` is fixed at exactly these six.
+- Genre `value` is a slug. Platform `value` is a numeric ID **as a string**. Pass these values as `genres` / `platforms` on `GET /api/games`.
+- `orderings` contains the six supported values: `-rating`, `-metacritic`, `-released`, `released`, `-added`, and `name`.
 - **503** if the provider is unavailable.
 
 ### `GET /api/games/companies`
@@ -292,13 +346,18 @@ No matches: `200` with `items: []`, `totalCount: 0`, `totalPages: 0`.
 | `kind` | Yes | `developer` or `publisher` (case-insensitive) |
 | `search` | Yes | 2-60 chars after trimming |
 
-- Example quearies
+- Example queries:
 ```
+@baseUrl = http://localhost:3001
+
 ### Search developers
 GET {{baseUrl}}/api/games/companies?kind=developer&search=Nintendo
 
 ### Search publishers
 GET {{baseUrl}}/api/games/companies?kind=publisher&search=Nintendo
+
+### Use a returned developer slug in a game search
+GET {{baseUrl}}/api/games?developers=nintendo
 ```
 
 - **200:** up to **10** `CompanyOption`:
