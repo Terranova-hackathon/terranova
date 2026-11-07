@@ -22,7 +22,6 @@ public static  partial class GameEndPoint
         group.MapGet("/filters", GetFilters);
         group.MapGet("/companies", SearchCompanies);
         group.MapGet("/featured", GetFeatured);
-
     }
 
     private static async Task<IResult> Search(
