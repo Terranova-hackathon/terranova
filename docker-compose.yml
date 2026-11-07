@@ -59,8 +59,16 @@ services:
             - Igdb__ApiSecret=${IGDB_API_SECRET}
         volumes:
             - ./backend:/app
-            - /app/bin
-            - /app/obj
+            - /app/src/Lune.Api/bin
+            - /app/src/Lune.Api/obj
+            - /app/src/Lune.Auth/bin
+            - /app/src/Lune.Auth/obj
+            - /app/src/Lune.Games/bin
+            - /app/src/Lune.Games/obj
+            - /app/src/Lune.Favorites/bin
+            - /app/src/Lune.Favorites/obj
+            - /app/src/Lune.Shared/bin
+            - /app/src/Lune.Shared/obj
         networks:
             - private-network
         healthcheck:

@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.*" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" PrivateAssets="all" />
     <ProjectReference Include="..\Lune.Games\Lune.Games.csproj" />
     <ProjectReference Include="..\Lune.Shared\Lune.Shared.csproj" />
     <ProjectReference Include="..\Lune.Auth\Lune.Auth.csproj" />
