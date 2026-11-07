@@ -1,0 +1,39 @@
+info:
+  name: delete /api/favorites/:igdbId
+  type: http
+  seq: 4
+  tags:
+    - Favorites
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/favorites/:igdbId"
+  params:
+    - name: igdbId
+      value: ""
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/favorites/:igdbId"
+      method: DELETE
+      params:
+        - name: igdbId
+          value: ""
+          type: path
+    response:
+      status: 200
+      statusText: OK
+      body:
+        type: text
+        data: ""

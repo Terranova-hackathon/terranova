@@ -52,12 +52,48 @@ Frontend (Node.js 22):
 cd frontend && npm install && npm start
 ```
 
-## Backend Dependencies
+## Dev Dependencies
 
-### Linux
-To develop outside of docker containers, you will need to install dotnet
-`sudo apt install -y dotnet-sdk-10.0`
+Backend development requires Microsoft's dotnet SDK
 
+Install with:
+```
+sudo apt-get update && sudo apt-get install -y dotnet-sdk-10.0
+```
 Only one external package is used in this project (Scalar for API documentation and testing)
-To install  backend/src/Lune.Api run:
-`dotnet add package Scalar.AspNetCore`
+
+Install (in Lune.Api project directory) with:
+
+```
+dotnet add package Scalar.AspNetCore
+```
+
+## Testing
+
+For API testing, we use [Bruno](https://docs.usebruno.com/) which works with an opensource test collection format `opencollection.yaml`. These collections that can be imported to other testing suites such as Postman.
+
+The test collection can be found at `/testing/endpoint-testing/lune-api-testing`. This collection can be opened with Bruno deskop,
+or can be accessed from within the VSCode IDE using the Bruno Extension `id: bruno-api-client.bruno`
+
+The entire endpoint collection can be run from the Bruno collections sidebar.
+
+1. Click `...` next to collection name and select "Run"
+2. Specify the order of requests (note some might impact the outcome of others, ex. don't test 'logout' before accessing auth protected endpoints).
+3. Run the requests
+4. Explore the responses.
+
+![1. Select Run](docs/images/bruno_select_run.png)
+![3. Run Requests](docs/images/bruno_run_requests.png)
+
+### Updating tests for new endpoints
+
+To retrieve an up to date openapi.json, run the following command from project root while the project is running:
+`curl -s http://localhost:3001/openapi/v1.json -o docs/openapi.json`
+This will save a copy to the /docs directory.
+
+To pre-populate a reference Bruno collection based on the openapi.json:
+(Requires `node > 20` and `npm install-g usebruno/cli`)
+
+Run ```bru import openapi -s docs/openapi.json -o testing/endpoint-testing/lune-reference-api -n "Lune Reference API" --collection-format=opencollection```
+
+Now, you can copy over any new endpoints to the `lune-api-testing` collection and begin to build out new tests.

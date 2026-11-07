@@ -1,0 +1,6 @@
+info:
+  name: Games
+  type: folder
+
+request:
+  auth: inherit

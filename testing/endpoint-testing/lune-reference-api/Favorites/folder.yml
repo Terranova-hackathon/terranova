@@ -1,0 +1,6 @@
+info:
+  name: Favorites
+  type: folder
+
+request:
+  auth: inherit

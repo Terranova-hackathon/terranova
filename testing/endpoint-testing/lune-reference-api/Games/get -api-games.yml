@@ -1,0 +1,109 @@
+info:
+  name: get /api/games
+  type: http
+  seq: 1
+  tags:
+    - Games
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/games"
+  params:
+    - name: search
+      value: ""
+      type: query
+      disabled: true
+    - name: page
+      value: "1"
+      type: query
+    - name: pageSize
+      value: "20"
+      type: query
+    - name: genres
+      value: ""
+      type: query
+      disabled: true
+    - name: platforms
+      value: ""
+      type: query
+      disabled: true
+    - name: developers
+      value: ""
+      type: query
+      disabled: true
+    - name: publishers
+      value: ""
+      type: query
+      disabled: true
+    - name: ordering
+      value: ""
+      type: query
+      disabled: true
+    - name: metacriticMin
+      value: ""
+      type: query
+      disabled: true
+    - name: metacriticMax
+      value: ""
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/games"
+      method: GET
+      params:
+        - name: search
+          value: ""
+          type: query
+          disabled: true
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "20"
+          type: query
+        - name: genres
+          value: ""
+          type: query
+          disabled: true
+        - name: platforms
+          value: ""
+          type: query
+          disabled: true
+        - name: developers
+          value: ""
+          type: query
+          disabled: true
+        - name: publishers
+          value: ""
+          type: query
+          disabled: true
+        - name: ordering
+          value: ""
+          type: query
+          disabled: true
+        - name: metacriticMin
+          value: ""
+          type: query
+          disabled: true
+        - name: metacriticMax
+          value: ""
+          type: query
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      body:
+        type: text
+        data: ""
