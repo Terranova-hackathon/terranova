@@ -1,0 +1,65 @@
+opencollection: 1.0.0
+
+info:
+  name: lune-backend-testing
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  auth:
+    type: basic
+
+docs:
+  content: |+
+    # Lune Game API Endpoints
+
+    Endpoints for backend service of Lune game search site
+
+    ## General Endpoints
+
+    Any site visitor should be able to make requests to the unprotected game search and game data endpoints as well as create an account to access protected endpoints.
+
+    | Type | Route | Description |
+    |---|---|---|
+    | POST | /api/auth/login | Login to Account |
+    | POST | /api/auth/register | Create a new Account |
+    | GET | /api/games/ | retrieve game list w/wo query parameters |
+
+    | GET | /api/games/{id:int} | retrieve individual game data |
+    | GET | /api/games/companies | retrieve company list with query params |
+    | GET | /api/games/filters | retrieve search filter options |
+    | GET | /health | app build state check |
+
+    ## Protected Endpoints
+
+    Certain functionality is reserved for registered users. This includes saving favorited games to a user list and access to the user profile page.
+
+    | Type | Route | Description |
+    |---|---|---|
+    | POST | /api/auth/logout | logout signed in user (not protected, but JWT required to logout user) |
+    | GET | /api/auth/me | return user profile data |
+    | GET | /api/favorites/ | returns structured summaries games in user's favorites list |
+    | DELETE | /api/favorites/{id:int} | remove game from favorite list by id  |
+    | PUT | /api/favorites/{id:int} | add game to user favorite list by id |
+    | GET | /api/favorites/ids | retrieves all user's favorites ids |
+
+  type: text/markdown
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    presets:
+      request:
+        type: http
+        url: "{{baseURL}}"

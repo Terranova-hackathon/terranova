@@ -1,0 +1,29 @@
+info:
+  name: Register_new_user_201
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "displayName": "{{$randomUserName}}",
+        "email": "{{$randomEmail}}",
+        "password": "{{new_password}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "201"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

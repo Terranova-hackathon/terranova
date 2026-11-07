@@ -1,0 +1,12 @@
+name: local-backend
+variables:
+  - name: baseURL
+    value: http://localhost:3001
+  - name: name
+    value: test_user
+  - name: email
+    value: test@test.com
+  - name: password
+    value: Password1!
+  - name: new_password
+    value: Password1!

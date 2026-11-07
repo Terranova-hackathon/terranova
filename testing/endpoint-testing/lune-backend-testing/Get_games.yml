@@ -1,0 +1,435 @@
+info:
+  name: Get_games
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseURL}}/api/games"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body
+      operator: isNotEmpty
+    - expression: res.body.items
+      operator: isNotEmpty
+    - expression: res..body.page
+      operator: isNotEmpty
+    - expression: res.body.pageSize
+      operator: isNumber
+    - expression: res.body.totalCount
+      operator: isNumber
+    - expression: res.body.totalPages
+      operator: isNumber
+    - expression: res.body.items[0]
+      operator: isJson
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |-
+  # Example Respose
+
+  ```
+  {
+    "items": [
+      {
+        "id": 1020,
+        "name": "Grand Theft Auto V",
+        "released": "2013-09-17",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co2lbd.jpg",
+        "rating": 4.44,
+        "metacritic": 88,
+        "genres": [
+          "Shooter",
+          "Racing",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 3",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox 360",
+          "Xbox One"
+        ]
+      },
+      {
+        "id": 1942,
+        "name": "The Witcher 3: Wild Hunt",
+        "released": "2015-05-19",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/coaarl.jpg",
+        "rating": 4.64,
+        "metacritic": 92,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "Nintendo Switch 2",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ]
+      },
+      {
+        "id": 72,
+        "name": "Portal 2",
+        "released": "2011-04-18",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1rs4.jpg",
+        "rating": 4.59,
+        "metacritic": 92,
+        "genres": [
+          "Platform",
+          "Puzzle",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360",
+          "Nintendo Switch"
+        ]
+      },
+      {
+        "id": 472,
+        "name": "The Elder Scrolls V: Skyrim",
+        "released": "2011-11-10",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/cocs1l.jpg",
+        "rating": 4.19,
+        "metacritic": 80,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ]
+      },
+      {
+        "id": 732,
+        "name": "Grand Theft Auto: San Andreas",
+        "released": "2004-10-26",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co2lb9.jpg",
+        "rating": 4.58,
+        "metacritic": 93,
+        "genres": [
+          "Shooter",
+          "Racing",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox",
+          "PlayStation 3",
+          "PlayStation 4",
+          "Windows Phone",
+          "Android",
+          "PC (Microsoft Windows)",
+          "iOS",
+          "Mac",
+          "Xbox 360",
+          "PlayStation 2"
+        ]
+      },
+      {
+        "id": 71,
+        "name": "Portal",
+        "released": "2007-10-10",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/coay61.jpg",
+        "rating": 4.16,
+        "metacritic": 80,
+        "genres": [
+          "Platform",
+          "Puzzle",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "Linux",
+          "Android",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360",
+          "Nintendo Switch"
+        ]
+      },
+      {
+        "id": 25076,
+        "name": "Red Dead Redemption 2",
+        "released": "2018-10-26",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1q1f.jpg",
+        "rating": 4.68,
+        "metacritic": 94,
+        "genres": [
+          "Shooter",
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "Google Stadia",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ]
+      },
+      {
+        "id": 19560,
+        "name": "God of War",
+        "released": "2018-04-20",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/cobkt6.jpg",
+        "rating": 4.7,
+        "metacritic": 96,
+        "genres": [
+          "Role-playing (RPG)",
+          "Hack and slash/Beat 'em up",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5"
+        ]
+      },
+      {
+        "id": 1009,
+        "name": "The Last of Us",
+        "released": "2013-06-14",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1r7f.jpg",
+        "rating": 4.61,
+        "metacritic": 92,
+        "genres": [
+          "Shooter",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3"
+        ]
+      },
+      {
+        "id": 233,
+        "name": "Half-Life 2",
+        "released": "2004-11-16",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1nmw.jpg",
+        "rating": 4.24,
+        "metacritic": 79,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "Xbox",
+          "PlayStation 3",
+          "Linux",
+          "Android",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360"
+        ]
+      },
+      {
+        "id": 20,
+        "name": "BioShock",
+        "released": "2007-08-21",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co2mli.jpg",
+        "rating": 4.48,
+        "metacritic": 93,
+        "genres": [
+          "Shooter",
+          "Puzzle",
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360"
+        ]
+      },
+      {
+        "id": 127,
+        "name": "Assassin's Creed II",
+        "released": "2009-11-17",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1rcf.jpg",
+        "rating": 4.42,
+        "metacritic": 90,
+        "genres": [
+          "Platform",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360"
+        ]
+      },
+      {
+        "id": 733,
+        "name": "Grand Theft Auto: Vice City",
+        "released": "2002-10-27",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co2lbb.jpg",
+        "rating": 4.53,
+        "metacritic": 94,
+        "genres": [
+          "Shooter",
+          "Racing",
+          "Adventure",
+          "Arcade"
+        ],
+        "platforms": [
+          "Xbox",
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "PlayStation 2"
+        ]
+      },
+      {
+        "id": 7346,
+        "name": "The Legend of Zelda: Breath of the Wild",
+        "released": "2017-03-03",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co3p2d.jpg",
+        "rating": 4.75,
+        "metacritic": 98,
+        "genres": [
+          "Puzzle",
+          "Adventure"
+        ],
+        "platforms": [
+          "Wii U",
+          "Nintendo Switch"
+        ]
+      },
+      {
+        "id": 231,
+        "name": "Half-Life",
+        "released": "1998-11-19",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/coc2ea.jpg",
+        "rating": 4.21,
+        "metacritic": 80,
+        "genres": [
+          "Shooter",
+          "Puzzle",
+          "Adventure"
+        ],
+        "platforms": [
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac"
+        ]
+      },
+      {
+        "id": 74,
+        "name": "Mass Effect 2",
+        "released": "2010-01-26",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co20ac.jpg",
+        "rating": 4.67,
+        "metacritic": 96,
+        "genres": [
+          "Shooter",
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ]
+      },
+      {
+        "id": 501,
+        "name": "Batman: Arkham City",
+        "released": "2011-10-18",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1voh.jpg",
+        "rating": 4.47,
+        "metacritic": 91,
+        "genres": [
+          "Hack and slash/Beat 'em up",
+          "Adventure"
+        ],
+        "platforms": [
+          "OnLive Game System",
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360",
+          "Nintendo Switch"
+        ]
+      },
+      {
+        "id": 538,
+        "name": "BioShock Infinite",
+        "released": "2013-03-25",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co2n12.jpg",
+        "rating": 4.47,
+        "metacritic": 93,
+        "genres": [
+          "Shooter",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PlayStation 4",
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360",
+          "Xbox One"
+        ]
+      },
+      {
+        "id": 7331,
+        "name": "Uncharted 4: A Thief's End",
+        "released": "2016-05-10",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1r7h.jpg",
+        "rating": 4.59,
+        "metacritic": 93,
+        "genres": [
+          "Shooter",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4"
+        ]
+      },
+      {
+        "id": 500,
+        "name": "Batman: Arkham Asylum",
+        "released": "2009-08-25",
+        "backgroundImage": "https://images.igdb.com/igdb/image/upload/t_720p/co1voj.jpg",
+        "rating": 4.37,
+        "metacritic": 89,
+        "genres": [
+          "Hack and slash/Beat 'em up",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "Ouya",
+          "PC (Microsoft Windows)",
+          "Mac",
+          "Xbox 360",
+          "Nintendo Switch"
+        ]
+      }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "totalCount": 31288,
+    "totalPages": 1565
+  }
+  ```

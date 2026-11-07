@@ -1,0 +1,29 @@
+info:
+  name: Register_existing_user_400
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "displayName": "{{name}}",
+        "email": "{{email}}",
+        "password": "{{password}}"
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
