@@ -58,7 +58,6 @@ cd frontend && npm install && npm start
 Backend development requires Microsofts dotnet sdk (version 10.0)
 
 Install with:
-```
-sudo apt-get update && \
+```sudo apt-get update && \
   sudo apt-get install -y dotnet-sdk-10.0
-````
+```
