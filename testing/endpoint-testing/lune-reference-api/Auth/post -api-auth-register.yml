@@ -1,0 +1,47 @@
+info:
+  name: post /api/auth/register
+  type: http
+  seq: 1
+  tags:
+    - Auth
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/auth/register"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "",
+        "password": "",
+        "displayName": ""
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/auth/register"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "email": "",
+            "password": "",
+            "displayName": ""
+          }
+    response:
+      status: 200
+      statusText: OK
+      body:
+        type: text
+        data: ""

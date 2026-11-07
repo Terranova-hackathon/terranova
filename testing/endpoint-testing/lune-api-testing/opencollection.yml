@@ -1,7 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: lune-backend-testing
+  name: Lune  API Testing
 config:
   proxy:
     inherit: true
@@ -16,7 +16,8 @@ config:
 
 request:
   auth:
-    type: basic
+    type: bearer
+    token: "{{token}}"
 
 docs:
   content: |+
@@ -33,7 +34,6 @@ docs:
     | POST | /api/auth/login | Login to Account |
     | POST | /api/auth/register | Create a new Account |
     | GET | /api/games/ | retrieve game list w/wo query parameters |
-
     | GET | /api/games/{id:int} | retrieve individual game data |
     | GET | /api/games/companies | retrieve company list with query params |
     | GET | /api/games/filters | retrieve search filter options |
@@ -62,4 +62,4 @@ extensions:
     presets:
       request:
         type: http
-        url: "{{baseURL}}"
+        url: "{{baseUrl}}"
