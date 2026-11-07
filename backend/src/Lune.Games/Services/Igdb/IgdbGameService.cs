@@ -25,12 +25,8 @@ internal sealed class IgdbGamesService(
         CancellationToken cancellationToken = default)
     {
         var offset = Math.Max(page - 1, 0) * pageSize;
-
-        // IGDB does not allow "sort" together with "search", so the default list is the only one that sorts.
-        var criteria = string.IsNullOrWhiteSpace(search)
-            ? "where total_rating_count > 0;"
-            : $"search \"{Escape(search.Trim())}\";";
-        var order = string.IsNullOrWhiteSpace(search) ? " sort total_rating_count desc;" : string.Empty;
+        var criteria = BuildCriteria(search, filters);
+        var order = BuildOrdering(search, filters);
 
         var games = await PostAsync<List<IgdbGame>>(
             "games", $"fields {IgdbGameFields.Summary}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
@@ -39,6 +35,73 @@ internal sealed class IgdbGamesService(
         return new PagedResult<GameSummary>(
             (games?.Select(ToSummary) ?? []).ToList(), page, pageSize, count?.Count ?? 0);
     }
+
+    //Converts the out search params into a IGDB readale parameter. 
+    private static string BuildCriteria(string? search, GameSearchFilters? filters)
+    {
+        var conditions = new List<string>();
+        if (filters is not null)
+        {
+            if (filters.Genres.Count > 0)
+                conditions.Add($"genres.slug = ({QuotedValues(filters.Genres)})");
+
+            if (filters.Platforms.Count > 0)
+                conditions.Add($"platforms = ({string.Join(",", filters.Platforms)})");
+
+            if (filters.Developers.Count > 0)
+            {
+                conditions.Add(
+                    $"involved_companies.developer = true & involved_companies.company.slug = ({QuotedValues(filters.Developers)})");
+            }
+
+            if (filters.Publishers.Count > 0)
+            {
+                conditions.Add(
+                    $"involved_companies.publisher = true & involved_companies.company.slug = ({QuotedValues(filters.Publishers)})");
+            }
+
+            if (filters.MetacriticMin is not null)
+                conditions.Add($"aggregated_rating >= {filters.MetacriticMin.Value}");
+
+            if (filters.MetacriticMax is not null)
+                conditions.Add($"aggregated_rating <= {filters.MetacriticMax.Value}");
+        }
+
+        var term = search?.Trim();
+        // IGDB does not support sorting a full-text search, so use a name filter when sorting is requested.
+        var useWildcardSearch = !string.IsNullOrEmpty(term) && filters?.Ordering is not null;
+        if (useWildcardSearch)
+            conditions.Add($"name ~ *\"{Escape(term!)}\"*");
+
+        if (string.IsNullOrEmpty(term))
+            conditions.Add("total_rating_count > 0");
+
+        var searchClause = string.IsNullOrEmpty(term) || useWildcardSearch
+            ? string.Empty
+            : $"search \"{Escape(term)}\"; ";
+        return $"{searchClause}{(conditions.Count == 0 ? string.Empty : $"where {string.Join(" & ", conditions)};")}";
+    }
+
+    private static string BuildOrdering(string? search, GameSearchFilters? filters)
+    {
+        var ordering = filters?.Ordering;
+        var clause = ordering switch
+        {
+            "-rating" => "total_rating desc",
+            "-metacritic" => "aggregated_rating desc",
+            "-released" => "first_release_date desc",
+            "released" => "first_release_date asc",
+            "-added" => "total_rating_count desc",
+            "name" => "name asc",
+            _ when string.IsNullOrWhiteSpace(search) => "total_rating_count desc",
+            _ => null
+        };
+
+        return clause is null ? string.Empty : $" sort {clause};";
+    }
+
+    private static string QuotedValues(IEnumerable<string> values) =>
+        string.Join(",", values.Select(value => $"\"{Escape(value)}\""));
 
     /// <summary>
     /// Gets one game by id, or null when IGDB does not know it.
@@ -143,6 +206,19 @@ internal sealed class IgdbGamesService(
             .OrderByDescending(c => c.GamesCount).ThenBy(c => c.Name)
             .Take(10)
             .ToList();
+    }
+
+    public async Task<GameDetails?> GetFeaturedAsync(CancellationToken cancellationToken = default)
+    {
+        var candidates = await PostAsync<List<IgdbGame>>(
+            "games",
+            $"fields {IgdbGameFields.Detail}; where total_rating_count > 0; sort total_rating_count desc; limit 50;",
+            cancellationToken);
+
+        if (candidates is null || candidates.Count == 0)
+            return null;
+
+        return ToDetails(candidates[Random.Shared.Next(candidates.Count)]);
     }
 
 

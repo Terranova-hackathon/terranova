@@ -6,11 +6,9 @@ using Lune.Games.Services;
 
 namespace Lune.Games.EndPoints;
 
-public static  partial class GameEndPoint
+public static class GameEndPoint
 {
-    
-    private const int MaxPageSize = 50;
-    private const int MaxValuePerPage = 20;
+    private const int MaxPageSize = 40;
 
     public static void Map(IEndpointRouteBuilder endpoints)
     {
@@ -21,16 +19,36 @@ public static  partial class GameEndPoint
         group.MapGet("/{id:int}", GetById);
         group.MapGet("/filters", GetFilters);
         group.MapGet("/companies", SearchCompanies);
+        group.MapGet("/featured", GetFeatured);
 
     }
 
     private static async Task<IResult> Search(
-    IGamesService games, string? search, int page = 1, int pageSize = 20, CancellationToken ct = default)
+        IGamesService games,
+        string? search,
+        int page = 1,
+        int pageSize = 20,
+        string? genres = null,
+        string? platforms = null,
+        string? developers = null,
+        string? publishers = null,
+        string? ordering = null,
+        string? metacriticMin = null,
+        string? metacriticMax = null,
+        CancellationToken cancellationToken = default)
     {
+        var filters = GameSearchFilterParser.Parse(
+            genres, platforms, developers, publishers, ordering, metacriticMin, metacriticMax, out var errors);
+        if (filters is null)
+            return Results.ValidationProblem(errors);
+
+        // just checking to see if the page number is anything less then one. 
+        page = Math.Max(page, 1);
         pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
+
         try
         {
-            return Results.Ok(await games.SearchAsync(search, page, pageSize, null, ct));
+            return Results.Ok(await games.SearchAsync(search, page, pageSize, filters, cancellationToken));
         }
         catch (GamesUnavailableException e)
         {
@@ -38,11 +56,11 @@ public static  partial class GameEndPoint
         }
     }
 
-    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken ct)
+    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken cancellationToken)
     {
         try
         {
-            var game = await games.GetByIdAsync(id, ct);
+            var game = await games.GetByIdAsync(id, cancellationToken);
             return game is null ? Results.NotFound() : Results.Ok(game);
         }
         catch (GamesUnavailableException ex)
@@ -92,6 +110,20 @@ public static  partial class GameEndPoint
         try
         {
             return Results.Ok(await games.SearchCompaniesAsync(companyKind!.Value, term, cancellationToken));
+        }
+        catch (GamesUnavailableException e)
+        {
+            return Unavailable(e);
+        }
+    }
+
+    private static async Task<IResult> GetFeatured(
+        IGamesService games, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var game = await games.GetFeaturedAsync(cancellationToken);
+            return game is null ? Results.NotFound() : Results.Ok(game);
         }
         catch (GamesUnavailableException e)
         {
