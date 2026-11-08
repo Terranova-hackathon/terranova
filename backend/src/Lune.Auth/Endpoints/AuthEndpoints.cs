@@ -124,6 +124,7 @@ public static class AuthEndpoints
     private static async Task<IResult> DeleteAccount(
         ClaimsPrincipal principal,
         UserManager<AppUser> users,
+        IEnumerable<IUserDataCleaner> cleaners,
         IOptions<JwtOptions> jwtOptions,
         HttpContext context)
     {
@@ -143,6 +144,13 @@ public static class AuthEndpoints
                 .ToDictionary(
                     group => group.Key,
                     group => group.Select(error => error.Description).ToArray()));
+        }
+
+        // The login is already gone, so clean up other modules' data without the request token:
+        // a client disconnect must not leave orphaned rows behind.
+        foreach (var cleaner in cleaners)
+        {
+            await cleaner.DeleteUserDataAsync(id, CancellationToken.None);
         }
 
         AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
