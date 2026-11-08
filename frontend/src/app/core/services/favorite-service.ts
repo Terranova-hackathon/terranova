@@ -26,6 +26,10 @@ export class FavoriteService {
 		return this.favoriteIds().has(id);
 	}
 
+	clear(): void {
+		this.favoriteIds.set(new Set());
+	}
+
 	addFavorite(id: number): Observable<void> {
 		return this.http.put<void>(
 			`${this.apiUrl}/${id}`, {}

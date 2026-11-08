@@ -2,38 +2,75 @@
 	<h1>Explore Thousands of Games</h1>
 	<p>Discover your next adventure.</p>
 
+	<form
+		class="games-search mb-4"
+		role="search"
+		(ngSubmit)="submitSearch()"
+	>
+		<label for="games-search" class="form-label">
+			Search videogames
+		</label>
+
+		<div class="d-flex gap-2">
+			<input
+				id="games-search"
+				name="search"
+				type="search"
+				class="form-control"
+				placeholder="Search by game name..."
+				[(ngModel)]="searchInput"
+			/>
+
+			<button type="submit" class="btn btn-primary">
+				Search
+			</button>
+		</div>
+	</form>
+
 	@if (favoriteError()) {
 		<div class="alert alert-danger" role="alert">
 			{{ favoriteError() }}
 		</div>
 	}
+
+	@if (searchTerm()) {
+		<p class="mb-3">
+			Search results for:
+			<strong>{{ searchTerm() }}</strong>
+		</p>
+	}
+
 	@if (loading()) {
 		<div class="text-center py-5" role="status">
 			<div class="spinner-border text-primary"></div>
 			<p class="mt-3">Loading games...</p>
 		</div>
 	} @else if (error()) {
-	<div class="alert alert-danger" role="alert">
-		<p>{{ error() }}</p>
+		<div class="alert alert-danger" role="alert">
+			<p>{{ error() }}</p>
 
-		@if (error().includes('session')) {
-			<a routerLink="/login">You must login</a>
-		} @else {
-			<button class="btn btn-outline-danger" (click)=" loadGames()">
+			<button class="btn btn-outline-danger" (click)=" retryGames()">
 				Try again
 			</button>
-		}
-	</div>
+		</div>
 	} @else if (games().length === 0) {
-		<p class="text-center py-5">No games found.</p>
+		<p class="text-center py-5">
+			@if (searchTerm()) {
+				No games found for "{{ searchTerm() }}".
+			} @else {
+				No games available.
+			}
+  		</p>
 	} @else {
 	<div class="row g-4 mt-2">
 		@for (game of games(); track game.id) {
-			<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+			<div class="col-12 col-md-6 col-lg-4 col-xl-3"
+				[id]="'game-' + game.id"
+			>
 				<app-game-card 
 					[game]="game"
 					[isFavorite]="favoriteIds().has(game.id)"
-					[favoriteBusy]="!favoritesReady() || favoriteBusyIds().has(game.id)"
+					[favoriteBusy]="isLoggedIn() && (!favoritesReady() || favoriteBusyIds().has(game.id))"
 					(favoriteToggled)="toggleFavorite($event)"
 				/>
 			</div>
@@ -60,7 +97,8 @@
 		>Next</button>
 	</nav>
 	<p class="text-center text-secondary mt-3">
-		{{ totalGames() }} Total Games
+		{{ totalGames() }}
+		{{ searchTerm() ? 'matching games' : 'total games' }}
 	</p>
 }
 </main>

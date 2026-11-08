@@ -10,8 +10,8 @@ public static partial class GamesEndpoints
 
     public static void MapGamesEndpoints(this IEndpointRouteBuilder app)
     {
+        // removed requireSession to allow guests to navigate to home
         var group = app.MapGroup("/api/games")
-            .RequireSession()
             .AddEndpointFilter(Simulate503);
 
         group.MapGet("", (HttpRequest req, GameCatalog catalog) => Search(req, catalog));
