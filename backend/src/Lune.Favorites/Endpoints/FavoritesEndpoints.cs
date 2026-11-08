@@ -54,7 +54,7 @@ internal static class FavoritesEndpoints
                     title: "Favorites limit reached.",
                     detail: $"You can save up to {FavoriteLimits.MaxPerUser} favorites.",
                     statusCode: StatusCodes.Status409Conflict),
-                _ => Results.NoContent(),
+                _ => Results.Created(),
             };
         }
         catch (GameCatalogUnavailableException ex)
