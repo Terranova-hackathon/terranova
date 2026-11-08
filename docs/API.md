@@ -81,6 +81,7 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | POST | `/api/auth/register` | No | Create account and sign in |
 | POST | `/api/auth/login` | No | Sign in |
 | POST | `/api/auth/logout` | No | Sign out |
+| POST | `/api/auth/delete-account` | Yes | Delete the current account |
 | GET | `/api/games` | Yes | Search, filter, sort and page games |
 | GET | `/api/games/filters` | Yes | Options for filter dropdowns |
 | GET | `/api/games/companies` | Yes | Developer/publisher autocomplete |
@@ -163,6 +164,14 @@ Real lockout: 5 wrong passwords lock the account for 5 minutes. Optional to mock
 Angular sends `{}`. No auth required.
 
 - **204:** no body, cookie deleted
+
+### `POST /api/auth/delete-account`
+
+Requires authentication. The account identified by the auth cookie is deleted; no user ID is accepted from the request.
+
+- **204:** account deleted, no body, cookie deleted
+- **401:** no valid cookie, or the account no longer exists
+- **400:** Identity rejected the deletion; `errors` contains the Identity error codes and descriptions
 
 ---
 
