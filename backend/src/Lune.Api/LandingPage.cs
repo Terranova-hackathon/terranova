@@ -60,6 +60,7 @@ public static class LandingPage
     <button id="registerBtn">Register</button>
     <button id="loginBtn">Login</button>
     <button id="logoutBtn">Logout</button>
+    <button id="deleteBtn">Delete account</button>
   </div>
 </header>
 
@@ -118,6 +119,12 @@ public static class LandingPage
     const res = await fetch('/api/auth/logout', { method: 'POST' });
     out.hidden = false;
     out.textContent = res.status + ' ' + res.statusText;
+  };
+  document.getElementById('deleteBtn').onclick = async () => {
+    if (!confirm('Permanently delete the currently logged-in account?')) return;
+    const res = await fetch('/api/auth/delete-account', { method: 'POST' });
+    out.hidden = false;
+    out.textContent = res.status + ' ' + res.statusText + '\n' + await res.text();
   };
   document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('dialog').close());
 </script>

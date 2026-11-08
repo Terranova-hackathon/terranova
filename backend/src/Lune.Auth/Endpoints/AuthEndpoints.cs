@@ -23,9 +23,9 @@ public static class AuthEndpoints
         group.MapPost("/login", Login);
         group.MapPost("/logout", Logout);
         group.MapGet("/me", GetCurrentUser).RequireAuthorization();
+        group.MapPost("/delete-account", DeleteAccount).RequireAuthorization();
 
-        //TODO: decide if we want to make add tese end points as well.
-        // group.MapPost("/delete-account", DeleteAccount);
+        //TODO: decide if we want to make add this end points as well.
         // group.MapPost("/forgot-password", ForgotPassword);
     }
 
@@ -95,7 +95,7 @@ public static class AuthEndpoints
     }
 
 
-    private static async Task<IResult> Logout( IOptions<JwtOptions> jwtOptions, HttpContext context)
+    private static async Task<IResult> Logout(IOptions<JwtOptions> jwtOptions, HttpContext context)
     {
         AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
         return await Task.FromResult(Results.NoContent());
@@ -121,11 +121,41 @@ public static class AuthEndpoints
         return Results.Ok(MakeResponse(user));
     }
 
-    // private static async Task DeleteAccount(HttpContext context)
-    // {
-    //     // TODO: Implement Delete Account logic here
-    //     await context.Response.WriteAsync("Delete Account password endpoint");
-    // }
+    private static async Task<IResult> DeleteAccount(
+        ClaimsPrincipal principal,
+        UserManager<AppUser> users,
+        IEnumerable<IUserDataCleaner> cleaners,
+        IOptions<JwtOptions> jwtOptions,
+        HttpContext context)
+    {
+        var id = principal.GetUserId();
+        if (id is null)
+            return Results.Unauthorized();
+
+        var user = await users.FindByIdAsync(id);
+        if (user is null)
+            return Results.Unauthorized();
+
+        var result = await users.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            return Results.ValidationProblem(result.Errors
+                .GroupBy(error => error.Code)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(error => error.Description).ToArray()));
+        }
+
+        // The login is already gone, so clean up other modules' data without the request token:
+        // a client disconnect must not leave orphaned rows behind.
+        foreach (var cleaner in cleaners)
+        {
+            await cleaner.DeleteUserDataAsync(id, CancellationToken.None);
+        }
+
+        AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
+        return Results.NoContent();
+    }
 
     //     private static async Task ForgotPassword(HttpContext context)
     // {
@@ -141,5 +171,3 @@ public static class AuthEndpoints
     internal static UserResponse MakeResponse(AppUser user) =>
         new(user.Id, user.Email ?? string.Empty, user.DisplayName);
 }
-
-
