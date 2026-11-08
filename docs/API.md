@@ -223,8 +223,9 @@ Searches the game catalog. All query parameters are optional.
 - Multiple values for one list filter are alternatives (OR). For example, `genres=action,adventure` matches either genre.
 - Different filters are combined (AND). For example, `genres=action&platforms=6` requires both a matching genre and platform.
 - `search` is combined with the selected filters.
+- The IGDB provider excludes games without a known first release date or total rating from search results.
 - If no search term is provided, the IGDB provider excludes games with no rating count and defaults to most-rated first.
-- With a search term and no `ordering`, IGDB uses its full-text search. With both `search` and `ordering`, IGDB uses a name-substring match instead, because IGDB does not allow sorting full-text search results. The substring behavior may return different matches than full-text search.
+- With a search term, the IGDB provider matches a substring of the game name and defaults to name order when `ordering` is omitted. This may return different matches than IGDB's full-text search.
 - `ordering` values mean: `-rating` highest rating first; `-metacritic` highest critic score first; `-released` newest release first; `released` oldest release first; `-added` most popular first; `name` A-Z.
 
 Use `/api/games/filters` to discover available genre slugs and platform IDs, and `/api/games/companies` to discover developer and publisher slugs. The set of options depends on the configured provider.

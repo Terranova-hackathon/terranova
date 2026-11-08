@@ -31,7 +31,7 @@ internal sealed class IgdbGamesService(
         var games = await PostAsync<List<IgdbGame>>(
             "games", $"fields {IgdbGameFields.Summary}; {criteria}{order} limit {pageSize}; offset {offset};", cancellationToken);
         var count = await PostAsync<IgdbCount>("games/count", criteria, cancellationToken);
-
+ 
         return new PagedResult<GameSummary>(
             (games?.Select(ToSummary) ?? []).ToList(), page, pageSize, count?.Count ?? 0);
     }
@@ -39,7 +39,7 @@ internal sealed class IgdbGamesService(
     //Converts the out search params into a IGDB readale parameter. 
     private static string BuildCriteria(string? search, GameSearchFilters? filters)
     {
-        var conditions = new List<string>();
+        var conditions = new List<string> { "first_release_date != null", "total_rating != null" };
         if (filters is not null)
         {
             if (filters.Genres.Count > 0)
@@ -68,18 +68,12 @@ internal sealed class IgdbGamesService(
         }
 
         var term = search?.Trim();
-        // IGDB does not support sorting a full-text search, so use a name filter when sorting is requested.
-        var useWildcardSearch = !string.IsNullOrEmpty(term) && filters?.Ordering is not null;
-        if (useWildcardSearch)
-            conditions.Add($"name ~ *\"{Escape(term!)}\"*");
-
         if (string.IsNullOrEmpty(term))
             conditions.Add("total_rating_count > 0");
+        else
+            conditions.Add($"name ~ *\"{Escape(term)}\"*");
 
-        var searchClause = string.IsNullOrEmpty(term) || useWildcardSearch
-            ? string.Empty
-            : $"search \"{Escape(term)}\"; ";
-        return $"{searchClause}{(conditions.Count == 0 ? string.Empty : $"where {string.Join(" & ", conditions)};")}";
+        return $"where {string.Join(" & ", conditions)};";
     }
 
     private static string BuildOrdering(string? search, GameSearchFilters? filters)
@@ -94,10 +88,10 @@ internal sealed class IgdbGamesService(
             "-added" => "total_rating_count desc",
             "name" => "name asc",
             _ when string.IsNullOrWhiteSpace(search) => "total_rating_count desc",
-            _ => null
+            _ => "name asc"
         };
 
-        return clause is null ? string.Empty : $" sort {clause};";
+        return $" sort {clause};";
     }
 
     private static string QuotedValues(IEnumerable<string> values) =>
