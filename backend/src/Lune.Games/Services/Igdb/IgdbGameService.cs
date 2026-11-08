@@ -39,7 +39,7 @@ internal sealed class IgdbGamesService(
     //Converts the out search params into a IGDB readale parameter. 
     private static string BuildCriteria(string? search, GameSearchFilters? filters)
     {
-        var conditions = new List<string>();
+        var conditions = new List<string> { "first_release_date != null", "total_rating != null" };
         if (filters is not null)
         {
             if (filters.Genres.Count > 0)
