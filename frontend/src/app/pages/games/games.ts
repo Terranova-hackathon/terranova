@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { catchError, combineLatest, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth-service';
+import { GamesNavigationService } from '../../core/services/games-navigation-service';
 
 @Component({
   imports: [GameCard, FormsModule],
@@ -32,6 +33,7 @@ export class Games implements OnInit {
   private readonly retryRequest = new Subject<void>();
   // Needed to call afterNextRender outside the constructor (in the subscribe callback)
   private readonly injector = inject(Injector);
+  private readonly gamesNavigation = inject(GamesNavigationService);
 
   readonly pageSize = 12;
   readonly favoriteIds = this.favoriteService.favoriteIds;
@@ -113,6 +115,15 @@ export class Games implements OnInit {
         this.searchInput = search;
         this.searchTerm.set(search);
         this.currentPage.set(page);
+        const gamesUrl = this.router.serializeUrl(
+          this.router.createUrlTree(['/games'], {
+            queryParams: {
+              search: search || null,
+              page: page === 1 ? null : page
+            }
+          })
+        );
+        this.gamesNavigation.memorize(gamesUrl);
         this.loading.set(true);
         this.error.set('');
       }),

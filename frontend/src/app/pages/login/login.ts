@@ -44,7 +44,7 @@ export class Login {
 				const requestedUrl = 
 					this.route.snapshot.queryParamMap.get('returnUrl');
 				const returnUrl =
-					requestedUrl && /^\/games(?:[?#]|$)/.test(requestedUrl)
+					requestedUrl && /^\/(?:games|favorites)(?:[/?#]|$)/.test(requestedUrl)
 						? requestedUrl : '/games';
 				this.router.navigateByUrl(returnUrl);
 			},
