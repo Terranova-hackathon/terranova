@@ -6,7 +6,6 @@ namespace Lune.Games.Services;
 
 public interface IGamesService
 {
-    //TODO: implent filter search for games based on GameSearchFilters
     Task<PagedResult<GameSummary>> SearchAsync(
         string? search, int page, int pageSize, GameSearchFilters? filters = null,
         CancellationToken cancellationToken = default);
@@ -17,7 +16,7 @@ public interface IGamesService
 
     Task<IReadOnlyList<CompanyOption>> SearchCompaniesAsync(CompanyKind kind, string search, CancellationToken cancellationToken = default);
 
-    Task<GameDetails?> GetFeaturedAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<GameDetails>> GetFeaturedAsync(CancellationToken cancellationToken = default);
 }
 
 /// <summary>Raised when the upstream game API is misconfigured or unreachable.</summary>

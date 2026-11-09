@@ -15,6 +15,9 @@ runtime:
     - expression: res.status
       operator: eq
       value: "200"
+    - expression: res.body.length
+      operator: eq
+      value: "10"
 
 settings:
   encodeUrl: true
