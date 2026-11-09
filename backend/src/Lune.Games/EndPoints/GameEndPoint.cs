@@ -8,6 +8,7 @@ namespace Lune.Games.EndPoints;
 
 public static class GameEndPoint
 {
+    private const int DefaultPageSize = 20;
     private const int MaxPageSize = 40;
 
     public static void Map(IEndpointRouteBuilder endpoints)
@@ -27,7 +28,7 @@ public static class GameEndPoint
         IGamesService games,
         string? search,
         int page = 1,
-        int pageSize = 20,
+        int pageSize = DefaultPageSize,
         string? genres = null,
         string? platforms = null,
         string? developers = null,
@@ -42,7 +43,6 @@ public static class GameEndPoint
         if (filters is null)
             return Results.ValidationProblem(errors);
 
-        // just checking to see if the page number is anything less then one. 
         page = Math.Max(page, 1);
         pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
 

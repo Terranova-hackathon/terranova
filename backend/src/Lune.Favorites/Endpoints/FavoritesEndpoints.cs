@@ -15,19 +15,13 @@ internal static class FavoritesEndpoints
 
     public static void Map(IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/favorites")
-            .WithTags("Favorites")
-            .RequireAuthorization();
+        var group = endpoints.MapGroup("/api/favorites");
 
-        // The user always comes from the login token, never from the URL,
-        // so nobody can read or change another user's favorites.
         group.MapGet("/", List);
-
         group.MapGet("/ids", async (HttpContext http, FavoritesService favorites, CancellationToken ct) =>
             http.User.GetUserId() is { } userId
                 ? Results.Ok(await favorites.IdsAsync(userId, ct))
                 : Results.Unauthorized());
-
         group.MapPut("/{igdbId:int}", Add);
         group.MapDelete("/{igdbId:int}", Remove);
     }
