@@ -87,7 +87,7 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | GET | `/api/games/companies` | Yes | Developer/publisher autocomplete |
 | GET | `/api/games/featured` | Yes | Up to 10 randomly selected popular games |
 | GET | `/api/games/{id}` | Yes | One game's details |
-| GET | `/api/favorites` | Yes | Current user's favorites |
+| GET | `/api/favorites` | Yes | Current user's favorites, paged |
 | GET | `/api/favorites/ids` | Yes | Favorited game ids only |
 | PUT | `/api/favorites/{igdbId}` | Yes | Add a favorite |
 | DELETE | `/api/favorites/{igdbId}` | Yes | Remove a favorite |
@@ -453,7 +453,8 @@ interface Favorite {
 ```
 
 ### `GET /api/favorites`
-- **200:** `Favorite[]`, **newest first**, max 1000, `[]` if none
+- **Query:** `page` (default `1`, values below 1 become 1), `pageSize` (default `20`, clamped to 1-40)
+- **200:** `PagedResult<Favorite>`, **newest first**. `items` is `[]` if none, or if `page` is past the last page. `totalCount` is all of the user's favorites (max 1000).
 - **401**
 
 ### `GET /api/favorites/ids`

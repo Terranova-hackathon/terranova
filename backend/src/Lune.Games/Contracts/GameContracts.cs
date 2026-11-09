@@ -6,8 +6,8 @@ namespace Lune.Games.Contracts;
 public sealed record GameSummary(
     int Id,
     string Name,
-    string? Released,
     string? BackgroundImage,
+    string? Released,
     double Rating,
     int? Metacritic,
     IReadOnlyList<string> Genres,

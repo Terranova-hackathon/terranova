@@ -9,8 +9,11 @@ http:
   method: GET
   url: "{{baseUrl}}/api/favorites"
   params:
-    - name: ""
-      value: "{{username}}"
+    - name: page
+      value: "1"
+      type: query
+    - name: pageSize
+      value: "20"
       type: query
   auth: inherit
 
@@ -19,6 +22,18 @@ runtime:
     - expression: res.status
       operator: eq
       value: "200"
+    - expression: res.body.items
+      operator: isDefined
+    - expression: res.body.page
+      operator: eq
+      value: "1"
+    - expression: res.body.pageSize
+      operator: eq
+      value: "20"
+    - expression: res.body.totalCount
+      operator: isNumber
+    - expression: res.body.totalPages
+      operator: isNumber
 
 settings:
   encodeUrl: true
@@ -32,6 +47,13 @@ examples:
     request:
       url: "{{baseUrl}}/api/favorites"
       method: GET
+      params:
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "20"
+          type: query
     response:
       status: 200
       statusText: OK
