@@ -85,7 +85,7 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | GET | `/api/games` | Yes | Search, filter, sort and page games |
 | GET | `/api/games/filters` | Yes | Options for filter dropdowns |
 | GET | `/api/games/companies` | Yes | Developer/publisher autocomplete |
-| GET | `/api/games/featured` | Yes | One randomly selected popular game (mock returns a fixed highlight) |
+| GET | `/api/games/featured` | Yes | Up to 10 randomly selected popular games |
 | GET | `/api/games/{id}` | Yes | One game's details |
 | GET | `/api/favorites` | Yes | Current user's favorites |
 | GET | `/api/favorites/ids` | Yes | Favorited game ids only |
@@ -390,11 +390,11 @@ associated with the requested role (developed or published).
 
 ### `GET /api/games/featured`
 
-- **200:** `GameDetails` (same shape as `GET /api/games/{id}`)
+- **200:** an array of up to 10 distinct `GameDetails` objects (each has the same shape as `GET /api/games/{id}`)
 - **404:** no eligible games are available
 - **503:** same as the other games routes
 
-The real backend selects randomly from up to 50 popular games (ordered by rating count in IGDB or rating in RAWG). The mock returns its fixed highlighted game.
+The backend selects without replacement from up to 50 popular games (ordered by rating count in IGDB or rating in RAWG). If fewer than 10 are available, all available games are returned. The mock selects from its 50 most-added games.
 
 ### `GET /api/games/{id}`
 

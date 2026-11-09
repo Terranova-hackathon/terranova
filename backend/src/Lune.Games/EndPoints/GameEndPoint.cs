@@ -122,8 +122,8 @@ public static class GameEndPoint
     {
         try
         {
-            var game = await games.GetFeaturedAsync(cancellationToken);
-            return game is null ? Results.NotFound() : Results.Ok(game);
+            var featured = await games.GetFeaturedAsync(cancellationToken);
+            return featured.Count == 0 ? Results.NotFound() : Results.Ok(featured);
         }
         catch (GamesUnavailableException e)
         {

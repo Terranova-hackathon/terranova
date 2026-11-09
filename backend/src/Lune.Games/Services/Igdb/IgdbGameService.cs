@@ -202,17 +202,16 @@ internal sealed class IgdbGamesService(
             .ToList();
     }
 
-    public async Task<GameDetails?> GetFeaturedAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<GameDetails>> GetFeaturedAsync(CancellationToken cancellationToken = default)
     {
         var candidates = await PostAsync<List<IgdbGame>>(
             "games",
             $"fields {IgdbGameFields.Detail}; where total_rating_count > 0; sort total_rating_count desc; limit 50;",
             cancellationToken);
 
-        if (candidates is null || candidates.Count == 0)
-            return null;
-
-        return ToDetails(candidates[Random.Shared.Next(candidates.Count)]);
+        return FeaturedGames.Select(candidates ?? [], game => game.Id)
+            .Select(ToDetails)
+            .ToList();
     }
 
 
