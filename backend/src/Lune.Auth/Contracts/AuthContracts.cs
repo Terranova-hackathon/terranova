@@ -6,8 +6,10 @@ namespace Lune.Auth.Contracts;
 /// </summary>
 public sealed record RegisterRequest(
     [property: Required, EmailAddress] string Email,
-    [property: Required, MinLength(8)] string Password, 
-    string? DisplayName);
+    [property: Required, MinLength(8)] string Password,
+    string? DisplayName,
+    [property: Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the privacy policy.")]
+    bool? AcceptedPrivacyPolicy);
 
 public sealed record LoginRequest(
     [property: Required] string Email,

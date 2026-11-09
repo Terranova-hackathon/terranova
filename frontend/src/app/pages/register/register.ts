@@ -25,7 +25,8 @@ export class Register {
       Validators.required, Validators.minLength(8),
       Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$/)
     ]],
-    confirmPassword: ['', Validators.required]
+    confirmPassword: ['', Validators.required],
+    acceptedPrivacyPolicy: [false, Validators.requiredTrue]
   });
 
   onSubit(): void {
@@ -44,7 +45,8 @@ export class Register {
     this.auth.register({
       email: values.email,
       password: values.password,
-      displayName: values.displayName.trim() || null
+      displayName: values.displayName.trim() || null,
+      acceptedPrivacyPolicy: values.acceptedPrivacyPolicy
     }).subscribe({
       next: () => {
         this.loading.set(false);

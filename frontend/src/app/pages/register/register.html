@@ -71,6 +71,27 @@
 				/>
 			</div>
 
+			<div class="form-check mb-3">
+				<input
+					id="privacy-consent"
+					type="checkbox"
+					class="form-check-input"
+					formControlName="acceptedPrivacyPolicy"
+					required
+					[class.is-invalid]="form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid"
+					[attr.aria-invalid]="form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid"
+					[attr.aria-describedby]="form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid ? 'privacy-consent-error' : null"
+				/>
+				<label class="form-check-label" for="privacy-consent">
+					I agree to the privacy policy.
+				</label>
+				@if (form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid) {
+					<div id="privacy-consent-error" class="invalid-feedback">
+						You must agree to the privacy policy.
+					</div>
+				}
+			</div>
+
 			@if (error()) {
 				<div class="alert alert-danger" role="alert">
 					{{ error() }}

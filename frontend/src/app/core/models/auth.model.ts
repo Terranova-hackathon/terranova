@@ -11,4 +11,5 @@ export interface LoginRequest {
 
 export interface RegisterRequest extends LoginRequest {
 	displayName: string | null;
+	acceptedPrivacyPolicy: boolean;
 }

@@ -361,7 +361,8 @@
         "required": [
           "email",
           "password",
-          "displayName"
+          "displayName",
+          "acceptedPrivacyPolicy"
         ],
         "type": "object",
         "properties": {
@@ -377,6 +378,10 @@
               "null",
               "string"
             ]
+          },
+          "acceptedPrivacyPolicy": {
+            "type": "boolean",
+            "enum": [true]
           }
         }
       }
