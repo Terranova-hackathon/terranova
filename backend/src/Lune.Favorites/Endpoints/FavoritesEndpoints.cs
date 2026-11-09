@@ -10,6 +10,9 @@ namespace Lune.Favorites.Endpoints;
 
 internal static class FavoritesEndpoints
 {
+    private const int DefaultPageSize = 20;
+    private const int MaxPageSize = 40;
+
     public static void Map(IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/favorites")
@@ -18,10 +21,7 @@ internal static class FavoritesEndpoints
 
         // The user always comes from the login token, never from the URL,
         // so nobody can read or change another user's favorites.
-        group.MapGet("/", async (HttpContext http, FavoritesService favorites, CancellationToken ct) =>
-            http.User.GetUserId() is { } userId
-                ? Results.Ok(await favorites.ListAsync(userId, ct))
-                : Results.Unauthorized());
+        group.MapGet("/", List);
 
         group.MapGet("/ids", async (HttpContext http, FavoritesService favorites, CancellationToken ct) =>
             http.User.GetUserId() is { } userId
@@ -30,6 +30,24 @@ internal static class FavoritesEndpoints
 
         group.MapPut("/{igdbId:int}", Add);
         group.MapDelete("/{igdbId:int}", Remove);
+    }
+
+    private static async Task<IResult> List(
+        HttpContext http,
+        FavoritesService favorites,
+        CancellationToken cancellationToken,
+        int page = 1,
+        int pageSize = DefaultPageSize)
+    {
+        if (http.User.GetUserId() is not { } userId)
+        {
+            return Results.Unauthorized();
+        }
+
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
+
+        return Results.Ok(await favorites.ListAsync(userId, page, pageSize, cancellationToken));
     }
 
     private static async Task<IResult> Add(
