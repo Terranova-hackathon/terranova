@@ -1,6 +1,7 @@
 using Lune.Favorites.Contracts;
 using Lune.Favorites.Data;
 using Lune.Shared.Games;
+using Lune.Shared.Paging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lune.Favorites.Services;
@@ -16,22 +17,32 @@ public enum AddFavoriteResult
 internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catalog)
 {
     public const int MaxFavorites = 1000;
-    public async Task<IReadOnlyList<FavoriteResponse>> ListAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<FavoriteResponse>> ListAsync(
+        string userId, int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var rows = await db.Favorites
+        var query = db.Favorites
             .AsNoTracking()
-            .Where(f => f.UserId == userId)
+            .Where(f => f.UserId == userId);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        // IgdbId breaks ties so rows added at the same instant never move between pages.
+        var rows = await query
             .OrderByDescending(f => f.CreatedAtUtc)
-            .Take(FavoriteLimits.MaxPerUser)
+            .ThenBy(f => f.IgdbId)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(f => new { f.IgdbId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms, f.CreatedAtUtc })
             .ToListAsync(cancellationToken);
 
         // SQL Server returns Kind=Unspecified; mark it UTC so the JSON gets a "Z" suffix.
-        return rows
+        var items = rows
             .Select(f => new FavoriteResponse(
                 f.IgdbId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
                 DateTime.SpecifyKind(f.CreatedAtUtc, DateTimeKind.Utc)))
             .ToList();
+
+        return new PagedResult<FavoriteResponse>(items, page, pageSize, totalCount);
     }
 
     /// <summary>Just the game ids, so list pages can draw a filled or empty heart cheaply.</summary>
