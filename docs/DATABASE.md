@@ -27,6 +27,7 @@ erDiagram
         nvarchar_max PasswordHash
         nvarchar_max DisplayName
         datetime2 CreatedAtUtc
+        datetime2 PrivacyConsentedAtUtc
     }
     Favorites {
         nvarchar450 UserId PK "logical ref to AspNetUsers.Id, no FK"
@@ -50,7 +51,7 @@ erDiagram
 
 ## Schema `auth` (ASP.NET Identity)
 
-Standard Identity tables, plus two custom columns on `AspNetUsers`.
+Standard Identity tables, plus three custom columns on `AspNetUsers`.
 
 ### `auth.AspNetUsers`
 
@@ -59,6 +60,7 @@ Standard Identity tables, plus two custom columns on `AspNetUsers`.
 | `Id` | nvarchar(450) | No | **PK**, GUID string |
 | `DisplayName` | nvarchar(max) | Yes | **Custom** |
 | `CreatedAtUtc` | datetime2 | No | **Custom**, set at registration |
+| `PrivacyConsentedAtUtc` | datetime2 | Yes | **Custom**, server-recorded UTC consent time; null for existing accounts |
 | `UserName` | nvarchar(256) | Yes | Same as `Email` at registration |
 | `NormalizedUserName` | nvarchar(256) | Yes | Uppercased. **Unique index** |
 | `Email` | nvarchar(256) | Yes | |
@@ -124,6 +126,7 @@ CREATE TABLE auth.AspNetUsers (
     Id                   nvarchar(450)  NOT NULL CONSTRAINT PK_AspNetUsers PRIMARY KEY,
     DisplayName          nvarchar(max)  NULL,
     CreatedAtUtc         datetime2      NOT NULL,
+    PrivacyConsentedAtUtc datetime2     NULL,
     UserName             nvarchar(256)  NULL,
     NormalizedUserName   nvarchar(256)  NULL,
     Email                nvarchar(256)  NULL,

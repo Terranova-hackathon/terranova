@@ -14,7 +14,8 @@ http:
       {
         "email": "",
         "password": "",
-        "displayName": ""
+        "displayName": "",
+        "acceptedPrivacyPolicy": true
       }
   auth: inherit
 
@@ -37,7 +38,8 @@ examples:
           {
             "email": "",
             "password": "",
-            "displayName": ""
+            "displayName": "",
+            "acceptedPrivacyPolicy": true
           }
     response:
       status: 200

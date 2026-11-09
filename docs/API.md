@@ -115,7 +115,7 @@ Any other `/api/*` path returns an empty `404`. Non-`/api` paths without a file 
 ### `POST /api/auth/register`
 
 ```json
-{ "email": "ann@example.com", "password": "Passw0rd!", "displayName": "Ann" }
+{ "email": "ann@example.com", "password": "Passw0rd!", "displayName": "Ann", "acceptedPrivacyPolicy": true }
 ```
 
 | Field | Rules |
@@ -123,8 +123,11 @@ Any other `/api/*` path returns an empty `404`. Non-`/api` paths without a file 
 | `email` | required, valid email |
 | `password` | required, min 8, plus the Identity rules below |
 | `displayName` | optional |
+| `acceptedPrivacyPolicy` | must be `true`; missing, `null`, or `false` is rejected |
 
 Identity rules: one digit, one lowercase, one uppercase, one non-alphanumeric character.
+
+On successful registration, the server records the consent time in UTC. Existing accounts are not prompted again.
 
 - **201:** `User`, header `Location: /api/auth/me`, `Set-Cookie: Lune_auth=...`
 - **400:** `errors` keyed by field name for basic validation, or by Identity error code for rule failures. Email is also the username, so a duplicate yields both codes:

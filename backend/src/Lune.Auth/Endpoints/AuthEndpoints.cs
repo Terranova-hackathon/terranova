@@ -49,6 +49,7 @@ public static class AuthEndpoints
             Email = req.Email, 
             UserName = req.Email,
             DisplayName = req.DisplayName,
+            PrivacyConsentedAtUtc = DateTime.UtcNow,
         };
 
         var res = await users.CreateAsync(user, req.Password);
