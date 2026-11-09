@@ -1,8 +1,8 @@
-import { afterNextRender, Component, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
 import { GameCard } from '../../shared/game-card/game-card';
 import { GameModel } from '../../core/models/game.model';
 import { GameService } from '../../core/services/game-service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FavoriteService } from '../../core/services/favorite-service';
 import { FormsModule } from '@angular/forms';
@@ -10,9 +10,11 @@ import { catchError, combineLatest, distinctUntilChanged, EMPTY, map, startWith,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth-service';
 import { GamesNavigationService } from '../../core/services/games-navigation-service';
+import { cleanList, cleanOrdering, emptyFilterState, FilterState, GameFilter, GameQuery, ListFilterKey, MAX_VALUES, toFilterParams, toFilterState } from '../../core/models/game-filter.model';
+import { GameFilters } from '../../shared/game-filters/game-filters';
 
 @Component({
-  imports: [GameCard, FormsModule],
+  imports: [GameCard, FormsModule, GameFilters],
   selector: 'app-games',
   styleUrl: './games.scss',
   templateUrl: './games.html',
@@ -55,6 +57,12 @@ export class Games implements OnInit {
   searchInput = '';
   searchTerm = signal('');
 
+
+  filterState = signal<FilterState>(emptyFilterState());
+  hasActiveFilters = computed(() =>
+  Object.values(toFilterParams(this.filterState())).some(v => v !== null)
+);
+
   // Keep favorites in sync with login state. This runs again whenever isLoggedIn changes:
   // - logged out: clear favorites and turn toggling off
   // - logged in: fetch favorite IDs, then turn toggling on
@@ -89,20 +97,12 @@ export class Games implements OnInit {
   // (for example, when only the fragment changed).
   ngOnInit(): void {
     const params$ = this.route.queryParamMap.pipe(
-      map(params => {
-        const search = params.get('search')?.trim() ?? '';
-        const rawPage = params.get('page') ?? '1';
-        const parsedPage = Number(rawPage);
-        const page = Number.isSafeInteger(parsedPage)
-          && parsedPage >= 1 ? parsedPage : 1;
-        return {search, page };
-      }),
+      map(params => readGameQuery(params)),
 
       distinctUntilChanged((previous, current) =>
-        previous.search === current.search &&
-        previous.page === current.page
-      ),
-    )
+        JSON.stringify(previous) === JSON.stringify(current)
+      )
+    );
     // Fetch when the URL params change OR when retry is clicked.
     // startWith makes retry emit once at the start, so combineLatest fires
     // right away instead of waiting for a first retry click.
@@ -111,29 +111,23 @@ export class Games implements OnInit {
       this.retryRequest.pipe(startWith(undefined))
     ]).pipe(
       map(([params]) => params),
-      tap(({search, page}) => {
-        this.searchInput = search;
-        this.searchTerm.set(search);
-        this.currentPage.set(page);
-        const gamesUrl = this.router.serializeUrl(
-          this.router.createUrlTree(['/games'], {
-            queryParams: {
-              search: search || null,
-              page: page === 1 ? null : page
-            }
-          })
+      tap(query => {
+        this.searchInput = query.search ?? '';
+        this.searchTerm.set(query.search ?? '');
+        this.currentPage.set(query.page ?? 1);
+        this.gamesNavigation.memorize(
+          this.router.url.split('#')[0]
         );
-        this.gamesNavigation.memorize(gamesUrl);
         this.loading.set(true);
         this.error.set('');
+        this.filterState.set(toFilterState(query));
       }),
       // switchMap cancels any request still in flight when a new one starts, so an old
       // response can't overwrite newer results
-      switchMap(({ search, page }) =>
-        this.gameService.fetchGames(page,
-          this.pageSize,
-          search
-        ).pipe(
+      switchMap(query =>
+        this.gameService.fetchGames({...query,
+          pageSize: this.pageSize
+        }).pipe(
           catchError((err: HttpErrorResponse) => {
             this.loading.set(false);
             this.games.set([]);
@@ -188,14 +182,12 @@ export class Games implements OnInit {
   // search, page and card (through the #game-<id> fragment)
   toggleFavorite(id: number): void {
     if (!this.isLoggedIn()) {
+// avoid losing filters if loggin from favorites
       const returnUrl = this.router.serializeUrl(
         this.router.createUrlTree(['/games'], {
-          queryParams: {
-            search: this.searchTerm() || null,
-            page: this.currentPage() === 1
-            ? null : this.currentPage()
-          },
-          fragment: `game-${id}`
+          queryParams:
+            this.route.snapshot.queryParams,
+            fragment: `game-${id}`
         })
       );
       void this.router.navigate(['/login'], {
@@ -254,4 +246,67 @@ export class Games implements OnInit {
   retryGames(): void {
     this.retryRequest.next();
   }
+
+  submitFilters(state: FilterState): void {
+    void this.router.navigate(['/games'], {
+      queryParams: {
+        ...toFilterParams(state),
+        page: null
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
+  resetFilters(): void {
+    void this.router.navigate(['/games'], {
+      queryParams: { search: this.searchTerm() || null }
+    });
+  }
+}
+
+// readscore makes sure metacritic score is a whole number
+function readScore(
+  value: string | null,
+  fallback: number
+): number {
+  if (value === null || value.trim() === '') {
+    return fallback;
+  }
+  const score = Number(value);
+
+  if (!Number.isInteger(score) || score < 0 || score > 100) {
+    return fallback;
+  }
+  return score;
+}
+// turn URL query string into clean GameQuery object
+function readGameQuery(params: ParamMap): GameQuery {
+  const rawPage = Number(params.get('page') ?? '1');
+  const page = 
+    Number.isSafeInteger(rawPage) && rawPage >= 1
+      ? rawPage : 1;
+  const min = params.get('metacriticMin');
+  const max = params.get('metacriticMax');
+  let metacriticMin = min === null ? undefined : readScore(min, 0);
+  let metacriticMax = max === null ? undefined : readScore(max, 100);
+  // swaps reversed range (protects case where user inserts 80 - 50,
+  // instead of error assume they meant 50 - 80)
+  if (metacriticMin !== undefined  && metacriticMax !== undefined
+      && metacriticMin > metacriticMax) {
+    [metacriticMin, metacriticMax] = [metacriticMax, metacriticMin];
+  }
+// 0 and 100 are not restrictions 
+// so not setting doesn't exlude games with no metacritic
+  if (metacriticMin === 0) metacriticMin = undefined;
+  if (metacriticMax === 100) metacriticMax = undefined;
+
+  return {
+    search: params.get('search')?.trim() ?? '', page,
+    genres: cleanList(params.get('genres'), 'slug'),
+    platforms: cleanList(params.get('platforms'), 'id'),
+    developers: cleanList(params.get('developers'), 'slug'),
+    publishers: cleanList(params.get('publishers'), 'slug'),
+    ordering: cleanOrdering(params.get('ordering')),
+    metacriticMin,
+    metacriticMax
+  };
 }

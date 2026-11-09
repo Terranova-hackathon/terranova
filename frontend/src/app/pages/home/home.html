@@ -7,20 +7,26 @@
     
 			<p class="hero__description">Explore thousands of video games, find hidden gems, and connect with other players.</p>
 
-			<form class="hero__search" role="search">
-				<label for="game-search" class="visually-hidden">
-					Search for a video game
-				</label>
+			<form class="hero__search" role="search" 
+				(ngSubmit)="submitSearch()">
+					<label for="game-search" class="visually-hidden">
+						Search for a video game
+					</label>
 
 			<input
 				id="game-search"
 				type="search"
 				name="search"
 				placeholder="Search for games..."
+				[(ngModel)]="searchInput"
 			/>
 
 			<button type="submit">Search</button>
 			</form>
+			<app-game-filters
+				class="hero__filters"
+				(applied)="applyFilters($event)"
+			/>
 		</div>
 	</section>
 </main>
