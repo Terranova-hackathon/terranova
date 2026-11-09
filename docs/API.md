@@ -21,7 +21,7 @@ Source of truth in the backend repo:
 ### Authentication (cookie, not a header)
 
 - Login and register set an **HttpOnly cookie** named `Lune_auth` holding a JWT. The browser sends it automatically. Angular never reads it and never sets an `Authorization` header.
-- Attributes: `HttpOnly`, `SameSite=Lax`, `Path=/`, 60 minute expiry. `Secure` only when the request is HTTPS.
+- Attributes: `HttpOnly`, `SameSite=Lax`, `Path=/`, 24 hour expiry. `Secure` only when the request is HTTPS.
 - Logout deletes the cookie.
 - A mock can use any opaque session value. It only has to check that the cookie maps to a user.
 

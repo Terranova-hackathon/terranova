@@ -6,13 +6,11 @@ namespace Lune.Auth.Options;
 public sealed class JwtOptions
 {
     public const string SectionName = "Jwt";
-    [Required]
-    public string Secret { get; set; } = string.Empty;
-    [Required]
-    public string Issuer { get; set; } = "lune";
-
-    [Required]
-    public int ExpirationMinutes { get; set; } = 60;
-    //TODO: need to choose name for cookie, example: "game_explorer_auth" or similar    
+    [Required] public string Secret { get; set; } = string.Empty;
+    [Required] public string Issuer { get; set; } = "lune";
+    /// <summary>
+    /// Set to 24 hours expiration for JWT. 
+    /// </summary>
+    [Required] public int ExpirationMinutes { get; set; } = 1440;   
     public string CookieName { get; set; } = "Lune_auth";
 }
