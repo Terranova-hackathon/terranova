@@ -1,4 +1,4 @@
-import { afterNextRender, Component, computed, DestroyRef, effect, inject, Injector, OnInit, signal } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, effect, inject, Injector, OnInit, signal, viewChild } from '@angular/core';
 import { GameCard } from '../../shared/game-card/game-card';
 import { GameModel } from '../../core/models/game.model';
 import { GameService } from '../../core/services/game-service';
@@ -6,7 +6,7 @@ import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FavoriteService } from '../../core/services/favorite-service';
 import { FormsModule } from '@angular/forms';
-import { catchError, combineLatest, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, debounceTime, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth-service';
 import { GamesNavigationService } from '../../core/services/games-navigation-service';
@@ -36,6 +36,10 @@ export class Games implements OnInit {
   // Needed to call afterNextRender outside the constructor (in the subscribe callback)
   private readonly injector = inject(Injector);
   private readonly gamesNavigation = inject(GamesNavigationService);
+// return an instance of app-game-filters from wthich we can read the filterstate and monitor changes
+  private readonly filtersPanel = viewChild(GameFilters);
+// Emits on every keystroke in the searchbox (even the x button)
+  private readonly searchTyped = new Subject<string>();
 
   readonly pageSize = 12;
   readonly favoriteIds = this.favoriteService.favoriteIds;
@@ -58,7 +62,9 @@ export class Games implements OnInit {
   searchTerm = signal('');
 
 
-  filterState = signal<FilterState>(emptyFilterState());
+  filterState = signal<FilterState>(emptyFilterState(), {
+    equal: (a, b) => JSON.stringify(a) === JSON.stringify(b)
+  });
   hasActiveFilters = computed(() =>
   Object.values(toFilterParams(this.filterState())).some(v => v !== null)
 );
@@ -96,6 +102,17 @@ export class Games implements OnInit {
   // distinctUntilChanged skips emissions where neither value changed
   // (for example, when only the fragment changed).
   ngOnInit(): void {
+    this.searchTyped.pipe(
+      map(value => value.trim()),
+      debounceTime(300),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(search => {
+      if (search === this.searchTerm()) return;
+      void this.router.navigate(['/games'], {
+        queryParams: { search: search || null, page: null },
+        queryParamsHandling: 'merge',
+      });
+    });
     const params$ = this.route.queryParamMap.pipe(
       map(params => readGameQuery(params)),
 
@@ -112,7 +129,10 @@ export class Games implements OnInit {
     ]).pipe(
       map(([params]) => params),
       tap(query => {
-        this.searchInput = query.search ?? '';
+        const urlSearch = query.search ?? '';
+        if (this.searchInput.trim() !== urlSearch) {
+          this.searchInput = urlSearch;
+        }
         this.searchTerm.set(query.search ?? '');
         this.currentPage.set(query.page ?? 1);
         this.gamesNavigation.memorize(
@@ -233,14 +253,20 @@ export class Games implements OnInit {
   submitSearch(): void {
     const search = this.searchInput.trim();
 
+    const draft = this.filtersPanel()?.filterState ?? this.filterState();
     void this.router.navigate(['/games'], {
       queryParams: {
         search : search || null,
+        ...toFilterParams(draft),
         page: null
       },
       queryParamsHandling: 'merge'
     });
   }
+  onSearchInput(value: string): void {
+    this.searchTyped.next(value);
+  }
+
 // Re-run the last fetch. This is needed because navigating to the same URL
 // doesn't make queryParamMap emit again.
   retryGames(): void {

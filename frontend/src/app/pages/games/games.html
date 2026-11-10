@@ -23,7 +23,9 @@
         type="search"
         class="form-control"
         placeholder="Search by game name..."
+        autocomplete="off"
         [(ngModel)]="searchInput"
+        (ngModelChange)="onSearchInput($event)"
       />
 
       <button type="submit" class="btn btn-primary">
@@ -54,12 +56,7 @@
       Search results for:
       <strong>{{ searchTerm() }}</strong>
     </p>
-  } @else if (hasActiveFilters()) {
-    No games match you current filters.
-  } @else {
-    No games available.
   }
-
   <!-- GAME RESULTS -->
   @if (loading()) {
     <div class="text-center py-5" role="status">
@@ -83,9 +80,11 @@
   } @else if (games().length === 0) {
     <p class="text-center py-5">
       @if (searchTerm()) {
-        No games found for "{{ searchTerm() }}".
-      } @else {
+        No games found for: "{{ searchTerm() }}".
+      } @else if (hasActiveFilters()) {
         No games match your current filters.
+      } @else {
+        No games available.
       }
     </p>
 
