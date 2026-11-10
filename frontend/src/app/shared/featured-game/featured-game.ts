@@ -16,7 +16,6 @@ export class FeaturedGame {
   activeIndex = signal(0);
 
   constructor() {
-    // Re-check the active line whenever the games (and so the slides) change.
     afterRenderEffect(() => {
       this.games();
       this.updateScrollState();
@@ -34,7 +33,6 @@ export class FeaturedGame {
     });
   }
 
-  // Each slide is exactly one track-width wide, so the scroll position tells us which one is showing.
   updateScrollState(): void {
     const el = this.track()?.nativeElement;
     if (!el || el.clientWidth === 0) return;
