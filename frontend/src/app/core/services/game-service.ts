@@ -1,5 +1,5 @@
 import { inject, Service } from '@angular/core';
-import { GameModel } from '../models/game.model';
+import { GameDetails, GameModel } from '../models/game.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PagedResult } from '../models/paged-result.model';
@@ -47,6 +47,12 @@ export class GameService {
 			.set('search', search.trim());
 		return this.http.get<CompanyOption[]>(
 			`${this.apiUrl}/companies`, { params }
+		);
+	}
+
+	fetchFeatured(): Observable<GameDetails[]> {
+		return this.http.get<GameDetails[]>(
+			`${this.apiUrl}/featured`
 		);
 	}
 

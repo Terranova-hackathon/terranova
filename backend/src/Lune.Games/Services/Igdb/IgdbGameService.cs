@@ -206,11 +206,11 @@ internal sealed class IgdbGamesService(
     {
         var candidates = await PostAsync<List<IgdbGame>>(
             "games",
-            $"fields {IgdbGameFields.Detail}; where total_rating_count > 0; sort total_rating_count desc; limit 50;",
+            $"fields {IgdbGameFields.Detail},screenshots.image_id; where total_rating_count > 0; sort total_rating_count desc; limit 50;",
             cancellationToken);
 
         return FeaturedGames.Select(candidates ?? [], game => game.Id)
-            .Select(ToDetails)
+            .Select(ToFeatured)
             .ToList();
     }
 
@@ -241,12 +241,22 @@ internal sealed class IgdbGamesService(
             : DateTimeOffset.FromUnixTimeSeconds(unixSeconds.Value).UtcDateTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
     /// <summary>
-    /// Builds the cover URL from IGDB's image id.
+    /// Builds the cover URL from IGDB's image id. <paramref name="size"/> is an IGDB size name such as t_720p or t_1080p.
     /// </summary>
-    private string? ToImageUrl(IgdbCover? cover) =>
+    private string? ToImageUrl(IgdbCover? cover, string size = "t_720p") =>
         string.IsNullOrWhiteSpace(cover?.ImageId)
             ? null
-            : $"{_options.ImageBaseUrl.TrimEnd('/')}/t_720p/{cover.ImageId}.jpg";
+            : $"{_options.ImageBaseUrl.TrimEnd('/')}/{size}/{cover.ImageId}.jpg";
+
+    /// <summary>
+    /// Featured games fill the home page hero, so they get a wide 1080p screenshot instead of the portrait cover.
+    /// Falls back to the cover when IGDB has no screenshot.
+    /// </summary>
+    private GameDetails ToFeatured(IgdbGame g) =>
+        ToDetails(g) with
+        {
+            BackgroundImage = ToImageUrl(g.Screenshots?.FirstOrDefault(), "t_1080p") ?? ToImageUrl(g.Cover, "t_1080p")
+        };
 
     /// <summary>
     /// Converts IGDB's 0-100 rating to the 0-5 scale the API contract uses.

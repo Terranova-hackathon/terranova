@@ -1,14 +1,17 @@
 <main class="home">
 	<section class="hero">
+		@if (featuredGames().length) {
+			<app-featured-game class="hero__backdrop" [games]="featuredGames()" />
+		} @else if (featuredLoading()) {
+			<div class="hero__loading" role="status">
+				<div class="spinner-border text-light" aria-hidden="true"></div>
+				<span class="visually-hidden">Loading featured games...</span>
+			</div>
+		}
+
 		<div class="hero__content">
-			<p class="hero__eyebrow">Welcome to GameHub</p>
-
-			<h1>Discover games worth playing.</h1>
-    
-			<p class="hero__description">Explore thousands of video games, find hidden gems, and connect with other players.</p>
-
 			<div class="hero__search-wrap">
-				<form class="hero__search" role="search" 
+				<form class="hero__search" role="search"
 					(ngSubmit)="submitSearch()">
 						<label for="game-search" class="visually-hidden">
 							Search for a video game
@@ -45,4 +48,11 @@
 			/>
 		</div>
 	</section>
+
+	@if (featuredError()) {
+		<div class="alert alert-danger m-4" role="alert">
+			Unable to load featured games.
+			<button class="btn btn-outline-danger ms-2" (click)="loadFeatured()">Retry</button>
+		</div>
+	}
 </main>

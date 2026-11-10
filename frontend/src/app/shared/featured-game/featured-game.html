@@ -1,0 +1,53 @@
+<section class="featured" aria-label="Featured games">
+	<ul class="featured__track" #track (scroll)="updateScrollState()">
+		@for (game of games(); track game.id) {
+			<li class="featured__slide">
+				@if (game.backgroundImage) {
+					<img
+						class="featured__image"
+						[src]="game.backgroundImage"
+						alt=""
+						loading="lazy"
+					/>
+				}
+
+				<a
+					class="featured__details"
+					routerLink="/games"
+					[queryParams]="{ search: game.name }"
+				>
+					<h3 class="featured__name">{{ game.name }}</h3>
+
+					<p class="featured__meta">
+						@if (releaseYear(game.released)) {
+							<span>{{ releaseYear(game.released) }}</span>
+						}
+						<span class="featured__rating">★ {{ game.rating }}</span>
+						@if (game.metacritic !== null) {
+							<span>Metacritic {{ game.metacritic }}</span>
+						}
+					</p>
+
+					<div class="featured__genres">
+						@for (genre of game.genres.slice(0, 3); track genre) {
+							<span>{{ genre }}</span>
+						}
+					</div>
+				</a>
+			</li>
+		}
+	</ul>
+
+	<div class="featured__controls" role="group" aria-label="Choose a featured game">
+		@for (game of games(); track game.id; let i = $index) {
+			<button
+				type="button"
+				class="featured__dot"
+				[class.is-active]="i === activeIndex()"
+				[attr.aria-label]="'Go to ' + game.name + ' (' + (i + 1) + ' of ' + games().length + ')'"
+				[attr.aria-current]="i === activeIndex() ? 'true' : null"
+				(click)="scrollToIndex(i)"
+			></button>
+		}
+	</div>
+</section>
