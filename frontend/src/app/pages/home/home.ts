@@ -52,7 +52,6 @@ export class Home {
 
     this.gameService.fetchFeatured().subscribe({
       next: (games) => {
-        console.log('featured games', games);
         this.featuredGames.set(games);
         this.featuredLoading.set(false);
       },
