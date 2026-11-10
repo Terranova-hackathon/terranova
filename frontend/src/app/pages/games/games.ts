@@ -109,7 +109,7 @@ export class Games implements OnInit {
     ).subscribe(search => {
       if (search === this.searchTerm()) return;
       void this.router.navigate(['/games'], {
-        queryParams: { search: search || null, page: null },
+        queryParams: this.searchParams(search),
         queryParamsHandling: 'merge',
       });
     });
@@ -250,15 +250,31 @@ export class Games implements OnInit {
     });
   }
 
+  private searchParams(search: string) {
+    const wasSearching = this.searchTerm() !== '';
+
+    if (search && !wasSearching) {
+      const page = this.currentPage();
+      return { search, page: null, fromPage: page > 1 ? page : null };
+    }
+    if (!search && wasSearching) {
+      return {
+        search: null,
+        page: readFromPage(this.route.snapshot.queryParamMap),
+        fromPage: null
+      };
+    }
+    return { search: search || null, page: null };
+  }
+
   submitSearch(): void {
     const search = this.searchInput.trim();
-
     const draft = this.filtersPanel()?.filterState ?? this.filterState();
+
     void this.router.navigate(['/games'], {
       queryParams: {
-        search : search || null,
-        ...toFilterParams(draft),
-        page: null
+        ...this.searchParams(search),
+        ...toFilterParams(draft)
       },
       queryParamsHandling: 'merge'
     });
@@ -277,7 +293,8 @@ export class Games implements OnInit {
     void this.router.navigate(['/games'], {
       queryParams: {
         ...toFilterParams(state),
-        page: null
+        page: null,
+        fromPage: null
       },
       queryParamsHandling: 'merge'
     });
@@ -335,4 +352,9 @@ function readGameQuery(params: ParamMap): GameQuery {
     metacriticMin,
     metacriticMax
   };
+}
+
+function readFromPage(params: ParamMap): number | null {
+  const page = Number(params.get('fromPage'));
+  return Number.isSafeInteger(page) && page > 1 ? page : null;
 }
