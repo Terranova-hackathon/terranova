@@ -50,3 +50,33 @@
     }
   }
 }
+
+// Login prompt shown when a guest clicks the heart
+.login-prompt {
+  width: min(400px, calc(100% - 32px));
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
+
+  p {
+    margin-bottom: 20px;
+  }
+
+  .btn-primary {
+    background: var(--color-button-bg);
+    border-color: var(--color-button-bg);
+    color: var(--color-button-text);
+
+    &:hover {
+      background: var(--color-button-hover);
+      border-color: var(--color-button-hover);
+    }
+  }
+
+  // The dimmed layer behind the dialog
+  &::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+}

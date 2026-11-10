@@ -3,7 +3,7 @@
 		<h1>Create an account</h1>
 		<p>Join GameHub and start your collction.</p>
 
-		<form [formGroup]="form" (ngSubmit)="onSubit()">
+		<form [formGroup]="form" (ngSubmit)="onSubmit()">
 			<div class="mb-3">
 				<label class="form-label" for="register-name">
 					Display name (optional)
@@ -105,7 +105,7 @@
 
 		<p class="auth-footer">
 			Already have an account?
-			<a routerLink="/login">Log in</a>
+			<a routerLink="/login" queryParamsHandling="preserve">Log in</a>
 		</p>
 	</section>
 </main>

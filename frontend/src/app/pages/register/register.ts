@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { safeReturnUrl } from '../../core/utils/return-url';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -14,6 +15,7 @@ export class Register {
   private readonly buildform = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -29,7 +31,7 @@ export class Register {
     acceptedPrivacyPolicy: [false, Validators.requiredTrue]
   });
 
-  onSubit(): void {
+  onSubmit(): void {
     if (this.form.invalid || this.loading()) {
       this.form.markAllAsTouched();
       return;
@@ -50,7 +52,10 @@ export class Register {
     }).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigateByUrl('/games');
+        const returnUrl = safeReturnUrl(
+          this.route.snapshot.queryParamMap.get('returnUrl')
+        );
+        this.router.navigateByUrl(returnUrl);
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
