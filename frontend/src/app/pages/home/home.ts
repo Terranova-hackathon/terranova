@@ -4,13 +4,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { toFilterParams } from '../../core/models/game-filter.model';
 import { GameFilters } from '../../shared/game-filters/game-filters';
+import { FeaturedGame } from '../../shared/featured-game/featured-game';
 import { GameService } from '../../core/services/game-service';
 import { GameDetails, GameModel } from '../../core/models/game.model';
 import { catchError, debounce, debounceTime, distinctUntilChanged, map, of, Subject, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  imports: [FormsModule, GameFilters],
+  imports: [FormsModule, GameFilters, FeaturedGame],
   selector: 'app-home',
   styleUrl: './home.scss',
   templateUrl: './home.html',

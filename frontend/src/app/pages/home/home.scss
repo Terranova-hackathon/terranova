@@ -5,12 +5,14 @@
 }
 
 .hero {
+	position: relative;
 	width: 100%;
 	min-height: 85vh;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
-	padding: 80px 24px;
+	// Bottom padding keeps room for the featured game details and buttons.
+	padding: 32px 24px 260px;
 
 	background-image:
 		var(--hero-overlay),
@@ -20,10 +22,21 @@
 	background-position: center;
 	background-repeat: no-repeat;
 
+	// The featured games sit behind the search and headline, filling the whole hero.
+	&__backdrop {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
 	&__content {
+		position: relative;
+		z-index: 1;
 		width: 100%;
 		max-width: 760px;
 		text-align: center;
+	}
+	&__intro {
+		margin-top: 48px;
 	}
 	&__eyebrow {
 		color: var(--hero-eyebrow);
@@ -128,7 +141,7 @@
 @media (max-width: 576px) {
 	.hero {
 		min-height: 460px;
-		padding: 56px 16px;
+		padding: 24px 16px 260px;
 		background-position: 60% center;
 
 		&__search {

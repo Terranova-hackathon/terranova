@@ -1,0 +1,61 @@
+<section class="featured" aria-label="Featured games">
+	<ul class="featured__track" #track (scroll)="updateScrollState()">
+		@for (game of games(); track game.id) {
+			<li class="featured__slide">
+				@if (game.backgroundImage) {
+					<img
+						class="featured__image"
+						[src]="game.backgroundImage"
+						alt=""
+						loading="lazy"
+					/>
+				}
+
+				<a
+					class="featured__details"
+					routerLink="/games"
+					[queryParams]="{ search: game.name }"
+				>
+					<h3 class="featured__name">{{ game.name }}</h3>
+
+					<p class="featured__meta">
+						@if (releaseYear(game.released)) {
+							<span>{{ releaseYear(game.released) }}</span>
+						}
+						<span class="featured__rating">★ {{ game.rating }}</span>
+						@if (game.metacritic !== null) {
+							<span>Metacritic {{ game.metacritic }}</span>
+						}
+					</p>
+
+					<div class="featured__genres">
+						@for (genre of game.genres.slice(0, 3); track genre) {
+							<span>{{ genre }}</span>
+						}
+					</div>
+				</a>
+			</li>
+		}
+	</ul>
+
+	<div class="featured__controls">
+		<button
+			type="button"
+			class="featured__button"
+			aria-label="Previous featured game"
+			[disabled]="!canScrollPrev()"
+			(click)="scrollPrev()"
+		>
+			<i class="bi bi-chevron-left" aria-hidden="true"></i>
+		</button>
+		<button
+			type="button"
+			class="featured__button"
+			aria-label="Next featured game"
+			[disabled]="!canScrollNext()"
+			(click)="scrollNext()"
+		>
+			<i class="bi bi-chevron-right" aria-hidden="true"></i>
+		</button>
+	</div>
+</section>
