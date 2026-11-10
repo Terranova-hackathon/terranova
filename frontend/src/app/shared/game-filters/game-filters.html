@@ -1,0 +1,238 @@
+  <!-- ADVANCED FILTERS -->
+
+<details class="advanced-filters">
+
+  <summary class="advanced-filters__summary">
+    <span class="advanced-filters__summary-title">
+      <i class="bi bi-sliders" aria-hidden="true"></i>
+      Advanced Filters
+
+      @if (active()) {
+        <span class="advanced-filters__active">
+          Active
+        </span>
+      }
+    </span>
+
+    <i
+      class="bi bi-chevron-down advanced-filters__chevron"
+      aria-hidden="true"
+    ></i>
+  </summary>
+
+  <div class="advanced-filters__content">
+    <p class="advanced-filters__description">
+      Refine your search using multiple filters.
+    </p>
+
+    @if (filtersLoading()) {
+      <div class="text-center py-4" role="status">
+        <div class="spinner-border spinner-border-sm"></div>
+        <span class="ms-2">Loading filter options...</span>
+      </div>
+
+    } @else if (filtersError()) {
+      <div class="alert alert-warning" role="alert">
+        <p>{{ filtersError() }}</p>
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="loadFilterOptions()"
+        >
+          Retry
+        </button>
+      </div>
+
+    } @else if (filterOptions(); as options) {
+
+      <form
+        class="advanced-filters__form"
+        (ngSubmit)="submitFilters()"
+      >
+        <div class="row g-4">
+
+          <!-- GENRES -->
+          <div class="col-12 col-lg-6">
+            <fieldset class="filter-group">
+              <legend class="filter-group__title">
+                Genres
+              </legend>
+
+              <div class="filter-group__options">
+                @for (genre of options.genres; track genre.value) {
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [id]="'genre-' + genre.value"
+                      [checked]="isSelected('genres', genre.value)"
+					  [disabled]="!isSelected('genres', genre.value)
+					   && filterState.genres.length >= maxValues"
+                      (change)="toggleFilter('genres', genre.value)"
+                    />
+
+                    <label
+                      class="form-check-label"
+                      [for]="'genre-' + genre.value"
+                    >
+                      {{ genre.name }}
+                    </label>
+                  </div>
+                } @empty {
+                  <p>No genres available.</p>
+                }
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- PLATFORMS -->
+          <div class="col-12 col-lg-6">
+            <fieldset class="filter-group">
+              <legend class="filter-group__title">
+                Platforms
+              </legend>
+
+              <div class="filter-group__options">
+                @for (platform of options.platforms; track platform.value) {
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [id]="'platform-' + platform.value"
+                      [checked]="isSelected('platforms', platform.value)"
+					  [disabled]="!isSelected('platforms', platform.value)
+					   && filterState.platforms.length >= maxValues"
+                      (change)="toggleFilter('platforms', platform.value)"
+                    />
+
+                    <label
+                      class="form-check-label"
+                      [for]="'platform-' + platform.value"
+                    >
+                      {{ platform.name }}
+                    </label>
+                  </div>
+                } @empty {
+                  <p>No platforms available.</p>
+                }
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- METACRITIC -->
+          <div class="col-12 col-lg-6">
+            <fieldset class="filter-group">
+              <legend class="filter-group__title">
+                Metacritic Score
+              </legend>
+
+              <div class="filter-group__slider">
+                <div class="filter-group__score">
+                  <label for="metacritic-min">
+                    Minimum
+                  </label>
+
+                  <strong>
+                    {{ filterState.metacriticMin ?? 0 }}
+                  </strong>
+                </div>
+
+                <input
+                  id="metacritic-min"
+                  type="range"
+                  class="form-range"
+                  name="metacriticMin"
+                  min="0"
+                  [max]="100"
+                  step="1"
+                  [ngModel]="filterState.metacriticMin ?? 0"
+                  (ngModelChange)="setMetacriticMin($event)"
+                />
+
+                <div class="filter-group__score mt-3">
+                  <label for="metacritic-max">
+                    Maximum
+                  </label>
+
+                  <strong>
+                    {{ filterState.metacriticMax ?? 100 }}
+                  </strong>
+                </div>
+
+                <input
+                  id="metacritic-max"
+                  type="range"
+                  class="form-range"
+                  name="metacriticMax"
+                  [min]="0"
+                  max="100"
+                  step="1"
+                  [ngModel]="filterState.metacriticMax ?? 100"
+                  (ngModelChange)="setMetacriticMax($event)"
+                />
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- SORTING -->
+          <div class="col-12 col-lg-6">
+            <div class="filter-group">
+              <label
+                for="game-ordering"
+                class="filter-group__title"
+              >
+                Sort By
+              </label>
+
+              <select
+                id="game-ordering"
+                name="ordering"
+                class="form-select"
+                [(ngModel)]="filterState.ordering"
+              >
+                <option value="">
+                  Default sorting
+                </option>
+
+                @for (
+                  ordering of options.orderings;
+                  track ordering.value
+                ) {
+                  <option [value]="ordering.value">
+                    {{ ordering.name }}
+                  </option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="advanced-filters__actions">
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="resetFilters()"
+          >
+            <i
+              class="bi bi-arrow-counterclockwise"
+              aria-hidden="true"
+            ></i>
+            Reset Filters
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            <i class="bi bi-funnel" aria-hidden="true"></i>
+            Apply Filters
+          </button>
+
+        </div>
+      </form>
+    }
+  </div>
+</details>
