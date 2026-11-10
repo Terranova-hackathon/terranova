@@ -13,45 +13,36 @@ export class FeaturedGame {
 
   private readonly track = viewChild<ElementRef<HTMLElement>>('track');
 
-  canScrollPrev = signal(false);
-  canScrollNext = signal(false);
+  activeIndex = signal(0);
 
   constructor() {
-    // Re-check the buttons whenever the games (and so the slides) change.
+    // Re-check the active line whenever the games (and so the slides) change.
     afterRenderEffect(() => {
       this.games();
       this.updateScrollState();
     });
   }
 
-  scrollPrev(): void {
-    this.scrollByPage(-1);
-  }
-
-  scrollNext(): void {
-    this.scrollByPage(1);
-  }
-
-  updateScrollState(): void {
-    const el = this.track()?.nativeElement;
-    if (!el) return;
-
-    this.canScrollPrev.set(el.scrollLeft > 1);
-    this.canScrollNext.set(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
-  }
-
-  releaseYear(released: string | null): string {
-    return released?.slice(0, 4) ?? '';
-  }
-
-  private scrollByPage(direction: -1 | 1): void {
+  scrollToIndex(index: number): void {
     const el = this.track()?.nativeElement;
     if (!el) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.scrollBy({
-      left: direction * el.clientWidth,
+    el.scrollTo({
+      left: index * el.clientWidth,
       behavior: reduceMotion ? 'auto' : 'smooth',
     });
+  }
+
+  // Each slide is exactly one track-width wide, so the scroll position tells us which one is showing.
+  updateScrollState(): void {
+    const el = this.track()?.nativeElement;
+    if (!el || el.clientWidth === 0) return;
+
+    this.activeIndex.set(Math.round(el.scrollLeft / el.clientWidth));
+  }
+
+  releaseYear(released: string | null): string {
+    return released?.slice(0, 4) ?? '';
   }
 }
