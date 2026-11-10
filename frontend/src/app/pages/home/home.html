@@ -2,6 +2,11 @@
 	<section class="hero">
 		@if (featuredGames().length) {
 			<app-featured-game class="hero__backdrop" [games]="featuredGames()" />
+		} @else if (featuredLoading()) {
+			<div class="hero__loading" role="status">
+				<div class="spinner-border text-light" aria-hidden="true"></div>
+				<span class="visually-hidden">Loading featured games...</span>
+			</div>
 		}
 
 		<div class="hero__content">
