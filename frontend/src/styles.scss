@@ -84,6 +84,22 @@
 	--color-focus-ring: rgba(79, 70, 229, 0.2);
 }
 
+.pagination-controls {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 24px;
+
+	span {
+		color: var(--color-muted);
+		font-weight: 500;
+	}
+	button {
+		min-width: 100px;
+	}
+}
+
 html,
 body {
 	margin: 0;

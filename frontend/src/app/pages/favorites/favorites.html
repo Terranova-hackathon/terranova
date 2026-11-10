@@ -35,7 +35,7 @@
 				</a>
 			</div>
 		}@else {
-			<p>{{ favorites().length }} saved game</p>
+			<p>{{ totalCount() }} saved {{ totalCount() == 1 ? 'game' : 'games' }} </p>
 			<!-- Favorites use the same game-cards as the Games page -->
 			<div class="row g-4">
 				@for (favorite of favorites(); track favorite.id) {
@@ -49,6 +49,31 @@
 					</div>
 				}
 			</div>
+			@if (totalPages() > 1) {
+				<nav class="pagination-controls mt-5" aria-label="Favorites pagination">
+						<button
+							type="button"
+							class="btn btn-outline-secondary"
+							[disabled]="currentPage() <= 1 || loading()"
+							(click)="changePage(currentPage() - 1)"
+						>
+							Previous
+						</button>
+
+						<span aria-live="polite">
+							Page {{ currentPage() }} of {{ totalPages() }}
+						</span>
+
+						<button
+							type="button"
+							class="btn btn-outline-secondary"
+							[disabled]="currentPage() >= totalPages() || loading()"
+							(click)="changePage(currentPage() + 1)"
+						>
+							Next
+						</button>
+				</nav>
+			}
 		}
 	}
 </main>
