@@ -10,6 +10,7 @@
 				</label>
 
 				<input
+					#nameInput
 					id="register-name"
 					type="text"
 					class="form-control"
@@ -26,10 +27,12 @@
 				<input
 					id="register-email"
 					type="email"
+					placeholder="you@example.com"
 					class="form-control"
 					formControlName="email"
 					autocomplete="email"
 					[class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+					aria-describedby="password-help"
 				/>
 
 				@if (form.controls.email.touched && form.controls.email.invalid) {
@@ -52,9 +55,9 @@
 					autocomplete="new-password"
 					[class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
 				/>
-				<small class="form-text">
-					Minimum 8 characters,including uppercase, lowercase, a digit and a special character.
-				</small>
+				<div id="password-help" class="form-text">
+					Minimum 8 characters, including uppercase, lowercase, a digit and a special character.
+				</div>
 			</div>
 
 			<div class="mb-3">

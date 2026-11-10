@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { afterNextRender, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
@@ -16,9 +16,14 @@ export class Login {
 	private readonly auth = inject(AuthService);
 	private readonly router = inject(Router);
 	private readonly route = inject(ActivatedRoute);
+	private readonly emailInput = viewChild.required<ElementRef<HTMLInputElement>>('emailInput');
 
 	readonly loading = signal(false);
 	readonly error = signal<string | null>(null);
+
+	constructor() {
+		afterNextRender(() => this.emailInput().nativeElement.focus());
+	}
 
 	readonly form = this.buildform.nonNullable.group({
 		email: ['', [Validators.required, Validators.email]],
