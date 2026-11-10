@@ -20,6 +20,8 @@ internal sealed class IgdbGame
     /// <summary>Unix timestamp in seconds.</summary>
     [JsonPropertyName("first_release_date")] public long? FirstReleaseDate { get; set; }
     [JsonPropertyName("cover")] public IgdbCover? Cover { get; set; }
+    /// <summary>In-game screenshots (wide). Only requested for featured games.</summary>
+    [JsonPropertyName("screenshots")] public List<IgdbCover>? Screenshots { get; set; }
     /// <summary>User and critic rating combined, 0-100.</summary>
     [JsonPropertyName("total_rating")] public double? TotalRating { get; set; }
     /// <summary>Critic rating, 0-100.</summary>
