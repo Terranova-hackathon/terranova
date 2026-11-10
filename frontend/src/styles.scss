@@ -100,6 +100,12 @@
 	}
 }
 
+@media (max-width: 576px) {
+	.pagination-controls {
+		gap: 12px;
+	}
+}
+
 html,
 body {
 	margin: 0;

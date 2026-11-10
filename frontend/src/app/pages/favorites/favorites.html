@@ -35,7 +35,7 @@
 				</a>
 			</div>
 		}@else {
-			<p>{{ totalCount() }} saved {{ totalCount() == 1 ? 'game' : 'games' }} </p>
+			<p>{{ totalCount() }} saved {{ totalCount() === 1 ? 'game' : 'games' }} </p>
 			<!-- Favorites use the same game-cards as the Games page -->
 			<div class="row g-4">
 				@for (favorite of favorites(); track favorite.id) {

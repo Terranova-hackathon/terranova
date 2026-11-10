@@ -87,6 +87,7 @@ export class Games implements OnInit {
         .subscribe({
           next: () => {
             this.favoritesReady.set(true);
+            this.completePendingFavorite();
           },
           error: () => {
             this.favoriteError.set(
@@ -202,6 +203,8 @@ export class Games implements OnInit {
   // search, page and card (through the #game-<id> fragment)
   toggleFavorite(id: number): void {
     if (!this.isLoggedIn()) {
+// remember what user was trying to do
+      this.favoriteService.setPendingFavorite(id);
 // avoid losing filters if loggin from favorites
       const returnUrl = this.router.serializeUrl(
         this.router.createUrlTree(['/games'], {
@@ -242,6 +245,15 @@ export class Games implements OnInit {
       }
     });
   }
+
+  private completePendingFavorite(): void {
+    const id = this.favoriteService.takePendingFavorite();
+    if (id === null) return;
+    if (this.route.snapshot.fragment !== `game-${id}`) return;
+    if (this.favoriteIds().has(id)) return;
+    this.toggleFavorite(id);
+  }
+
   private clearFavoriteBusy(id: number): void {
     this.favoriteBusyIds.update(ids => {
       const updated = new Set(ids);

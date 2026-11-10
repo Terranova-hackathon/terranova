@@ -10,6 +10,17 @@ export class FavoriteService {
 	private readonly apiUrl = '/api/favorites';
 
 	readonly favoriteIds = signal<Set<number>>(new Set());
+	private pendingFavoriteId: number | null = null;
+
+	setPendingFavorite(id: number): void {
+		this.pendingFavoriteId = id;
+	}
+
+	takePendingFavorite(): number | null {
+		const id = this.pendingFavoriteId;
+		this.pendingFavoriteId = null;
+		return id;
+	}
 
 	getFavorites(page = 1, pageSize = 20): Observable<PagedResult<FavoriteModel>> {
 		return this.http.get<PagedResult<FavoriteModel>>(this.apiUrl, {
