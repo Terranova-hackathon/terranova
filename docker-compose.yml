@@ -1,23 +1,23 @@
 services:
     # Mock API (ASP.NET Core, in-memory). Starts by default so the frontend can be built without the real backend.
-    mock-api:
-        build:
-            context: ./mock-api
-            dockerfile: Dockerfile
-        ports:
-            - '4001:4001'
-        volumes:
-            - ./mock-api:/app
-            - /app/bin
-            - /app/obj
-        networks:
-            - private-network
-        healthcheck:
-            test: ['CMD-SHELL', 'curl -fs http://localhost:4001/health || exit 1']
-            interval: 5s
-            timeout: 3s
-            retries: 20
-        restart: unless-stopped
+    # mock-api:
+    #     build:
+    #         context: ./mock-api
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - '4001:4001'
+    #     volumes:
+    #         - ./mock-api:/app
+    #         - /app/bin
+    #         - /app/obj
+    #     networks:
+    #         - private-network
+    #     healthcheck:
+    #         test: ['CMD-SHELL', 'curl -fs http://localhost:4001/health || exit 1']
+    #         interval: 5s
+    #         timeout: 3s
+    #         retries: 20
+    #     restart: unless-stopped
 
     # SQL Server (real backend only: docker compose --profile real up)
     sqlserver:
@@ -97,7 +97,7 @@ services:
         networks:
             - private-network
         depends_on:
-            mock-api:
+            backend:
                 condition: service_healthy
         restart: unless-stopped
 

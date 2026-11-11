@@ -20,17 +20,23 @@ internal sealed class IgdbGame
     /// <summary>Unix timestamp in seconds.</summary>
     [JsonPropertyName("first_release_date")] public long? FirstReleaseDate { get; set; }
     [JsonPropertyName("cover")] public IgdbCover? Cover { get; set; }
-    /// <summary>In-game screenshots (wide). Only requested for featured games.</summary>
+    /// <summary>In-game screenshots (wide).</summary>
     [JsonPropertyName("screenshots")] public List<IgdbCover>? Screenshots { get; set; }
+    /// <summary>Artwork images.</summary>
+    [JsonPropertyName("artworks")] public List<IgdbCover>? Artworks { get; set; }
     /// <summary>User and critic rating combined, 0-100.</summary>
     [JsonPropertyName("total_rating")] public double? TotalRating { get; set; }
     /// <summary>Critic rating, 0-100.</summary>
     [JsonPropertyName("aggregated_rating")] public double? AggregatedRating { get; set; }
     [JsonPropertyName("summary")] public string? Summary { get; set; }
+    [JsonPropertyName("storyline")] public string? Storyline { get; set; }
     [JsonPropertyName("url")] public string? Url { get; set; }
+    [JsonPropertyName("websites")] public List<IgdbWebsite>? Websites { get; set; }
     [JsonPropertyName("genres")] public List<IgdbNamed>? Genres { get; set; }
     [JsonPropertyName("platforms")] public List<IgdbNamed>? Platforms { get; set; }
     [JsonPropertyName("involved_companies")] public List<IgdbInvolvedCompany>? InvolvedCompanies { get; set; }
+    [JsonPropertyName("videos")] public List<IgdbVideo>? Videos { get; set; }
+    [JsonPropertyName("similar_games")] public List<int>? SimilarGames { get; set; }
 }
 
 /// <summary>
@@ -78,4 +84,22 @@ internal sealed class IgdbInvolvedCompany
     [JsonPropertyName("developer")] public bool Developer { get; set; }
     [JsonPropertyName("publisher")] public bool Publisher { get; set; }
     [JsonPropertyName("company")] public IgdbNamed? Company { get; set; }
+}
+
+/// <summary>
+/// Represents a website URL for a game (official site, Steam, etc).
+/// </summary>
+internal sealed class IgdbWebsite
+{
+    [JsonPropertyName("url")] public string? Url { get; set; }
+    [JsonPropertyName("category")] public int Category { get; set; }
+}
+
+/// <summary>
+/// Represents a video (trailer, gameplay, etc) for a game.
+/// </summary>
+internal sealed class IgdbVideo
+{
+    [JsonPropertyName("video_id")] public string? VideoId { get; set; }
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
 }

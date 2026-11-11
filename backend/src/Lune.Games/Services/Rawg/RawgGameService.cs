@@ -154,7 +154,22 @@ internal sealed class RawgGamesService(HttpClient http, IOptions<RawgServiceOpti
     /// Converts a RAWG game object to full game details.
     /// </summary>
     private static GameDetails ToDetails(RawgGame g) => new(
-        g.Id, g.Name, g.Released, g.BackgroundImage, g.Rating, g.Metacritic,
-        g.DescriptionRaw, g.Website,
-        Names(g.Genres), PlatformNames(g.Platforms), Names(g.Developers), Names(g.Publishers));
+        Id: g.Id,
+        Name: g.Name,
+        Released: g.Released,
+        BackgroundImage: g.BackgroundImage,
+        Cover: null,
+        Rating: g.Rating,
+        Metacritic: g.Metacritic,
+        Description: g.DescriptionRaw,
+        StoryLine: null,
+        Website: g.Website,
+        Genres: Names(g.Genres),
+        Platforms: PlatformNames(g.Platforms),
+        Developers: Names(g.Developers),
+        Publishers: Names(g.Publishers),
+        Screenshots: [],
+        Artworks: [],
+        Videos: [],
+        RelatedGames: []);
 }

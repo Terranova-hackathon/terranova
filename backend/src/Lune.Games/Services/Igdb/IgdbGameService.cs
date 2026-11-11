@@ -249,6 +249,45 @@ internal sealed class IgdbGamesService(
             : $"{_options.ImageBaseUrl.TrimEnd('/')}/{size}/{cover.ImageId}.jpg";
 
     /// <summary>
+    /// Builds a list of image URLs from IGDB cover/artwork objects.
+    /// </summary>
+    private IReadOnlyList<string> ToImageUrls(List<IgdbCover>? covers, string size = "t_720p") =>
+        covers?.Select(c => ToImageUrl(c, size))
+            .Where(url => url is not null)
+            .Cast<string>()
+            .ToList() ?? [];
+
+    /// <summary>
+    /// Builds YouTube video URLs from IGDB video IDs.
+    /// </summary>
+    private IReadOnlyList<string> ToVideoUrls(List<IgdbVideo>? videos) =>
+        videos?.Select(v => $"https://www.youtube.com/watch?v={v.VideoId}")
+            .Where(url => !string.IsNullOrWhiteSpace(url) && !url.EndsWith("="))
+            .ToList() ?? [];
+
+    /// <summary>
+    /// Extracts the official website URL from IGDB's websites list (category 1 = official website).
+    /// </summary>
+    private static string? ToWebsiteUrl(List<IgdbWebsite>? websites) =>
+        websites?.FirstOrDefault(w => w.Category == 1)?.Url;
+
+    /// <summary>
+    /// Picks a random screenshot for the background image, or falls back to the cover.
+    /// </summary>
+    private string? ToBackgroundImage(List<IgdbCover>? screenshots, IgdbCover? cover)
+    {
+        if (screenshots?.Count > 0)
+        {
+            var random = new Random();
+            var randomScreenshot = screenshots[random.Next(screenshots.Count)];
+            var url = ToImageUrl(randomScreenshot, "t_1080p");
+            if (url is not null)
+                return url;
+        }
+        return ToImageUrl(cover);
+    }
+
+    /// <summary>
     /// Featured games fill the home page hero, so they get a wide 1080p screenshot instead of the portrait cover.
     /// Falls back to the cover when IGDB has no screenshot.
     /// </summary>
@@ -274,15 +313,35 @@ internal sealed class IgdbGamesService(
     /// Converts an IGDB game object to a game summary.
     /// </summary>
     private GameSummary ToSummary(IgdbGame g) => new(
-        g.Id, g.Name, ToReleaseDate(g.FirstReleaseDate), ToImageUrl(g.Cover), ToRating(g.TotalRating),
-        ToMetacritic(g.AggregatedRating), Names(g.Genres), Names(g.Platforms));
+        g.Id, 
+        g.Name, 
+        ToReleaseDate(g.FirstReleaseDate), 
+        ToImageUrl(g.Cover), 
+        ToRating(g.TotalRating),
+        ToMetacritic(g.AggregatedRating), 
+        Names(g.Genres), 
+        Names(g.Platforms));
 
     /// <summary>
     /// Converts an IGDB game object to full game details.
     /// </summary>
     private GameDetails ToDetails(IgdbGame g) => new(
-        g.Id, g.Name, ToReleaseDate(g.FirstReleaseDate), ToImageUrl(g.Cover), ToRating(g.TotalRating),
-        ToMetacritic(g.AggregatedRating), g.Summary, g.Url,
-        Names(g.Genres), Names(g.Platforms),
-        Companies(g.InvolvedCompanies, c => c.Developer), Companies(g.InvolvedCompanies, c => c.Publisher));
+        Id: g.Id,
+        Name: g.Name,
+        Released: ToReleaseDate(g.FirstReleaseDate),
+        BackgroundImage: ToBackgroundImage(g.Screenshots, g.Cover),
+        Cover: ToImageUrl(g.Cover, "t_cover_big"),
+        Rating: ToRating(g.TotalRating),
+        Metacritic: ToMetacritic(g.AggregatedRating),
+        Description: g.Summary,
+        StoryLine: g.Storyline,
+        Website: ToWebsiteUrl(g.Websites),
+        Genres: Names(g.Genres),
+        Platforms: Names(g.Platforms),
+        Developers: Companies(g.InvolvedCompanies, c => c.Developer),
+        Publishers: Companies(g.InvolvedCompanies, c => c.Publisher),
+        Screenshots: ToImageUrls(g.Screenshots, "t_1080p"),
+        Artworks: ToImageUrls(g.Artworks, "t_1080p"),
+        Videos: ToVideoUrls(g.Videos),
+        RelatedGames: g.SimilarGames?.Select(id => id.ToString()).ToList() ?? []);
 }

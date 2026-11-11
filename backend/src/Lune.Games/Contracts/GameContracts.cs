@@ -21,14 +21,20 @@ public sealed record GameDetails(
     string Name,
     string? Released,
     string? BackgroundImage,
+    string? Cover,
     double Rating,
     int? Metacritic,
     string? Description,
+    string? StoryLine,
     string? Website,
     IReadOnlyList<string> Genres,
     IReadOnlyList<string> Platforms,
     IReadOnlyList<string> Developers,
-    IReadOnlyList<string> Publishers);
+    IReadOnlyList<string> Publishers,
+    IReadOnlyList<string> Screenshots,
+    IReadOnlyList<string> Artworks,
+    IReadOnlyList<string> Videos,
+    IReadOnlyList<string> RelatedGames);
 
 
 /// <summary>

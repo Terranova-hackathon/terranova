@@ -16,7 +16,7 @@ public sealed class GamesModule : IModule
 {
     public void AddServices(IServiceCollection services, IConfiguration configuration)
     {
-        // this registers the rawg game service if we want to swap it out at all.
+        // this registers the rawg game service if we want to swap it out at all. (rawg.io game service is deprecated at this point)
         // services.Configure<RawgServiceOptions>(configuration.GetSection(RawgServiceOptions.SectionName));
 
         // services.AddHttpClient<IGamesService, RawgGamesService>((sp, client) =>
