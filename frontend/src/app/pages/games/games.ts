@@ -1,4 +1,4 @@
-import { afterNextRender, Component, computed, DestroyRef, effect, inject, Injector, OnInit, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, computed, DestroyRef, effect, ElementRef, inject, Injector, OnInit, signal, viewChild } from '@angular/core';
 import { GameCard } from '../../shared/game-card/game-card';
 import { GameModel } from '../../core/models/game.model';
 import { GameService } from '../../core/services/game-service';
@@ -40,12 +40,14 @@ export class Games implements OnInit {
   private readonly filtersPanel = viewChild(GameFilters);
 // Emits on every keystroke in the searchbox (even the x button)
   private readonly searchTyped = new Subject<string>();
+  private readonly loginDialog = viewChild<ElementRef<HTMLDialogElement>>('loginDialog');
 
   readonly pageSize = 12;
   readonly favoriteIds = this.favoriteService.favoriteIds;
   readonly isLoggedIn = this.auth.isLoggedIn;
 
   games = signal<GameModel[]>([]);
+  loginPrompt = signal<GameModel | null>(null);
   currentPage = signal(1);
   totalPages = signal(0);
   totalGames = signal(0);
@@ -87,6 +89,7 @@ export class Games implements OnInit {
         .subscribe({
           next: () => {
             this.favoritesReady.set(true);
+            this.completePendingFavorite();
           },
           error: () => {
             this.favoriteError.set(
@@ -202,17 +205,7 @@ export class Games implements OnInit {
   // search, page and card (through the #game-<id> fragment)
   toggleFavorite(id: number): void {
     if (!this.isLoggedIn()) {
-// avoid losing filters if loggin from favorites
-      const returnUrl = this.router.serializeUrl(
-        this.router.createUrlTree(['/games'], {
-          queryParams:
-            this.route.snapshot.queryParams,
-            fragment: `game-${id}`
-        })
-      );
-      void this.router.navigate(['/login'], {
-        queryParams: { returnUrl }
-      });
+      this.openLoginPrompt(id);
       return;
     }
     if (!this.favoritesReady()) return;
@@ -242,6 +235,35 @@ export class Games implements OnInit {
       }
     });
   }
+
+  private openLoginPrompt(id: number): void {
+    const game = this.games().find(g => g.id === id) ?? null;
+    this.loginPrompt.set(game);
+    this.loginDialog()?.nativeElement.showModal();
+  }
+
+  goToLogin(): void {
+    const game = this.loginPrompt();
+    if (!game) return;
+
+    this.favoriteService.setPendingFavorite(game.id);
+    const returnUrl = this.router.serializeUrl(
+      this.router.createUrlTree(['/games'], {
+        queryParams: this.route.snapshot.queryParams,
+        fragment: `game-${game.id}`
+      })
+    );
+    void this.router.navigate(['/login'], { queryParams: { returnUrl } });
+  }
+
+  private completePendingFavorite(): void {
+    const id = this.favoriteService.takePendingFavorite();
+    if (id === null) return;
+    if (this.route.snapshot.fragment !== `game-${id}`) return;
+    if (this.favoriteIds().has(id)) return;
+    this.toggleFavorite(id);
+  }
+
   private clearFavoriteBusy(id: number): void {
     this.favoriteBusyIds.update(ids => {
       const updated = new Set(ids);
