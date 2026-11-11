@@ -17,16 +17,11 @@ internal sealed class IgdbGame
 {
     [JsonPropertyName("id")] public int Id { get; set; }
     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-    /// <summary>Unix timestamp in seconds.</summary>
     [JsonPropertyName("first_release_date")] public long? FirstReleaseDate { get; set; }
     [JsonPropertyName("cover")] public IgdbCover? Cover { get; set; }
-    /// <summary>In-game screenshots (wide).</summary>
     [JsonPropertyName("screenshots")] public List<IgdbCover>? Screenshots { get; set; }
-    /// <summary>Artwork images.</summary>
     [JsonPropertyName("artworks")] public List<IgdbCover>? Artworks { get; set; }
-    /// <summary>User and critic rating combined, 0-100.</summary>
     [JsonPropertyName("total_rating")] public double? TotalRating { get; set; }
-    /// <summary>Critic rating, 0-100.</summary>
     [JsonPropertyName("aggregated_rating")] public double? AggregatedRating { get; set; }
     [JsonPropertyName("summary")] public string? Summary { get; set; }
     [JsonPropertyName("storyline")] public string? Storyline { get; set; }
