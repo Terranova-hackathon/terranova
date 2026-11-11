@@ -16,6 +16,7 @@ internal sealed class IgdbGamesService(
     HttpClient http, IOptions<IgdbServiceOptions> options, IgdbTokenProvider tokens, IMemoryCache cache) : IGamesService
 {
     private readonly IgdbServiceOptions _options = options.Value;
+    private readonly IgdbGameConverter _converter = new(options.Value);
 
     /// <summary>
     /// Searches for games using the IGDB API. Without a search term the most rated games are listed.
@@ -33,7 +34,7 @@ internal sealed class IgdbGamesService(
         var count = await PostAsync<IgdbCount>("games/count", criteria, cancellationToken);
  
         return new PagedResult<GameSummary>(
-            (games?.Select(ToSummary) ?? []).ToList(), page, pageSize, count?.Count ?? 0);
+            (games?.Select(g => _converter.ToSummary(g)) ?? []).ToList(), page, pageSize, count?.Count ?? 0);
     }
 
     //Converts the out search params into a IGDB readale parameter. 
@@ -71,7 +72,7 @@ internal sealed class IgdbGamesService(
         if (string.IsNullOrEmpty(term))
             conditions.Add("total_rating_count > 0");
         else
-            conditions.Add($"name ~ *\"{Escape(term)}\"*");
+            conditions.Add($"name ~ *\"{IgdbGameConverter.Escape(term)}\"*");
 
         return $"where {string.Join(" & ", conditions)};";
     }
@@ -95,7 +96,7 @@ internal sealed class IgdbGamesService(
     }
 
     private static string QuotedValues(IEnumerable<string> values) =>
-        string.Join(",", values.Select(value => $"\"{Escape(value)}\""));
+        string.Join(",", values.Select(value => $"\"{IgdbGameConverter.Escape(value)}\""));
 
     /// <summary>
     /// Gets one game by id, or null when IGDB does not know it.
@@ -106,7 +107,7 @@ internal sealed class IgdbGamesService(
             "games", $"fields {IgdbGameFields.Detail}; where id = {id}; limit 1;", cancellationToken);
 
         var game = games?.FirstOrDefault();
-        return game is null ? null : ToDetails(game);
+        return game is null ? null : _converter.ToDetails(game);
     }
 
     /// <summary>
@@ -190,7 +191,7 @@ internal sealed class IgdbGamesService(
         // The IGDB companies endpoint ignores "search", so match the name with a case-insensitive wildcard.
         // IGDB cannot sort by array size, so fetch extra matches and keep the 10 with the most games.
         var companies = await PostAsync<List<IgdbCompany>>(
-            "companies", $"fields name,slug,{role}; where name ~ *\"{Escape(search)}\"* & {role} != null; limit 50;",
+            "companies", $"fields name,slug,{role}; where name ~ *\"{IgdbGameConverter.Escape(search)}\"* & {role} != null; limit 50;",
             cancellationToken) ?? throw new GamesUnavailableException("The game data service returned an empty company response.");
 
         return companies
@@ -210,79 +211,7 @@ internal sealed class IgdbGamesService(
             cancellationToken);
 
         return FeaturedGames.Select(candidates ?? [], game => game.Id)
-            .Select(ToFeatured)
+            .Select(g => _converter.ToFeatured(g))
             .ToList();
     }
-
-
-    /// <summary>
-    /// Escapes text so it can sit inside a quoted IGDB string.
-    /// </summary>
-    private static string Escape(string text) => text.Replace("\\", "\\\\").Replace("\"", "\\\"");
-
-    /// <summary>
-    /// Extracts the names from a list of IGDB named items.
-    /// </summary>
-    private static IReadOnlyList<string> Names(List<IgdbNamed>? items) =>
-        items?.Select(i => i.Name).ToList() ?? [];
-
-    /// <summary>
-    /// Extracts the names of the companies that have the given role (developer or publisher).
-    /// </summary>
-    private static IReadOnlyList<string> Companies(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
-        items?.Where(c => role(c) && c.Company is not null).Select(c => c.Company!.Name).Distinct().ToList() ?? [];
-
-    /// <summary>
-    /// Converts IGDB's Unix timestamp to the YYYY-MM-DD string the API contract uses.
-    /// </summary>
-    private static string? ToReleaseDate(long? unixSeconds) =>
-        unixSeconds is null
-            ? null
-            : DateTimeOffset.FromUnixTimeSeconds(unixSeconds.Value).UtcDateTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-
-    /// <summary>
-    /// Builds the cover URL from IGDB's image id. <paramref name="size"/> is an IGDB size name such as t_720p or t_1080p.
-    /// </summary>
-    private string? ToImageUrl(IgdbCover? cover, string size = "t_720p") =>
-        string.IsNullOrWhiteSpace(cover?.ImageId)
-            ? null
-            : $"{_options.ImageBaseUrl.TrimEnd('/')}/{size}/{cover.ImageId}.jpg";
-
-    /// <summary>
-    /// Featured games fill the home page hero, so they get a wide 1080p screenshot instead of the portrait cover.
-    /// Falls back to the cover when IGDB has no screenshot.
-    /// </summary>
-    private GameDetails ToFeatured(IgdbGame g) =>
-        ToDetails(g) with
-        {
-            BackgroundImage = ToImageUrl(g.Screenshots?.FirstOrDefault(), "t_1080p") ?? ToImageUrl(g.Cover, "t_1080p")
-        };
-
-    /// <summary>
-    /// Converts IGDB's 0-100 rating to the 0-5 scale the API contract uses.
-    /// </summary>
-    private static double ToRating(double? totalRating) =>
-        totalRating is null ? 0 : Math.Round(totalRating.Value / 20, 2);
-
-    /// <summary>
-    /// IGDB has no Metacritic score, so the critic rating (0-100) stands in for it.
-    /// </summary>
-    private static int? ToMetacritic(double? aggregatedRating) =>
-        aggregatedRating is null ? null : (int)Math.Round(aggregatedRating.Value);
-
-    /// <summary>
-    /// Converts an IGDB game object to a game summary.
-    /// </summary>
-    private GameSummary ToSummary(IgdbGame g) => new(
-        g.Id, g.Name, ToReleaseDate(g.FirstReleaseDate), ToImageUrl(g.Cover), ToRating(g.TotalRating),
-        ToMetacritic(g.AggregatedRating), Names(g.Genres), Names(g.Platforms));
-
-    /// <summary>
-    /// Converts an IGDB game object to full game details.
-    /// </summary>
-    private GameDetails ToDetails(IgdbGame g) => new(
-        g.Id, g.Name, ToReleaseDate(g.FirstReleaseDate), ToImageUrl(g.Cover), ToRating(g.TotalRating),
-        ToMetacritic(g.AggregatedRating), g.Summary, g.Url,
-        Names(g.Genres), Names(g.Platforms),
-        Companies(g.InvolvedCompanies, c => c.Developer), Companies(g.InvolvedCompanies, c => c.Publisher));
 }

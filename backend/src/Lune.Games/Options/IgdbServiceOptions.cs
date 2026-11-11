@@ -9,4 +9,5 @@ internal sealed class IgdbServiceOptions
     public string TokenUrl { get; set;} = "https://id.twitch.tv/oauth2/token";
     // The Idgb data base doesnt give me a full url path so i have to build it my self. 
     public string ImageBaseUrl {get; set ;} = "https://images.igdb.com/igdb/image/upload";
+    public string VideoBaseUrl { get; set; } = "https://www.youtube.com/watch?v=";
 }

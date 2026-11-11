@@ -20,15 +20,22 @@ public sealed record GameDetails(
     int Id,
     string Name,
     string? Released,
+    //background image is just a first screen_shot from the game
     string? BackgroundImage,
+    string? Cover,
     double Rating,
     int? Metacritic,
     string? Description,
+    string? StoryLine,
     string? Website,
     IReadOnlyList<string> Genres,
     IReadOnlyList<string> Platforms,
     IReadOnlyList<string> Developers,
-    IReadOnlyList<string> Publishers);
+    IReadOnlyList<string> Publishers,
+    IReadOnlyList<string> Screenshots,
+    IReadOnlyList<string> Artworks,
+    IReadOnlyList<string> Videos,
+    IReadOnlyList<string> RelatedGames);
 
 
 /// <summary>

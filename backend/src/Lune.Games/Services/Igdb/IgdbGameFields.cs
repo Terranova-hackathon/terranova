@@ -6,7 +6,7 @@ internal static class IgdbGameFields
         "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,platforms.name";
 
     public const string Detail =
-        Summary + ",summary,url,involved_companies.developer,involved_companies.publisher,involved_companies.company.name";
+        Summary + ",summary,storyline,url,websites.url,artworks.image_id,screenshots.image_id,videos.video_id,videos.name,similar_games,involved_companies.developer,involved_companies.publisher,involved_companies.company.name";
 
     // IGDB lists 200+ platforms, most of them retro or obscure. The filter dropdown offers:
     // PC (Windows), Mac, Linux, PS5, PS4, PS3, Xbox Series X|S, Xbox One, Xbox 360,
