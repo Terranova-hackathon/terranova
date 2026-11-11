@@ -20,6 +20,7 @@ public sealed record GameDetails(
     int Id,
     string Name,
     string? Released,
+    //background image is just a first screen_shot from the game
     string? BackgroundImage,
     string? Cover,
     double Rating,
