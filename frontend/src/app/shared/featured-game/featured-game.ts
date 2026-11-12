@@ -1,6 +1,6 @@
 import { afterRenderEffect, Component, ElementRef, input, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GameDetails } from '../../core/models/game.model';
+import { GameDetailsModel } from '../../core/models/game.model';
 
 @Component({
   imports: [RouterLink],
@@ -9,7 +9,7 @@ import { GameDetails } from '../../core/models/game.model';
   templateUrl: './featured-game.html',
 })
 export class FeaturedGame {
-  games = input.required<GameDetails[]>();
+  games = input.required<GameDetailsModel[]>();
 
   private readonly track = viewChild<ElementRef<HTMLElement>>('track');
 

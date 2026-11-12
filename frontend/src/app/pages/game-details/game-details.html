@@ -1,0 +1,159 @@
+<main class="game-details"
+		(pointerdown)="onBackdropPointerDown($event)"
+		(click)="onBackdropClick($event)"
+	>
+	<div class="game-details__container">
+		<a class="game-details__back" [routerLink]="gamesNavigation.gamesUrl()">← Back to games</a>
+
+		@if (loading()) {
+			<p>Loading…</p>
+		} @else if (error()) {
+			<p>{{ error() }}</p>
+			<button type="button" (click)="retry()">Retry</button>
+		} @else if (game(); as g) {
+			<div class="game-details__hero"
+				 [style.background-image]="'url(' + g.backgroundImage + ')'">
+				<img class="game-details__cover"
+				 [src]="g.cover || g.backgroundImage || 'images/placeholder.jpg'"
+				 [alt]="g.name + ' cover'" 
+				/>
+			</div>
+			<article class="game-details__content">
+				<h1>{{ g.name }}</h1>
+				<p>Released: {{ g.released || 'unknown' }}</p>
+
+				<section>
+					<h2>About</h2>
+					<p class="game-details__description">{{ g.description || 'No description available.' }}</p>
+					@if (g.storyLine) {
+						<h3>Story</h3>
+						<p>{{ g.storyLine }}</p>
+					}
+				</section>
+
+				@if (g.screenshots.length) {
+					<section>
+						<h2>Screenshots</h2>
+						<img class="game-details__main-shot" [src]="selectedShot() ?? g.screenshots[0]" [alt]="g.name + ' screenshot'" />
+						<div class="game-details__thumbs">
+							@for (shot of g.screenshots; track shot; let i = $index) {
+								<button type="button" 
+									[attr.aria-label]="'View screeenshot ' + (i + 1)" 
+									[attr.aria-pressed]="shot === (selectedShot() ?? g.screenshots[0])"
+									(click)="selectedShot.set(shot)"
+									[class.active]="shot === (selectedShot() ?? g.screenshots[0])"
+								>
+									<img [src]="shot" alt="" loading="lazy" />
+								</button>
+							}
+						</div>
+					</section>
+				}
+
+				<dl class="game-details__facts">
+				<dt>Genres</dt>
+					<dd>
+						@for (genre of g.genres; track genre) { <span class="chip">{{ genre }}</span> }
+						@empty { Unknown }
+					</dd>
+
+					<dt>Platforms</dt>
+					<dd>
+						@for (platform of g.platforms; track platform) { <span class="chip">{{ platform }}</span> }
+						@empty { Unknown }
+					</dd>
+
+					<dt>{{ g.developers.length > 1 ? 'Developers' : 'Developer' }}</dt>
+					<dd>{{ g.developers.join(', ') || 'Unknown' }}</dd>
+
+					<dt>{{ g.publishers.length > 1 ? 'Publishers' : 'Publisher' }}</dt>
+					<dd>{{ g.publishers.join(', ') || 'Unknown' }}</dd>
+				</dl>
+
+				<p class="game-details__rating">
+					@if (g.rating > 0) {
+						<i class="bi bi-star-fill" aria-hidden="true"></i> {{ g.rating | number:'1.1-1' }} / 5
+					} @else {
+						Not rated yet
+					}
+				</p>
+
+				<p class="game-details__metacritic">
+					Metacritic:
+					@if (g.metacritic != null) {
+						<span
+							class="metascore"
+							[class.good]="metacriticClass(g.metacritic) === 'good'"
+							[class.mixed]="metacriticClass(g.metacritic) === 'mixed'"
+							[class.bad]="metacriticClass(g.metacritic) === 'bad'"
+						>
+							{{ g.metacritic }}
+						</span>
+					} @else {
+						N/A
+					}
+				</p>
+
+				@if (g.relatedGames.items.length > 0) {
+				  <section class="game-details__related">
+				
+				    <div class="game-details__related-header">
+				      <h2>Related Games</h2>
+					
+				      <span class="game-details__related-count">
+						@if (g.relatedGames.totalCount > g.relatedGames.items.length) {
+							Showing {{ g.relatedGames.items.length }} of {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
+						} @else {
+							{{ g.relatedGames.items.length }} {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
+						}
+				      </span>
+				    </div>
+				
+				    <div class="game-details__related-grid">
+					
+				      @for (related of g.relatedGames.items; track related.id) {
+				        <a
+				          class="game-details__related-card"
+				          [routerLink]="['/games', related.id]"
+				        >
+
+				          <img
+				            [src]="related.backgroundImage || 'images/placeholder.jpg'"
+				            [alt]="related.name"
+				            loading="lazy"
+				          />
+
+				          <div class="game-details__related-info">
+						
+				            <h3>{{ related.name }}</h3>
+						
+				            <p class="game-details__related-release">
+				              {{ related.released || 'Release unknown' }}
+				            </p>
+						
+				            <div class="game-details__related-rating">
+				              @if (related.rating > 0) {
+				                <i
+				                  class="bi bi-star-fill"
+				                  aria-hidden="true"
+				                ></i>
+
+				                <span>
+				                  {{ related.rating | number:'1.1-1' }} / 5
+				                </span>
+				              } @else {
+				                <span>Not rated</span>
+				              }
+				            </div>
+						
+				          </div>
+				        </a>
+				      }
+				  
+				    </div>
+  				  </section>
+				}
+			</article>
+		}
+	</div>
+</main>

@@ -6,7 +6,7 @@ import { toFilterParams } from '../../core/models/game-filter.model';
 import { GameFilters } from '../../shared/game-filters/game-filters';
 import { FeaturedGame } from '../../shared/featured-game/featured-game';
 import { GameService } from '../../core/services/game-service';
-import { GameDetails, GameModel } from '../../core/models/game.model';
+import { GameDetailsModel, GameModel } from '../../core/models/game.model';
 import { catchError, debounce, debounceTime, distinctUntilChanged, map, of, Subject, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -23,7 +23,7 @@ export class Home {
   private readonly searchTyped = new Subject<string>();
 
   suggestions = signal<GameModel[]>([]);
-  featuredGames = signal<GameDetails[]>([]);
+  featuredGames = signal<GameDetailsModel[]>([]);
   featuredLoading = signal(true);
   featuredError = signal(false);
   searchInput = '';

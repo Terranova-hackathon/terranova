@@ -1,3 +1,5 @@
+import { PagedResult } from "./paged-result.model";
+
 export interface GameModel {
 	id: number;
 	name: string;
@@ -9,9 +11,15 @@ export interface GameModel {
 	platforms: string[];
 }
 
-export interface GameDetails extends GameModel {
+export interface GameDetailsModel extends GameModel {
 	description: string | null;
 	website: string | null;
 	developers: string[];
 	publishers: string[];
+	cover?: string | null;
+	storyLine?: string | null;
+	screenshots: string[];
+	artworks?: string[];
+	videos?: string[];
+	relatedGames: PagedResult<GameModel>;
 }

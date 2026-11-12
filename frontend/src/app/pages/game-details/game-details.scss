@@ -1,0 +1,483 @@
+
+.game-details {
+  min-height: calc(100dvh - 80px);
+  padding: 40px 20px 80px;
+  background: var(--color-background);
+  color: var(--color-text);
+  cursor: pointer;
+
+  &__container {
+    width: 100%;
+    max-width: 1150px;
+    margin: 0 auto;
+  }
+
+    &__hero,
+    &__content {
+     cursor: auto;
+    }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+  }
+
+  // Background artwork and cover
+  &__hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+
+    min-height: 370px;
+    padding: 32px;
+
+    background-color: var(--color-surface-alt);
+    background-size: cover;
+    background-position: center;
+
+    border: 1px solid var(--color-border);
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(8, 11, 23, 0.15) 0%,
+        rgba(8, 11, 23, 0.75) 100%
+      );
+      pointer-events: none;
+    }
+  }
+
+  &__cover {
+    position: relative;
+    z-index: 1;
+
+    width: 180px;
+    height: 255px;
+    object-fit: cover;
+
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: var(--color-surface);
+
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+  }
+
+  // Main details panel
+  &__content {
+    padding: 36px;
+
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+
+    background: var(--color-surface);
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    section {
+      margin-top: 36px;
+    }
+
+    p {
+      line-height: 1.7;
+    }
+  }
+
+  &__description {
+    color: var(--color-muted);
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+
+  // Screenshot gallery
+  &__main-shot {
+    display: block;
+    width: 100%;
+    max-height: 560px;
+    aspect-ratio: 16 / 9;
+
+    object-fit: contain;
+
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+  }
+
+  &__thumbs {
+    display: flex;
+    gap: 12px;
+
+    margin-top: 16px;
+    padding-bottom: 8px;
+
+    overflow-x: auto;
+    scrollbar-width: thin;
+
+    button {
+      flex: 0 0 140px;
+      padding: 3px;
+
+      border: 2px solid transparent;
+      border-radius: 10px;
+
+      background: transparent;
+      cursor: pointer;
+
+      transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
+
+      img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border-radius: 6px;
+      }
+
+      &:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+      }
+
+      &.active {
+        border-color: var(--color-primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 3px;
+      }
+    }
+  }
+
+	&__related {
+	  margin-top: 48px;
+	  padding-top: 32px;
+	  border-top: 1px solid var(--color-border);
+	}
+
+	&__related-header {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  gap: 16px;
+	  margin-bottom: 24px;
+
+	  h2 {
+	    margin: 0;
+	  }
+	}
+
+	&__related-count {
+	  color: var(--color-muted);
+	  font-size: 0.9rem;
+	}
+
+	&__related-grid {
+	  display: grid;
+	  grid-template-columns: repeat(3, minmax(0, 1fr));
+	  gap: 20px;
+	}
+
+	&__related-card {
+	  display: block;
+	  min-width: 0;
+	  overflow: hidden;
+
+	  color: var(--color-text);
+	  background: var(--color-surface-alt);
+
+	  border: 1px solid var(--color-border);
+	  border-radius: 12px;
+
+	  text-decoration: none;
+
+	  transition:
+	    transform 0.2s ease,
+	    border-color 0.2s ease;
+
+	  img {
+	    display: block;
+	    width: 100%;
+	    aspect-ratio: 16 / 9;
+	    object-fit: cover;
+	  }
+
+	  &:hover {
+	    transform: translateY(-4px);
+	    border-color: var(--color-primary);
+	  }
+
+	  &:focus-visible {
+	    outline: 2px solid var(--color-primary);
+	    outline-offset: 4px;
+	  }
+	}
+
+	&__related-info {
+	  padding: 16px;
+
+	  h3 {
+	    margin: 0 0 8px;
+
+	    font-size: 1rem;
+	    font-weight: 600;
+	    line-height: 1.4;
+	  }
+	}
+
+	&__related-release {
+	  margin-bottom: 10px;
+	  color: var(--color-muted);
+	  font-size: 0.85rem;
+	}
+
+	&__related-rating {
+	  display: flex;
+	  align-items: center;
+	  gap: 6px;
+
+	  font-size: 0.9rem;
+	  color: var(--color-muted);
+
+	  i {
+	    color: var(--color-rating);
+	  }
+	}
+
+
+  // Game facts
+  &__facts {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 16px 24px;
+
+    margin-top: 36px;
+    padding: 24px;
+
+    border-radius: 12px;
+    background: var(--color-surface-alt);
+
+    dt {
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+
+      min-width: 0;
+      margin: 0;
+      color: var(--color-text);
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 5px 10px;
+
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+
+      color: var(--color-text);
+      font-size: 0.85rem;
+    }
+  }
+
+  // Game rating
+  &__rating {
+    margin-top: 28px;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    i {
+      color: var(--color-rating);
+      margin-right: 6px;
+    }
+  }
+
+  // Metacritic score
+  &__metacritic {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+
+    .metascore {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+
+      min-width: 44px;
+      height: 44px;
+      padding: 6px;
+
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+
+      &.good {
+        background: #16a34a;
+        color: #ffffff;
+      }
+
+      &.mixed {
+        background: #eab308;
+        color: #171b2b;
+      }
+
+      &.bad {
+        background: #dc2626;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .game-details {
+    padding: 24px 16px 56px;
+
+    &__hero {
+      min-height: 280px;
+      padding: 20px;
+    }
+
+    &__cover {
+      width: 130px;
+      height: 185px;
+    }
+
+    &__content {
+      padding: 24px;
+    }
+
+    &__facts {
+      grid-template-columns: 120px minmax(0, 1fr);
+      padding: 18px;
+    }
+
+    &__thumbs button {
+      flex-basis: 115px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .game-details {
+    padding: 16px 12px 48px;
+
+    &__hero {
+      min-height: 230px;
+      padding: 16px;
+    }
+
+    &__cover {
+      width: 100px;
+      height: 145px;
+    }
+
+    &__content {
+      padding: 20px 16px;
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+    }
+
+    &__facts {
+      display: block;
+
+      dt {
+        margin-top: 16px;
+        margin-bottom: 6px;
+      }
+
+      dd {
+        margin-bottom: 12px;
+      }
+    }
+
+    &__thumbs {
+      gap: 8px;
+
+      button {
+        flex-basis: 100px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .game-details__related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .game-details__related-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .game-details__related-card {
+    display: flex;
+
+    img {
+      width: 120px;
+      aspect-ratio: auto;
+      min-height: 130px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+  }
+}

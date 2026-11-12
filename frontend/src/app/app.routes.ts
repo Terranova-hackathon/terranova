@@ -5,6 +5,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { authGuard } from './core/guards/auth-guard';
 import { Favorites } from './pages/favorites/favorites';
+import { GameDetails } from './pages/game-details/game-details';
 
 
 export const routes: Routes = [
@@ -29,6 +30,10 @@ export const routes: Routes = [
 	{
 		path: 'register',
 		component: Register
+	},
+	{
+		path: 'games/:id',
+		component: GameDetails
 	},
 	{
 		path: '**',
