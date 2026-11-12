@@ -7,7 +7,7 @@ internal sealed class GameCatalogAdapter(IGamesService games) : IGameCatalog
 {
     public async Task<GameSnapshot?> FindAsync(int id, CancellationToken cancellationToken = default)
     {
-        var game = await games.GetByIdAsync(id, cancellationToken);
+        var game = await games.GetByIdAsync(id, page: 1, pageSize: 6, cancellationToken);
         return game is null
             ? null
             : new GameSnapshot(game.Id, game.Name, game.Released, game.BackgroundImage, game.Rating, game.Metacritic, game.Genres, game.Platforms);
