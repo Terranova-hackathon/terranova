@@ -10,7 +10,7 @@ public interface IGamesService
         string? search, int page, int pageSize, GameSearchFilters? filters = null,
         CancellationToken cancellationToken = default);
 
-    Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<GameDetails?> GetByIdAsync(int id, int page = 1, int pageSize = 6, CancellationToken cancellationToken = default);
 
     Task<GameFilterOptions> GetFilterOptionsAsync(CancellationToken cancellationToken = default);
 

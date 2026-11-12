@@ -101,7 +101,7 @@ internal sealed class IgdbGamesService(
     /// <summary>
     /// Gets one game by id, or null when IGDB does not know it.
     /// </summary>
-    public async Task<GameDetails?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<GameDetails?> GetByIdAsync(int id, int page = 1, int pageSize = 6, CancellationToken cancellationToken = default)
     {
         var games = await PostAsync<List<IgdbGame>>(
             "games", $"fields {IgdbGameFields.Detail}; where id = {id}; limit 1;", cancellationToken);
@@ -109,8 +109,8 @@ internal sealed class IgdbGamesService(
         var game = games?.FirstOrDefault();
         if (game is null)
             return null;
-        // Fetch related games for the current game and set the page size to 5 for now. we might adjust this later.
-        var relatedGames = await GetRelatedGamesAsync(game.SimilarGames, page: 1, pageSize: 5, cancellationToken);
+
+        var relatedGames = await GetRelatedGamesAsync(game.SimilarGames, page, pageSize, cancellationToken);
         return _converter.ToDetails(game, relatedGames);
     }
 
