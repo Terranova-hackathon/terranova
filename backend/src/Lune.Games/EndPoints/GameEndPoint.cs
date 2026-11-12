@@ -56,11 +56,19 @@ public static class GameEndPoint
         }
     }
 
-    private static async Task<IResult> GetById(int id, IGamesService games, CancellationToken cancellationToken)
+    private static async Task<IResult> GetById(
+        int id,
+        IGamesService games,
+        int page = 1,
+        int pageSize = 6,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            var game = await games.GetByIdAsync(id, cancellationToken);
+            page = Math.Max(page, 1);
+            pageSize = Math.Clamp(pageSize, 1, MaxPageSize);
+
+            var game = await games.GetByIdAsync(id, page, pageSize, cancellationToken);
             return game is null ? Results.NotFound() : Results.Ok(game);
         }
         catch (GamesUnavailableException ex)
