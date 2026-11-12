@@ -1,5 +1,7 @@
 namespace Lune.Games.Contracts;
 
+using Lune.Shared.Paging;
+
 /// <summary>
 /// Contains contract definitions for game-related data.
 /// </summary>
@@ -35,7 +37,7 @@ public sealed record GameDetails(
     IReadOnlyList<string> Screenshots,
     IReadOnlyList<string> Artworks,
     IReadOnlyList<string> Videos,
-    IReadOnlyList<string> RelatedGames);
+    PagedResult<GameSummary> RelatedGames);
 
 
 /// <summary>

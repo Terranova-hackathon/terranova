@@ -107,7 +107,32 @@ internal sealed class IgdbGamesService(
             "games", $"fields {IgdbGameFields.Detail}; where id = {id}; limit 1;", cancellationToken);
 
         var game = games?.FirstOrDefault();
-        return game is null ? null : _converter.ToDetails(game);
+        if (game is null)
+            return null;
+        // Fetch related games for the current game and set the page size 10 5 for now. we might adjust this later.
+        var relatedGames = await GetRelatedGamesAsync(game.SimilarGames, page: 1, pageSize: 5, cancellationToken);
+        return _converter.ToDetails(game, relatedGames);
+    }
+
+    /// <summary>
+    /// Fetches paged related games by their IDs and returns them as GameSummary objects.
+    /// </summary>
+    private async Task<PagedResult<GameSummary>> GetRelatedGamesAsync(List<int>? gameIds, int page, int pageSize, CancellationToken cancellationToken)
+    {
+        if (gameIds?.Count == 0)
+            return new PagedResult<GameSummary>([], page, pageSize, 0);
+
+        var offset = Math.Max(page - 1, 0) * pageSize;
+        var ids = string.Join(",", gameIds!);
+        var games = await PostAsync<List<IgdbGame>>(
+            "games", $"fields {IgdbGameFields.Summary}; where id = ({ids}); limit {pageSize}; offset {offset};", cancellationToken);
+
+        var totalCount = gameIds?.Count ?? 0;
+        return new PagedResult<GameSummary>(
+            (games?.Select(g => _converter.ToSummary(g)) ?? []).ToList(),
+            page,
+            pageSize,
+            totalCount);
     }
 
     /// <summary>
