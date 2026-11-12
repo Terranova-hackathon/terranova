@@ -148,7 +148,9 @@
 						  </span>
 						</div>
 					
-						<div class="game-details__related-grid">
+						<div class="game-details__related-grid"
+							[class.is-loading]="relatedLoading()"
+						>
 						
 						  @for (related of relatedPage.items; track related.id) {
 							<a
@@ -226,15 +228,22 @@
 						}
 
 						@if (relatedLoading()) {
-						<p class="game-details__related-status" role="status">
-							Loading related games...
-						</p>
+							<div class="text-center py-4" role="status">
+								<div class="spinner-border text-primary">
+									<span class="visually-hidden">
+										Loading related games...
+									</span>
+								</div>
+							<p class="game-details__related-status" role="status">
+								Loading related games...
+							</p>
+							</div>
 						}
 
 						@if (relatedError()) {
-						<p class="game-details__related-error" role="alert">
-							{{ relatedError() }}
-						</p>
+							<p class="game-details__related-error" role="alert">
+								{{ relatedError() }}
+							</p>
 						}
 						</section>
 					}
