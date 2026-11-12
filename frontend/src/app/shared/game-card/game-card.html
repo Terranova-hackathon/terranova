@@ -1,13 +1,15 @@
 <article class="game-card">
-	<img
-		class="game-card__image"
-		[src]="game().backgroundImage || 'images/placeholder.jpg'"
-		[alt]="game().name"
-	/>
+	<a [routerLink]="['/games', game().id]" class="game-card__link">
+		<img
+			class="game-card__image"
+			[src]="game().backgroundImage || 'images/placeholder.jpg'"
+			[alt]="game().name"
+		/>
+	</a>
 
 	<div class="game-card__content">
 		<div class="game-card__heading">
-			<h3>{{ game().name }}</h3>
+			<h3><a [routerLink]="['/games', game().id]">{{ game().name }}</a></h3>
 
 			<button
 				type="button"
