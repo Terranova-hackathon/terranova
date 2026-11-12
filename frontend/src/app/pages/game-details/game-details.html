@@ -101,64 +101,112 @@
 					}
 				</p>
 
-				@if (g.relatedGames.items.length > 0) {
-				  <section class="game-details__related">
-				
-				    <div class="game-details__related-header">
-				      <h2>Related Games</h2>
+				@if (relatedGames(); as relatedPage) {
+					@if (relatedPage.items.length > 0) {
+					  <section class="game-details__related">
 					
-				      <span class="game-details__related-count">
-						@if (g.relatedGames.totalCount > g.relatedGames.items.length) {
-							Showing {{ g.relatedGames.items.length }} of {{ g.relatedGames.totalCount }}
-						} @else {
-							{{ g.relatedGames.items.length }} {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
+						<div class="game-details__related-header">
+						  <h2>Related Games</h2>
+
+						  <span class="game-details__related-count">
+							@if (relatedPage.totalCount > relatedPage.items.length) {
+								Showing {{ relatedPage.items.length }} of {{ relatedPage.totalCount }}
+							} @else {
+								{{ relatedPage.items.length }} {{ relatedPage.items.length === 1 ? 'game' : 'games' }}
+							}
+						  </span>
+						</div>
+					
+						<div class="game-details__related-grid">
+						
+						  @for (related of relatedPage.items; track related.id) {
+							<a
+							  class="game-details__related-card"
+							  [routerLink]="['/games', related.id]"
+							>
+	
+							  <img
+								[src]="related.backgroundImage || 'images/placeholder.jpg'"
+								[alt]="related.name"
+								loading="lazy"
+							  />
+
+							  <div class="game-details__related-info">
+
+								<h3>{{ related.name }}</h3>
+
+								<p class="game-details__related-release">
+								  {{ related.released || 'Release unknown' }}
+								</p>
+
+								<div class="game-details__related-rating">
+								  @if (related.rating > 0) {
+									<i
+									  class="bi bi-star-fill"
+									  aria-hidden="true"
+									></i>
+
+									<span>
+									  {{ related.rating | number:'1.1-1' }} / 5
+									</span>
+								  } @else {
+									<span>Not rated</span>
+								  }
+								</div>
+							
+							  </div>
+							</a>
+						  }
+						</div>
+
+						@if (relatedPage.totalPages > 1) {
+						<nav
+							class="game-details__related-pagination"
+							aria-label="Related games pagination"
+						>
+							<button
+							type="button"
+							class="game-details__page-button"
+							(click)="changeRelatedPage(relatedPage.page - 1)"
+							[disabled]="relatedLoading() || relatedPage.page <= 1"
+							>
+							<i class="bi bi-chevron-left" aria-hidden="true"></i>
+							Previous
+							</button>
+
+							<span class="game-details__page-indicator">
+							Page {{ relatedPage.page }}
+							of {{ relatedPage.totalPages }}
+							</span>
+
+							<button
+							type="button"
+							class="game-details__page-button"
+							(click)="changeRelatedPage(relatedPage.page + 1)"
+							[disabled]="
+								relatedLoading() ||
+								relatedPage.page >= relatedPage.totalPages
+							"
+							>
+							Next
+							<i class="bi bi-chevron-right" aria-hidden="true"></i>
+							</button>
+						</nav>
 						}
-				      </span>
-				    </div>
-				
-				    <div class="game-details__related-grid">
-					
-				      @for (related of g.relatedGames.items; track related.id) {
-				        <a
-				          class="game-details__related-card"
-				          [routerLink]="['/games', related.id]"
-				        >
 
-				          <img
-				            [src]="related.backgroundImage || 'images/placeholder.jpg'"
-				            [alt]="related.name"
-				            loading="lazy"
-				          />
+						@if (relatedLoading()) {
+						<p class="game-details__related-status" role="status">
+							Loading related games...
+						</p>
+						}
 
-				          <div class="game-details__related-info">
-						
-				            <h3>{{ related.name }}</h3>
-						
-				            <p class="game-details__related-release">
-				              {{ related.released || 'Release unknown' }}
-				            </p>
-						
-				            <div class="game-details__related-rating">
-				              @if (related.rating > 0) {
-				                <i
-				                  class="bi bi-star-fill"
-				                  aria-hidden="true"
-				                ></i>
-
-				                <span>
-				                  {{ related.rating | number:'1.1-1' }} / 5
-				                </span>
-				              } @else {
-				                <span>Not rated</span>
-				              }
-				            </div>
-						
-				          </div>
-				        </a>
-				      }
-				  
-				    </div>
-  				  </section>
+						@if (relatedError()) {
+						<p class="game-details__related-error" role="alert">
+							{{ relatedError() }}
+						</p>
+						}
+						</section>
+					}
 				}
 			</article>
 		}
