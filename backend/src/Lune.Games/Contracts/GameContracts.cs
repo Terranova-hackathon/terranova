@@ -37,7 +37,7 @@ public sealed record GameDetails(
     IReadOnlyList<string> Screenshots,
     IReadOnlyList<string> Artworks,
     IReadOnlyList<string> Videos,
-    PagedResult<GameSummary>? RelatedGames);
+    PagedResult<GameSummary> RelatedGames);
 
 
 /// <summary>

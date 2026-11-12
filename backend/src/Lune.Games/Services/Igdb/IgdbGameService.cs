@@ -117,10 +117,10 @@ internal sealed class IgdbGamesService(
     /// <summary>
     /// Fetches paged related games by their IDs and returns them as GameSummary objects.
     /// </summary>
-    private async Task<PagedResult<GameSummary>?> GetRelatedGamesAsync(List<int>? gameIds, int page, int pageSize, CancellationToken cancellationToken)
+    private async Task<PagedResult<GameSummary>> GetRelatedGamesAsync(List<int>? gameIds, int page, int pageSize, CancellationToken cancellationToken)
     {
         if (gameIds == null || gameIds.Count == 0)
-            return null;
+            return new PagedResult<GameSummary>([], page, pageSize, 0);
 
         var offset = Math.Max(page - 1, 0) * pageSize;
         var ids = string.Join(",", gameIds);
