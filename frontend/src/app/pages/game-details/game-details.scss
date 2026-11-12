@@ -445,6 +445,67 @@
     color: var(--bs-danger-text-emphasis);
   }
 
+  // Related heart btn
+  &__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    h1 {
+      flex: 1;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &__favorite {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 52px;
+    height: 52px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+
+    background: var(--color-surface-alt);
+    color: var(--color-muted);
+
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease;
+
+    &:hover:not(:disabled) {
+      color: #e63962;
+      border-color: #e63962;
+      transform: scale(1.06);
+    }
+
+    &.is-favorite {
+      color: #e63962;
+      background: var(--color-surface-alt);
+      border-color: #e63962;
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 4px;
+    }
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -521,6 +582,17 @@
       button {
         flex-basis: 100px;
       }
+    }
+
+    &__title-row {
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    &__favorite {
+      width: 44px;
+      height: 44px;
+      font-size: 1.25rem;
     }
   }
 }

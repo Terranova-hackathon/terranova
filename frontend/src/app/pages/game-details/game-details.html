@@ -19,17 +19,48 @@
 	</div>
 		} @else if (game(); as g) {
 			<div class="game-details__hero"
-				 [style.background-image]="'url(' + g.backgroundImage + ')'">
+				[style.background-image]="'url(' + g.backgroundImage + ')'"
+			>
 				<img class="game-details__cover"
 				 [src]="g.cover || g.backgroundImage || 'images/placeholder.jpg'"
 				 [alt]="g.name + ' cover'" 
 				/>
 			</div>
 			<article class="game-details__content">
-				<h1>{{ g.name }}</h1>
-				<p>Released: {{ g.released || 'unknown' }}</p>
-
-				<section>
+				<div class="game-details__title-row">
+					<h1>{{ g.name }}</h1>
+					<button
+						type="button"
+						class="game-details__favorite"
+						[class.is-favorite]="favoriteIds().has(g.id)"
+						[disabled]="
+							(isLoggedIn() && !favoritesReady()) ||
+							favoriteBusyIds().has(g.id)"
+						[attr.aria-label]="
+							favoriteIds().has(g.id)
+							? 'Remove ' + g.name + ' from favorites'
+							: 'Add ' + g.name + ' to favorites'"
+						[attr.aria-pressed]="favoriteIds().has(g.id)"
+						(click)="toggleFavorite(g.id)"
+					>
+						<i
+							class="bi"
+							[class.bi-heart-fill]="favoriteIds().has(g.id)"
+							[class.bi-heart]="!favoriteIds().has(g.id)"
+							aria-hidden="true"
+						></i>
+					</button>
+				</div>
+					<p>Released: {{ g.released || 'unknown' }}</p>
+					@if (favoriteError()) {
+						<div
+							class="alert alert-danger mt-3"
+							role="alert"
+						>
+							{{ favoriteError() }}
+						</div>
+					}
+					<section>
 					<h2>About</h2>
 					<p class="game-details__description">{{ g.description || 'No description available.' }}</p>
 					@if (g.storyLine) {
