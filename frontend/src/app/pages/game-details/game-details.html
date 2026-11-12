@@ -102,7 +102,7 @@
 					
 				      <span class="game-details__related-count">
 						@if (g.relatedGames.totalCount > g.relatedGames.items.length) {
-							Showing {{ g.relatedGames.items.length }} of {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
+							Showing {{ g.relatedGames.items.length }} of {{ g.relatedGames.totalCount }}
 						} @else {
 							{{ g.relatedGames.items.length }} {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
 						}
