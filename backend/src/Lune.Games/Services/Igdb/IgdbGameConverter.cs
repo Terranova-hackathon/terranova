@@ -111,7 +111,7 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
     /// <summary>
     /// Converts an IGDB game object to full game details.
     /// </summary>
-    internal GameDetails ToDetails(IgdbGame g, PagedResult<GameSummary> relatedGames) => new(
+    internal GameDetails ToDetails(IgdbGame g, PagedResult<GameSummary>? relatedGames) => new(
         Id: g.Id,
         Name: g.Name,
         Released: ToReleaseDate(g.FirstReleaseDate),
@@ -135,7 +135,7 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
     /// Converts an IGDB game object to featured game details with a random screenshot background.
     /// </summary>
     internal GameDetails ToFeatured(IgdbGame g) =>
-        ToDetails(g, new PagedResult<GameSummary>([], 1, 5, 0)) with
+        ToDetails(g, null) with
         {
             BackgroundImage = ToImageUrl(g.Screenshots?.FirstOrDefault(), "t_1080p") ?? ToImageUrl(g.Cover, "t_1080p")
         };
