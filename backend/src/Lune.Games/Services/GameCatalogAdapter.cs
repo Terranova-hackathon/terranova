@@ -12,4 +12,10 @@ internal sealed class GameCatalogAdapter(IGamesService games) : IGameCatalog
             ? null
             : new GameSnapshot(game.Id, game.Name, game.Released, game.BackgroundImage, game.Rating, game.Metacritic, game.Genres, game.Platforms);
     }
+
+    public async Task<IReadOnlyList<ExternalGameId>> FindExternalIdsAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var game = await games.GetByIdAsync(id, page: 1, pageSize: 1, cancellationToken);
+        return game?.ExternalGames.Select(e => new ExternalGameId(e.Source, e.Uid, e.Url)).ToList() ?? [];
+    }
 }
