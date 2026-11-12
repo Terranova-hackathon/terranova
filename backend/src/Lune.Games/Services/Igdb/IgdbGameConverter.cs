@@ -67,6 +67,32 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
     internal static string? ToWebsiteUrl(List<IgdbWebsite>? websites) =>
         websites?.FirstOrDefault(w => w.Category == 1)?.Url;
 
+    private const int SteamExternalGameSource = 1;
+
+    /// <summary>
+    /// Finds the Steam app id in IGDB's external games list (source 1 = Steam).
+    /// </summary>
+    internal static int? ToSteamAppId(List<IgdbExternalGame>? externalGames) =>
+        externalGames?
+            .Where(e => e.ExternalGameSource?.Id == SteamExternalGameSource)
+            .Select(e => int.TryParse(e.Uid, NumberStyles.None, CultureInfo.InvariantCulture, out var appId) ? appId : (int?)null)
+            .FirstOrDefault(appId => appId is not null);
+
+    /// <summary>
+    /// Lists the game's ids on other stores and services, skipping excluded sources and entries IGDB has no source name or uid for.
+    /// </summary>
+    internal static IReadOnlyList<ExternalGameLink> ToExternalGames(List<IgdbExternalGame>? externalGames) =>
+        externalGames?
+            .Where(e => !string.IsNullOrWhiteSpace(e.Uid) && !string.IsNullOrWhiteSpace(e.ExternalGameSource?.Name))
+            .Where(e => !IsExcludedExternalSource(e.ExternalGameSource!.Name!))
+            .Select(e => new ExternalGameLink(e.ExternalGameSource!.Name!, e.Uid!, e.Url))
+            .ToList() ?? [];
+
+    private static bool IsExcludedExternalSource(string name) =>
+        name.StartsWith("Amazon", StringComparison.OrdinalIgnoreCase)
+        || name.StartsWith("YouTube", StringComparison.OrdinalIgnoreCase)
+        || name.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase);
+
     /// <summary>
     /// Picks a random screenshot for the background image, or falls back to the cover.
     /// </summary>
@@ -122,6 +148,7 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         Description: g.Summary,
         StoryLine: g.Storyline,
         Website: ToWebsiteUrl(g.Websites),
+        ExternalGames: ToExternalGames(g.ExternalGames),
         Genres: Names(g.Genres),
         Platforms: Names(g.Platforms),
         Developers: Companies(g.InvolvedCompanies, c => c.Developer),
