@@ -2,6 +2,7 @@ using System.Globalization;
 using Lune.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
+using Lune.Shared.Paging;
 
 namespace Lune.Games.Services;
 
@@ -110,7 +111,7 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
     /// <summary>
     /// Converts an IGDB game object to full game details.
     /// </summary>
-    internal GameDetails ToDetails(IgdbGame g) => new(
+    internal GameDetails ToDetails(IgdbGame g, PagedResult<GameSummary> relatedGames) => new(
         Id: g.Id,
         Name: g.Name,
         Released: ToReleaseDate(g.FirstReleaseDate),
@@ -128,13 +129,13 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         Screenshots: ToImageUrls(g.Screenshots, "t_1080p"),
         Artworks: ToImageUrls(g.Artworks, "t_1080p"),
         Videos: ToVideoUrls(g.Videos),
-        RelatedGames: g.SimilarGames?.Select(id => id.ToString()).ToList() ?? []);
+        RelatedGames: relatedGames);
 
     /// <summary>
     /// Converts an IGDB game object to featured game details with a random screenshot background.
     /// </summary>
     internal GameDetails ToFeatured(IgdbGame g) =>
-        ToDetails(g) with
+        ToDetails(g, new PagedResult<GameSummary>([], 1, 5, 0)) with
         {
             BackgroundImage = ToImageUrl(g.Screenshots?.FirstOrDefault(), "t_1080p") ?? ToImageUrl(g.Cover, "t_1080p")
         };
