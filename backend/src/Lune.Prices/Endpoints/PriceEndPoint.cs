@@ -11,15 +11,15 @@ public static class PriceEndPoint
     {
         var group = endpoints.MapGroup("/api/prices").WithTags("Prices");
 
-        group.MapGet("/{gameId:int}", GetPriceComparison);
+        group.MapGet("/{Id:int}", GetPriceComparison);
     }
 
     private static async Task<IResult> GetPriceComparison(
-        int gameId, MultiPlatformPriceService priceComparison, CancellationToken cancellationToken)
+        int Id, MultiPlatformPriceService priceComparison, CancellationToken cancellationToken)
     {
         try
         {
-            var comparison = await priceComparison.GetPriceComparisonAsync(gameId, cancellationToken);
+            var comparison = await priceComparison.GetPriceComparisonAsync(Id, cancellationToken);
             if (comparison is null)
                 return Results.Problem(
                     title: "No price data found.",

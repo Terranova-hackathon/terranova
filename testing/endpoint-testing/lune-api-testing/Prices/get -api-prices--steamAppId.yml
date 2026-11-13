@@ -1,0 +1,53 @@
+info:
+  name: get /api/prices/:steamAppId
+  type: http
+  seq: 1
+  tags:
+    - Prices
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/prices/:steamAppId"
+  params:
+    - name: steamAppId
+      value: ""
+      type: path
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 200 Response - Price Comparison Available
+    description: OK - Returns price comparison across platforms
+    request:
+      url: "{{baseUrl}}/api/prices/570"
+      method: GET
+      params:
+        - name: steamAppId
+          value: "570"
+          type: path
+    response:
+      status: 200
+      statusText: OK
+      body:
+        type: json
+        data:
+          gameId: 0
+          steamAppId: 570
+          platforms:
+            - platform: Steam
+              currentPrice: 0
+              historicalLow: 0
+              averagePrice: null
+              currency: USD
+              url: "https://store.steampowered.com/app/570"
