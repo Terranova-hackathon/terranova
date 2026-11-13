@@ -24,6 +24,7 @@ public static class AuthEndpoints
         group.MapPost("/logout", Logout);
         group.MapGet("/me", GetCurrentUser).RequireAuthorization();
         group.MapPost("/delete-account", DeleteAccount).RequireAuthorization();
+        group.MapPut("/display-name", ChangeDisplayName).RequireAuthorization();
 
         //TODO: decide if we want to make add this end points as well.
         // group.MapPost("/forgot-password", ForgotPassword);
@@ -156,6 +157,39 @@ public static class AuthEndpoints
 
         AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
         return Results.NoContent();
+    }
+
+    private static async Task<IResult> ChangeDisplayName(
+        ChangeDisplayNameRequest req,
+        ClaimsPrincipal principal,
+        UserManager<AppUser> users)
+    {
+        if (!RequestValidator.TryValidate(req, out var errors))
+        {
+            return Results.ValidationProblem(errors);
+        }
+
+        var id = principal.GetUserId();
+        if (id is null)
+            return Results.Unauthorized();
+
+        var user = await users.FindByIdAsync(id);
+        if (user is null)
+            return Results.Unauthorized();
+
+        user.DisplayName = req.DisplayName;
+        var result = await users.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            return Results.ValidationProblem(result.Errors
+                .GroupBy(error => error.Code)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(error => error.Description).ToArray()));
+        }
+
+        return Results.Ok(MakeResponse(user));
     }
 
     //     private static async Task ForgotPassword(HttpContext context)
