@@ -31,6 +31,18 @@
   &__total {
     color: var(--color-muted);
   }
+
+  &__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+
+    p {
+      margin: 0;
+    }
+  }
 }
 
 // BASIC SEARCH
@@ -79,4 +91,24 @@
   &::backdrop {
     background: rgb(0 0 0 / 0.6);
   }
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .pagination-number {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+}
+
+.pagination-ellipsis {
+  padding: 0 4px;
+  color: var(--color-muted);
 }

@@ -6,9 +6,10 @@ import { GameCard } from '../../shared/game-card/game-card';
 import { catchError, combineLatest, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PagedResult } from '../../core/models/paged-result.model';
+import { ScrollControls } from '../../shared/scroll-controls/scroll-controls';
 
 @Component({
-  imports: [RouterLink, GameCard],
+  imports: [RouterLink, GameCard, ScrollControls],
   selector: 'app-favorites',
   styleUrl: './favorites.scss',
   templateUrl: './favorites.html',
