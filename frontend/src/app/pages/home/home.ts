@@ -9,6 +9,7 @@ import { GameService } from '../../core/services/game-service';
 import { GameDetailsModel, GameModel } from '../../core/models/game.model';
 import { catchError, debounce, debounceTime, distinctUntilChanged, map, of, Subject, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { GamesNavigationService } from '../../core/services/games-navigation-service';
 
 @Component({
   imports: [FormsModule, GameFilters, FeaturedGame],
@@ -21,6 +22,7 @@ export class Home {
   private readonly filtersPanel = viewChild(GameFilters);
   private readonly gameService = inject(GameService);
   private readonly searchTyped = new Subject<string>();
+  private readonly gamesNavigation = inject(GamesNavigationService);
 
   suggestions = signal<GameModel[]>([]);
   featuredGames = signal<GameDetailsModel[]>([]);
@@ -79,5 +81,9 @@ export class Home {
         ...(draft ? toFilterParams(draft) : {})
       }
     });
+  }
+
+  resetFilters(): void {
+    this.gamesNavigation.clearFilters();
   }
 }

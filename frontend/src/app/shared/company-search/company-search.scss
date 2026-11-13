@@ -1,0 +1,64 @@
+:host { display: block; }
+
+.company-search {
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 10px;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-button-bg);
+    color: var(--color-button-text);
+    font-size: 0.85rem;
+    text-transform: capitalize;
+
+    &:hover { background: var(--color-button-hover); }
+  }
+
+  &__results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 10px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface-alt);
+
+    .form-check { margin-bottom: 0; }
+    .form-check-label { color: var(--color-text); cursor: pointer; }
+    .form-check-input:checked {
+      background-color: var(--color-button-bg);
+      border-color: var(--color-button-bg);
+    }
+  }
+
+  &__hint, &__count {
+    margin-top: 8px;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+}
+
+.form-control {
+  background-color: var(--color-input-bg);
+  border-color: var(--color-input-border);
+  color: var(--color-text);
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-focus-ring);
+  }
+}
