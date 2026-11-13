@@ -49,8 +49,10 @@
 		</p>
 
 		<div class="game-card__platforms">
-			@for (platform of game().platforms; track platform) {
+			@for (platform of game().platforms.slice(0, 4); track platform) {
 				<span>{{ platform }}</span>
+			} @if (game().platforms.length > 4) {
+				<span>...</span>
 			}
 		</div>
 	</div>
