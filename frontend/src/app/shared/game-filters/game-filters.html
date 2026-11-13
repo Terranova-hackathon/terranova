@@ -120,6 +120,30 @@
             </fieldset>
           </div>
 
+          <!-- DEVELOPERS -->
+          <div class="col-12 col-lg-6">
+            <fieldset class="filter-group">
+              <legend class="filter-group__title">Developers</legend>
+              <app-company-search
+                kind="developer"
+                [selected]="filterState.developers"
+                (toggled)="toggleFilter('developers', $event)"
+              />
+            </fieldset>
+          </div>
+
+          <!-- PUBLISHERS -->
+          <div class="col-12 col-lg-6">
+            <fieldset class="filter-group">
+              <legend class="filter-group__title">Publishers</legend>
+              <app-company-search
+                kind="publisher"
+                [selected]="filterState.publishers"
+                (toggled)="toggleFilter('publishers', $event)"
+              />
+            </fieldset>
+          </div>
+
           <!-- METACRITIC -->
           <div class="col-12 col-lg-6">
             <fieldset class="filter-group">

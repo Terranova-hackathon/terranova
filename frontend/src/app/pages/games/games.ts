@@ -2,7 +2,7 @@ import { afterNextRender, Component, computed, DestroyRef, effect, ElementRef, i
 import { GameCard } from '../../shared/game-card/game-card';
 import { GameModel } from '../../core/models/game.model';
 import { GameService } from '../../core/services/game-service';
-import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FavoriteService } from '../../core/services/favorite-service';
 import { FormsModule } from '@angular/forms';
@@ -10,8 +10,9 @@ import { catchError, combineLatest, debounceTime, distinctUntilChanged, EMPTY, m
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth-service';
 import { GamesNavigationService } from '../../core/services/games-navigation-service';
-import { cleanList, cleanOrdering, emptyFilterState, FilterState, GameFilter, GameQuery, ListFilterKey, MAX_VALUES, toFilterParams, toFilterState } from '../../core/models/game-filter.model';
+import { emptyFilterState, FilterState, toFilterParams, toFilterState } from '../../core/models/game-filter.model';
 import { GameFilters } from '../../shared/game-filters/game-filters';
+import { readGameQuery } from '../../core/utils/game-query';
 
 @Component({
   imports: [GameCard, FormsModule, GameFilters],
@@ -326,54 +327,6 @@ export class Games implements OnInit {
       queryParams: { search: this.searchTerm() || null }
     });
   }
-}
-
-// readscore makes sure metacritic score is a whole number
-function readScore(
-  value: string | null,
-  fallback: number
-): number {
-  if (value === null || value.trim() === '') {
-    return fallback;
-  }
-  const score = Number(value);
-
-  if (!Number.isInteger(score) || score < 0 || score > 100) {
-    return fallback;
-  }
-  return score;
-}
-// turn URL query string into clean GameQuery object
-function readGameQuery(params: ParamMap): GameQuery {
-  const rawPage = Number(params.get('page') ?? '1');
-  const page = 
-    Number.isSafeInteger(rawPage) && rawPage >= 1
-      ? rawPage : 1;
-  const min = params.get('metacriticMin');
-  const max = params.get('metacriticMax');
-  let metacriticMin = min === null ? undefined : readScore(min, 0);
-  let metacriticMax = max === null ? undefined : readScore(max, 100);
-  // swaps reversed range (protects case where user inserts 80 - 50,
-  // instead of error assume they meant 50 - 80)
-  if (metacriticMin !== undefined  && metacriticMax !== undefined
-      && metacriticMin > metacriticMax) {
-    [metacriticMin, metacriticMax] = [metacriticMax, metacriticMin];
-  }
-// 0 and 100 are not restrictions 
-// so not setting doesn't exlude games with no metacritic
-  if (metacriticMin === 0) metacriticMin = undefined;
-  if (metacriticMax === 100) metacriticMax = undefined;
-
-  return {
-    search: params.get('search')?.trim() ?? '', page,
-    genres: cleanList(params.get('genres'), 'slug'),
-    platforms: cleanList(params.get('platforms'), 'id'),
-    developers: cleanList(params.get('developers'), 'slug'),
-    publishers: cleanList(params.get('publishers'), 'slug'),
-    ordering: cleanOrdering(params.get('ordering')),
-    metacriticMin,
-    metacriticMax
-  };
 }
 
 function readFromPage(params: ParamMap): number | null {
