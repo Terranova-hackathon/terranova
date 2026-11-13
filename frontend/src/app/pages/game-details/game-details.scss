@@ -325,6 +325,7 @@
     .chip {
       display: inline-block;
       padding: 5px 10px;
+      text-decoration: none;
 
       background: var(--color-surface);
       border: 1px solid var(--color-border);
@@ -332,6 +333,11 @@
 
       color: var(--color-text);
       font-size: 0.85rem;
+
+      &:hover {
+        background: var(--color-primary);
+        color: --color-surface;
+      }
     }
   }
 
