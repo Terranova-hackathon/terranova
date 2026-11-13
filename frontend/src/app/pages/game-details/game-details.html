@@ -108,29 +108,35 @@
 					<dd>{{ g.publishers.join(', ') || 'Unknown' }}</dd>
 				</dl>
 
-				<p class="game-details__rating">
-					@if (g.rating > 0) {
-						<i class="bi bi-star-fill" aria-hidden="true"></i> {{ g.rating | number:'1.1-1' }} / 5
-					} @else {
-						Not rated yet
-					}
-				</p>
+				<div class="game-details__ratings-prices">
+					<div class="game-details__scores">
+						<p class="game-details__rating">
+							@if (g.rating > 0) {
+								<i class="bi bi-star-fill" aria-hidden="true"></i> {{ g.rating | number:'1.1-1' }} / 5
+							} @else {
+								Not rated yet
+							}
+						</p>
 
-				<p class="game-details__metacritic">
-					Metacritic:
-					@if (g.metacritic != null) {
-						<span
-							class="metascore"
-							[class.good]="metacriticClass(g.metacritic) === 'good'"
-							[class.mixed]="metacriticClass(g.metacritic) === 'mixed'"
-							[class.bad]="metacriticClass(g.metacritic) === 'bad'"
-						>
-							{{ g.metacritic }}
-						</span>
-					} @else {
-						N/A
-					}
-				</p>
+						<p class="game-details__metacritic">
+							Metacritic:
+							@if (g.metacritic != null) {
+								<span
+									class="metascore"
+									[class.good]="metacriticClass(g.metacritic) === 'good'"
+									[class.mixed]="metacriticClass(g.metacritic) === 'mixed'"
+									[class.bad]="metacriticClass(g.metacritic) === 'bad'"
+								>
+									{{ g.metacritic }}
+								</span>
+							} @else {
+								N/A
+							}
+						</p>
+					</div>
+
+					<app-price-comparison [gameId]="g.id" />
+				</div>
 
 				@if (relatedGames(); as relatedPage) {
 					@if (relatedPage.items.length > 0) {
@@ -165,7 +171,6 @@
 							  />
 
 							  <div class="game-details__related-info">
-
 								<h3>{{ related.name }}</h3>
 
 								<p class="game-details__related-release">
@@ -186,7 +191,6 @@
 									<span>Not rated</span>
 								  }
 								</div>
-							
 							  </div>
 							</a>
 						  }

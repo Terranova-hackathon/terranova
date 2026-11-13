@@ -1,0 +1,85 @@
+
+<div class="price-comparison">
+  <h2 class="price-comparison__title">
+    <i class="bi bi-tags" aria-hidden="true"></i>
+    Price Comparison
+  </h2>
+
+  @if (loading()) {
+    <div class="price-comparison__message" role="status">
+      <span class="spinner-border spinner-border-sm"></span>
+      Loading prices...
+    </div>
+
+  } @else if (error()) {
+    <p class="price-comparison__message">
+      {{ error() }}
+    </p>
+
+  } @else if (prices(); as data) {
+    @if (data.platforms.length > 0) {
+      <div class="price-comparison__table-wrap">
+        <table class="price-comparison__table">
+          <thead>
+            <tr>
+              <th scope="col">Store</th>
+              <th scope="col">Current</th>
+              <th scope="col">Historical low</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (store of data.platforms; track store.platform) {
+              <tr>
+                <td>
+                  @if (validStoreUrl(store.url); as url) {
+                    <a
+                      [href]="url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="price-comparison__store"
+                    >
+                      {{ store.platform }}
+                      <i
+                        class="bi bi-box-arrow-up-right"
+                        aria-hidden="true"
+                      ></i>
+                    </a>
+                  } @else {
+                    <span>{{ store.platform }}</span>
+                  }
+                </td>
+
+                <td>
+                  @if (store.currentPrice !== null) {
+                    {{ store.currentPrice |
+                      currency:(store.currency || 'EUR') }}
+                  } @else {
+                    <span class="price-comparison__unavailable">
+                      N/A
+                    </span>
+                  }
+                </td>
+
+                <td>
+                  @if (store.historicalLow !== null) {
+                    {{ store.historicalLow |
+                      currency:(store.currency || 'EUR') }}
+                  } @else {
+                    <span class="price-comparison__unavailable">
+                      N/A
+                    </span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="price-comparison__message">
+        No stores available.
+      </p>
+    }
+  }
+</div>

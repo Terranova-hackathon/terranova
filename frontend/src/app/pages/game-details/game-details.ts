@@ -10,9 +10,10 @@ import { DecimalPipe } from '@angular/common';
 import { PagedResult } from '../../core/models/paged-result.model';
 import { AuthService } from '../../core/services/auth-service';
 import { FavoriteService } from '../../core/services/favorite-service';
+import { PriceComparison } from '../../shared/price-comparison/price-comparison';
 
 @Component({
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, PriceComparison],
   selector: 'app-game-details',
   styleUrl: './game-details.scss',
   templateUrl: './game-details.html',
