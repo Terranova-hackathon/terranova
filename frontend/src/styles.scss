@@ -124,3 +124,15 @@ body {
 *::after {
 	box-sizing: border-box;
 }
+
+.luna-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: currentColor;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+.luna-icon--eclipse { --icon: url('/icons/eclipse.svg'); }
+.luna-icon--helmet  { --icon: url('/icons/helmet.svg'); }
