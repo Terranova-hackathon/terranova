@@ -32,6 +32,26 @@ internal sealed class IgdbGame
     [JsonPropertyName("involved_companies")] public List<IgdbInvolvedCompany>? InvolvedCompanies { get; set; }
     [JsonPropertyName("videos")] public List<IgdbVideo>? Videos { get; set; }
     [JsonPropertyName("similar_games")] public List<int>? SimilarGames { get; set; }
+    [JsonPropertyName("external_games")] public List<IgdbExternalGame>? ExternalGames { get; set; }
+}
+
+/// <summary>
+/// Maps a game to its id on another store or service (Steam, GOG, Epic, ...). The uid is that service's own id for the game.
+/// </summary>
+internal sealed class IgdbExternalGame
+{
+    [JsonPropertyName("uid")] public string? Uid { get; set; }
+    [JsonPropertyName("url")] public string? Url { get; set; }
+    [JsonPropertyName("external_game_source")] public IgdbExternalSource? ExternalGameSource { get; set; }
+}
+
+/// <summary>
+/// The store or service an external game id belongs to.
+/// </summary>
+internal sealed class IgdbExternalSource
+{
+    [JsonPropertyName("id")] public int Id { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
 }
 
 /// <summary>
@@ -40,15 +60,7 @@ internal sealed class IgdbGame
 internal sealed class IgdbNamed
 {
     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// A genre or platform from IGDB's lookup endpoints. Genres have a slug, platforms do not need one.
-/// </summary>
-internal sealed class IgdbFilterItem
-{
-    [JsonPropertyName("id")] public int Id { get; set; }
-    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("id")] public int? Id { get; set; }
     [JsonPropertyName("slug")] public string? Slug { get; set; }
 }
 

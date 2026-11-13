@@ -5,10 +5,11 @@ import { GameService } from '../../core/services/game-service';
 import {
   emptyFilterState, FilterState, GameFilter, ListFilterKey, MAX_VALUES
 } from '../../core/models/game-filter.model';
+import { CompanySearch } from '../company-search/company-search';
 
 @Component({
   selector: 'app-game-filters',
-  imports: [FormsModule],
+  imports: [FormsModule, CompanySearch],
   templateUrl: './game-filters.html',
   styleUrl: './game-filters.scss',
 })

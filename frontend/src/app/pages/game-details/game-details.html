@@ -6,23 +6,61 @@
 		<a class="game-details__back" [routerLink]="gamesNavigation.gamesUrl()">← Back to games</a>
 
 		@if (loading()) {
-			<p>Loading…</p>
+			<div class="text-center py-5" role="status">
+				<div class="spinner-border text-primary"></div>
+				<p class="mt-3">Loading game…</p>
+			</div>
 		} @else if (error()) {
-			<p>{{ error() }}</p>
-			<button type="button" (click)="retry()">Retry</button>
+			<div class="alert alert-danger" role="alert">
+				<p>{{ error() }}</p>
+				<button type="button" class="btn btn-outline-danger" (click)="retry()">
+					Try again
+				</button>
+	</div>
 		} @else if (game(); as g) {
 			<div class="game-details__hero"
-				 [style.background-image]="'url(' + g.backgroundImage + ')'">
+				[style.background-image]="'url(' + g.backgroundImage + ')'"
+			>
 				<img class="game-details__cover"
 				 [src]="g.cover || g.backgroundImage || 'images/placeholder.jpg'"
 				 [alt]="g.name + ' cover'" 
 				/>
 			</div>
 			<article class="game-details__content">
-				<h1>{{ g.name }}</h1>
-				<p>Released: {{ g.released || 'unknown' }}</p>
-
-				<section>
+				<div class="game-details__title-row">
+					<h1>{{ g.name }}</h1>
+					<button
+						type="button"
+						class="game-details__favorite"
+						[class.is-favorite]="favoriteIds().has(g.id)"
+						[disabled]="
+							(isLoggedIn() && !favoritesReady()) ||
+							favoriteBusyIds().has(g.id)"
+						[attr.aria-label]="
+							favoriteIds().has(g.id)
+							? 'Remove ' + g.name + ' from favorites'
+							: 'Add ' + g.name + ' to favorites'"
+						[attr.aria-pressed]="favoriteIds().has(g.id)"
+						(click)="toggleFavorite(g.id)"
+					>
+						<i
+							class="bi"
+							[class.bi-heart-fill]="favoriteIds().has(g.id)"
+							[class.bi-heart]="!favoriteIds().has(g.id)"
+							aria-hidden="true"
+						></i>
+					</button>
+				</div>
+					<p>Released: {{ g.released || 'unknown' }}</p>
+					@if (favoriteError()) {
+						<div
+							class="alert alert-danger mt-3"
+							role="alert"
+						>
+							{{ favoriteError() }}
+						</div>
+					}
+					<section>
 					<h2>About</h2>
 					<p class="game-details__description">{{ g.description || 'No description available.' }}</p>
 					@if (g.storyLine) {
@@ -70,88 +108,146 @@
 					<dd>{{ g.publishers.join(', ') || 'Unknown' }}</dd>
 				</dl>
 
-				<p class="game-details__rating">
-					@if (g.rating > 0) {
-						<i class="bi bi-star-fill" aria-hidden="true"></i> {{ g.rating | number:'1.1-1' }} / 5
-					} @else {
-						Not rated yet
-					}
-				</p>
+				<div class="game-details__ratings-prices">
+					<div class="game-details__scores">
+						<p class="game-details__rating">
+							@if (g.rating > 0) {
+								<i class="bi bi-star-fill" aria-hidden="true"></i> {{ g.rating | number:'1.1-1' }} / 5
+							} @else {
+								Not rated yet
+							}
+						</p>
 
-				<p class="game-details__metacritic">
-					Metacritic:
-					@if (g.metacritic != null) {
-						<span
-							class="metascore"
-							[class.good]="metacriticClass(g.metacritic) === 'good'"
-							[class.mixed]="metacriticClass(g.metacritic) === 'mixed'"
-							[class.bad]="metacriticClass(g.metacritic) === 'bad'"
+						<p class="game-details__metacritic">
+							Metacritic:
+							@if (g.metacritic != null) {
+								<span
+									class="metascore"
+									[class.good]="metacriticClass(g.metacritic) === 'good'"
+									[class.mixed]="metacriticClass(g.metacritic) === 'mixed'"
+									[class.bad]="metacriticClass(g.metacritic) === 'bad'"
+								>
+									{{ g.metacritic }}
+								</span>
+							} @else {
+								N/A
+							}
+						</p>
+					</div>
+
+					<app-price-comparison [gameId]="g.id" />
+				</div>
+
+				@if (relatedGames(); as relatedPage) {
+					@if (relatedPage.items.length > 0) {
+					  <section class="game-details__related">
+					
+						<div class="game-details__related-header">
+						  <h2>Related Games</h2>
+
+						  <span class="game-details__related-count">
+							@if (relatedPage.totalCount > relatedPage.items.length) {
+								Showing {{ relatedPage.items.length }} of {{ relatedPage.totalCount }}
+							} @else {
+								{{ relatedPage.items.length }} {{ relatedPage.items.length === 1 ? 'game' : 'games' }}
+							}
+						  </span>
+						</div>
+					
+						<div class="game-details__related-grid"
+							[class.is-loading]="relatedLoading()"
 						>
-							{{ g.metacritic }}
-						</span>
-					} @else {
-						N/A
-					}
-				</p>
+						
+						  @for (related of relatedPage.items; track related.id) {
+							<a
+							  class="game-details__related-card"
+							  [routerLink]="['/games', related.id]"
+							>
+	
+							  <img
+								[src]="related.backgroundImage || 'images/placeholder.jpg'"
+								[alt]="related.name"
+								loading="lazy"
+							  />
 
-				@if (g.relatedGames.items.length > 0) {
-				  <section class="game-details__related">
-				
-				    <div class="game-details__related-header">
-				      <h2>Related Games</h2>
-					
-				      <span class="game-details__related-count">
-						@if (g.relatedGames.totalCount > g.relatedGames.items.length) {
-							Showing {{ g.relatedGames.items.length }} of {{ g.relatedGames.totalCount }}
-						} @else {
-							{{ g.relatedGames.items.length }} {{ g.relatedGames.items.length === 1 ? 'game' : 'games' }}
+							  <div class="game-details__related-info">
+								<h3>{{ related.name }}</h3>
+
+								<p class="game-details__related-release">
+								  {{ related.released || 'Release unknown' }}
+								</p>
+
+								<div class="game-details__related-rating">
+								  @if (related.rating > 0) {
+									<i
+									  class="bi bi-star-fill"
+									  aria-hidden="true"
+									></i>
+
+									<span>
+									  {{ related.rating | number:'1.1-1' }} / 5
+									</span>
+								  } @else {
+									<span>Not rated</span>
+								  }
+								</div>
+							  </div>
+							</a>
+						  }
+						</div>
+
+						<div class="game-details__pagination-container">
+
+						<div class="game-details__loading-slot" role="status">
+							@if (relatedLoading()) {
+							<span
+								class="spinner-border spinner-border-sm text-primary"
+								aria-hidden="true"
+							></span>
+							<span>Loading related games…</span>
+							}
+						</div>
+
+						@if (relatedPage.totalPages > 1) {
+							<nav
+							class="game-details__related-pagination"
+							aria-label="Related games pagination"
+							>
+							<button
+								type="button"
+								class="game-details__page-button"
+								(click)="changeRelatedPage(relatedPage.page - 1)"
+								[disabled]="relatedLoading() || relatedPage.page <= 1"
+							>
+								<i class="bi bi-chevron-left" aria-hidden="true"></i>
+								Previous
+							</button>
+
+							<span class="game-details__page-indicator">
+								Page {{ relatedPage.page }} of {{ relatedPage.totalPages }}
+							</span>
+
+							<button
+								type="button"
+								class="game-details__page-button"
+								(click)="changeRelatedPage(relatedPage.page + 1)"
+								[disabled]="relatedLoading() || relatedPage.page >= relatedPage.totalPages"
+							>
+								Next
+								<i class="bi bi-chevron-right" aria-hidden="true"></i>
+							</button>
+							</nav>
 						}
-				      </span>
-				    </div>
-				
-				    <div class="game-details__related-grid">
-					
-				      @for (related of g.relatedGames.items; track related.id) {
-				        <a
-				          class="game-details__related-card"
-				          [routerLink]="['/games', related.id]"
-				        >
 
-				          <img
-				            [src]="related.backgroundImage || 'images/placeholder.jpg'"
-				            [alt]="related.name"
-				            loading="lazy"
-				          />
+						</div>
 
-				          <div class="game-details__related-info">
-						
-				            <h3>{{ related.name }}</h3>
-						
-				            <p class="game-details__related-release">
-				              {{ related.released || 'Release unknown' }}
-				            </p>
-						
-				            <div class="game-details__related-rating">
-				              @if (related.rating > 0) {
-				                <i
-				                  class="bi bi-star-fill"
-				                  aria-hidden="true"
-				                ></i>
-
-				                <span>
-				                  {{ related.rating | number:'1.1-1' }} / 5
-				                </span>
-				              } @else {
-				                <span>Not rated</span>
-				              }
-				            </div>
-						
-				          </div>
-				        </a>
-				      }
-				  
-				    </div>
-  				  </section>
+						@if (relatedError()) {
+							<p class="game-details__related-error" role="alert">
+								{{ relatedError() }}
+							</p>
+						}
+						</section>
+					}
 				}
 			</article>
 		}

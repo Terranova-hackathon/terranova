@@ -18,9 +18,9 @@ internal static class FavoritesEndpoints
         var group = endpoints.MapGroup("/api/favorites");
 
         group.MapGet("/", List);
-        group.MapGet("/ids", async (HttpContext http, FavoritesService favorites, CancellationToken ct) =>
+        group.MapGet("/ids", async (HttpContext http, FavoritesService favorites, CancellationToken cancellationToken) =>
             http.User.GetUserId() is { } userId
-                ? Results.Ok(await favorites.IdsAsync(userId, ct))
+                ? Results.Ok(await favorites.IdsAsync(userId, cancellationToken))
                 : Results.Unauthorized());
         group.MapPut("/{igdbId:int}", Add);
         group.MapDelete("/{igdbId:int}", Remove);

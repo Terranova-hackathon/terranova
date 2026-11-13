@@ -183,9 +183,9 @@ internal sealed class IgdbGamesService(
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
 
-            var genresTask = PostAsync<List<IgdbFilterItem>>(
+            var genresTask = PostAsync<List<IgdbNamed>>(
                 "genres", "fields id,name,slug; sort name asc; limit 500;", cancellationToken);
-            var platformsTask = PostAsync<List<IgdbFilterItem>>(
+            var platformsTask = PostAsync<List<IgdbNamed>>(
                 "platforms", $"fields id,name; where id = ({IgdbGameFields.PlatformIds}); sort name asc; limit 500;",
                 cancellationToken);
 
@@ -197,7 +197,8 @@ internal sealed class IgdbGamesService(
                 .ToList();
 
             var platforms = (platformsTask.Result ?? [])
-                .Select(p => new FilterOption(p.Id.ToString(CultureInfo.InvariantCulture), p.Name))
+                .Where(p => p.Id.HasValue)
+                .Select(p => new FilterOption(p.Id!.Value.ToString(CultureInfo.InvariantCulture), p.Name))
                 .ToList();
 
             return new GameFilterOptions(genres, platforms, GameOrderings.All);

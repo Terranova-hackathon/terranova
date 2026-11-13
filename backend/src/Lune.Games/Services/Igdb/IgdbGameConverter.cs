@@ -23,10 +23,29 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>
-    /// Extracts the names of the companies that have the given role (developer or publisher).
+    /// Extracts the slug/name pairs from a list of IGDB named items, so the frontend can query by slug.
     /// </summary>
-    internal static IReadOnlyList<string> Companies(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
-        items?.Where(c => role(c) && c.Company is not null).Select(c => c.Company!.Name).Distinct().ToList() ?? [];
+    internal static IReadOnlyList<FilterOption> Options(List<IgdbNamed>? items) =>
+        items?.Where(i => !string.IsNullOrWhiteSpace(i.Slug))
+            .Select(i => new FilterOption(i.Slug!, i.Name))
+            .ToList() ?? [];
+
+    /// <summary>
+    /// Extracts the ID/name pairs from a list of IGDB named items (for platforms), so the frontend can query by ID.
+    /// </summary>
+    internal static IReadOnlyList<FilterOption> IdOptions(List<IgdbNamed>? items) =>
+        items?.Where(i => i.Id.HasValue)
+            .Select(i => new FilterOption(i.Id!.Value.ToString(CultureInfo.InvariantCulture), i.Name))
+            .ToList() ?? [];
+
+    /// <summary>
+    /// Extracts the slug/name pairs of the companies that have the given role (developer or publisher).
+    /// </summary>
+    internal static IReadOnlyList<FilterOption> CompanyOptions(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
+        items?.Where(c => role(c) && c.Company is not null && !string.IsNullOrWhiteSpace(c.Company.Slug))
+            .Select(c => new FilterOption(c.Company!.Slug!, c.Company!.Name))
+            .Distinct()
+            .ToList() ?? [];
 
     /// <summary>
     /// Converts IGDB's Unix timestamp to the YYYY-MM-DD string the API contract uses.
@@ -67,6 +86,32 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
     internal static string? ToWebsiteUrl(List<IgdbWebsite>? websites) =>
         websites?.FirstOrDefault(w => w.Category == 1)?.Url;
 
+    private const int SteamExternalGameSource = 1;
+
+    /// <summary>
+    /// Finds the Steam app id in IGDB's external games list (source 1 = Steam).
+    /// </summary>
+    internal static int? ToSteamAppId(List<IgdbExternalGame>? externalGames) =>
+        externalGames?
+            .Where(e => e.ExternalGameSource?.Id == SteamExternalGameSource)
+            .Select(e => int.TryParse(e.Uid, NumberStyles.None, CultureInfo.InvariantCulture, out var appId) ? appId : (int?)null)
+            .FirstOrDefault(appId => appId is not null);
+
+    /// <summary>
+    /// Lists the game's ids on other stores and services, skipping excluded sources and entries IGDB has no source name or uid for.
+    /// </summary>
+    internal static IReadOnlyList<ExternalGameLink> ToExternalGames(List<IgdbExternalGame>? externalGames) =>
+        externalGames?
+            .Where(e => !string.IsNullOrWhiteSpace(e.Uid) && !string.IsNullOrWhiteSpace(e.ExternalGameSource?.Name))
+            .Where(e => !IsExcludedExternalSource(e.ExternalGameSource!.Name!))
+            .Select(e => new ExternalGameLink(e.ExternalGameSource!.Name!, e.Uid!, e.Url))
+            .ToList() ?? [];
+
+    private static bool IsExcludedExternalSource(string name) =>
+        name.StartsWith("Amazon", StringComparison.OrdinalIgnoreCase)
+        || name.StartsWith("YouTube", StringComparison.OrdinalIgnoreCase)
+        || name.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase);
+
     /// <summary>
     /// Picks a random screenshot for the background image, or falls back to the cover.
     /// </summary>
@@ -105,8 +150,8 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         ToImageUrl(g.Cover),
         ToRating(g.TotalRating),
         ToMetacritic(g.AggregatedRating),
-        Names(g.Genres),
-        Names(g.Platforms));
+        Options(g.Genres),
+        IdOptions(g.Platforms));
 
     /// <summary>
     /// Converts an IGDB game object to full game details.
@@ -122,10 +167,11 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         Description: g.Summary,
         StoryLine: g.Storyline,
         Website: ToWebsiteUrl(g.Websites),
-        Genres: Names(g.Genres),
-        Platforms: Names(g.Platforms),
-        Developers: Companies(g.InvolvedCompanies, c => c.Developer),
-        Publishers: Companies(g.InvolvedCompanies, c => c.Publisher),
+        ExternalGames: ToExternalGames(g.ExternalGames),
+        Genres: Options(g.Genres),
+        Platforms: IdOptions(g.Platforms),
+        Developers: CompanyOptions(g.InvolvedCompanies, c => c.Developer),
+        Publishers: CompanyOptions(g.InvolvedCompanies, c => c.Publisher),
         Screenshots: ToImageUrls(g.Screenshots, "t_1080p"),
         Artworks: ToImageUrls(g.Artworks, "t_1080p"),
         Videos: ToVideoUrls(g.Videos),

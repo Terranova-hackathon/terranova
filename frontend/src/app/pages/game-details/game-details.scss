@@ -199,6 +199,11 @@
 	  border-top: 1px solid var(--color-border);
 	}
 
+  &__related-grid.is-loading {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+  }
+
 	&__related-header {
 	  display: flex;
 	  justify-content: space-between;
@@ -378,6 +383,202 @@
       }
     }
   }
+
+  &__ratings-prices {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(0, 1.6fr);
+    align-items: center;
+    gap: 24px;
+    margin-top: 28px;
+  }
+
+  &__scores {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-self: center;
+    align-self: center;
+    width: fit-content;
+    min-width: 180px;
+
+    .game-details__rating,
+    .game-details__metacritic {
+      margin: 0;
+    }
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__metacritic {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  // Related Pagination
+  &__related-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  &__page-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    font-weight: 600;
+
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+  }
+
+  &__page-indicator {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  &__related-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 28px;
+    margin: 0;
+    padding: 0;
+
+    color: var(--color-muted);
+    font-size: 0.85rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+
+    margin-top: 16px;
+  }
+
+  &__loading-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    height: 28px;
+
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+
+  &__related-error {
+    margin-top: 16px;
+    text-align: center;
+    color: var(--bs-danger-text-emphasis);
+  }
+
+  // Related heart btn
+  &__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    h1 {
+      flex: 1;
+      min-width: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &__favorite {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 52px;
+    height: 52px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+
+    background: var(--color-surface-alt);
+    color: var(--color-muted);
+
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease;
+
+    &:hover:not(:disabled) {
+      color: #e63962;
+      border-color: #e63962;
+      transform: scale(1.06);
+    }
+
+    &.is-favorite {
+      color: #e63962;
+      background: var(--color-surface-alt);
+      border-color: #e63962;
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 4px;
+    }
+  }
+
 }
 
 @media (max-width: 768px) {
@@ -455,6 +656,17 @@
         flex-basis: 100px;
       }
     }
+
+    &__title-row {
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    &__favorite {
+      width: 44px;
+      height: 44px;
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -479,5 +691,28 @@
       object-fit: cover;
       flex-shrink: 0;
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .game-details__related-pagination {
+    gap: 8px;
+  }
+
+  .game-details__page-button {
+    padding: 9px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-details__ratings-prices {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .game-details__scores {
+    justify-self: start;
+    width: 100%;
   }
 }

@@ -82,8 +82,12 @@
 	}
 
 	&__rating {
-		color: var(--color-rating);
+		display: flex;
+		align-items: center;
+		gap: 6px;
 		font-weight: 600;
+
+		i { color: var(--color-rating);}
 	}
 
 	&__metacritic {
@@ -96,6 +100,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+		max-height: 58px;
+		overflow: hidden;
 
 		span {
 			padding: 4px 8px;
@@ -103,6 +109,12 @@
 			border-radius: 5px;
 			color: var(--color-text);
 			font-size: 0.75rem;
+			line-height: 18px;
+			max-width: 100%;
+			box-sizing: border-box;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 }
