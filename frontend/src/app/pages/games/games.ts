@@ -13,9 +13,10 @@ import { GamesNavigationService } from '../../core/services/games-navigation-ser
 import { emptyFilterState, FilterState, toFilterParams, toFilterState } from '../../core/models/game-filter.model';
 import { GameFilters } from '../../shared/game-filters/game-filters';
 import { readGameQuery } from '../../core/utils/game-query';
+import { ScrollControls } from '../../shared/scroll-controls/scroll-controls';
 
 @Component({
-  imports: [GameCard, FormsModule, GameFilters],
+  imports: [GameCard, FormsModule, GameFilters, ScrollControls],
   selector: 'app-games',
   styleUrl: './games.scss',
   templateUrl: './games.html',
