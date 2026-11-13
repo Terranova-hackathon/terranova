@@ -192,53 +192,50 @@
 						  }
 						</div>
 
+						<div class="game-details__pagination-container">
+
+						<div class="game-details__loading-slot" role="status">
+							@if (relatedLoading()) {
+							<span
+								class="spinner-border spinner-border-sm text-primary"
+								aria-hidden="true"
+							></span>
+							<span>Loading related games…</span>
+							}
+						</div>
+
 						@if (relatedPage.totalPages > 1) {
-						<nav
+							<nav
 							class="game-details__related-pagination"
 							aria-label="Related games pagination"
-						>
-							<button
-							type="button"
-							class="game-details__page-button"
-							(click)="changeRelatedPage(relatedPage.page - 1)"
-							[disabled]="relatedLoading() || relatedPage.page <= 1"
 							>
-							<i class="bi bi-chevron-left" aria-hidden="true"></i>
-							Previous
+							<button
+								type="button"
+								class="game-details__page-button"
+								(click)="changeRelatedPage(relatedPage.page - 1)"
+								[disabled]="relatedLoading() || relatedPage.page <= 1"
+							>
+								<i class="bi bi-chevron-left" aria-hidden="true"></i>
+								Previous
 							</button>
 
 							<span class="game-details__page-indicator">
-							Page {{ relatedPage.page }}
-							of {{ relatedPage.totalPages }}
+								Page {{ relatedPage.page }} of {{ relatedPage.totalPages }}
 							</span>
 
 							<button
-							type="button"
-							class="game-details__page-button"
-							(click)="changeRelatedPage(relatedPage.page + 1)"
-							[disabled]="
-								relatedLoading() ||
-								relatedPage.page >= relatedPage.totalPages
-							"
+								type="button"
+								class="game-details__page-button"
+								(click)="changeRelatedPage(relatedPage.page + 1)"
+								[disabled]="relatedLoading() || relatedPage.page >= relatedPage.totalPages"
 							>
-							Next
-							<i class="bi bi-chevron-right" aria-hidden="true"></i>
+								Next
+								<i class="bi bi-chevron-right" aria-hidden="true"></i>
 							</button>
-						</nav>
+							</nav>
 						}
 
-						@if (relatedLoading()) {
-							<div class="text-center py-4" role="status">
-								<div class="spinner-border text-primary">
-									<span class="visually-hidden">
-										Loading related games...
-									</span>
-								</div>
-							<p class="game-details__related-status" role="status">
-								Loading related games...
-							</p>
-							</div>
-						}
+						</div>
 
 						@if (relatedError()) {
 							<p class="game-details__related-error" role="alert">
