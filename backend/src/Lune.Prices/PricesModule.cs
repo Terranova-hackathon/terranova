@@ -17,11 +17,10 @@ public sealed class PricesModule : IModule
         services.AddMemoryCache();
 
         services.AddHttpClient<SteamPriceService>();
-        services.AddScoped<IPlatformPriceService>(sp => sp.GetRequiredService<SteamPriceService>());
-
         services.AddHttpClient<GgDealsService>();
-        services.AddScoped<IPlatformPriceService>(sp => sp.GetRequiredService<GgDealsService>());
 
+        services.AddScoped<IPlatformPriceService>(sp => sp.GetRequiredService<SteamPriceService>());
+        services.AddScoped<IPlatformPriceService>(sp => sp.GetRequiredService<GgDealsService>());
         services.AddScoped<MultiPlatformPriceService>();
     }
 
