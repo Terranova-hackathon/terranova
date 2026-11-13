@@ -41,7 +41,7 @@ internal sealed class GgDealsService(HttpClient http, IOptions<GgDealsOptions> o
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
             throw new PricesUnavailableException("The GG.deals API key is not configured.");
 
-        var url = $"prices/by-steam-app-id/?ids={steamAppId}&region={Uri.EscapeDataString(_options.Region)}&key={Uri.EscapeDataString(_options.ApiKey)}";
+        var url = $"{_options.BaseUrl}prices/by-steam-app-id/?ids={steamAppId}&region={Uri.EscapeDataString(_options.Region)}&key={Uri.EscapeDataString(_options.ApiKey)}";
 
         try
         {
@@ -59,7 +59,7 @@ internal sealed class GgDealsService(HttpClient http, IOptions<GgDealsOptions> o
                 return null;
 
             var prices = gameData.Prices;
-            var currentPrice = prices.CurrentKeyshops ?? prices.CurrentRetail;
+            var currentPrice = prices.CurrentRetail ?? prices.CurrentKeyshops;
             var historicalLow = (prices.HistoricalKeyshops.HasValue && prices.HistoricalRetail.HasValue)
                 ? Math.Min(prices.HistoricalKeyshops.Value, prices.HistoricalRetail.Value)
                 : prices.HistoricalKeyshops ?? prices.HistoricalRetail;
