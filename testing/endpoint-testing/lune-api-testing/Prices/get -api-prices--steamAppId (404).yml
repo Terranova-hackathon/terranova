@@ -1,0 +1,48 @@
+info:
+  name: get /api/prices/:steamAppId (404 Not Found)
+  type: http
+  seq: 2
+  tags:
+    - Prices
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/prices/:steamAppId"
+  params:
+    - name: steamAppId
+      value: ""
+      type: path
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "404"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 404 Response - No Price Data
+    description: Not Found - Game not found or no pricing data available
+    request:
+      url: "{{baseUrl}}/api/prices/999999999"
+      method: GET
+      params:
+        - name: steamAppId
+          value: "999999999"
+          type: path
+    response:
+      status: 404
+      statusText: Not Found
+      body:
+        type: json
+        data:
+          type: "https://tools.ietf.org/html/rfc9110#section-15.6.4"
+          title: "No price data found."
+          status: 404
+          detail: "This game may not have a Steam release or pricing data is not available."

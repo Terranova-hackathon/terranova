@@ -81,12 +81,13 @@ A protected route without a valid cookie returns **`401` with an empty body**.
 | POST | `/api/auth/register` | No | Create account and sign in |
 | POST | `/api/auth/login` | No | Sign in |
 | POST | `/api/auth/logout` | No | Sign out |
-| POST | `/api/auth/delete-account` | Yes | Delete the current account |
+| DELETE | `/api/auth/delete-account` | Yes | Delete the current account |
 | GET | `/api/games` | Yes | Search, filter, sort and page games |
 | GET | `/api/games/filters` | Yes | Options for filter dropdowns |
 | GET | `/api/games/companies` | Yes | Developer/publisher autocomplete |
 | GET | `/api/games/featured` | Yes | Up to 10 randomly selected popular games |
 | GET | `/api/games/{id}` | Yes | One game's details |
+| GET | `/api/prices/{steamAppId}` | Yes | Price comparison across platforms |
 | GET | `/api/favorites` | Yes | Current user's favorites, paged |
 | GET | `/api/favorites/ids` | Yes | Favorited game ids only |
 | PUT | `/api/favorites/{igdbId}` | Yes | Add a favorite |
@@ -168,7 +169,7 @@ Angular sends `{}`. No auth required.
 
 - **204:** no body, cookie deleted
 
-### `POST /api/auth/delete-account`
+### `DELETE /api/auth/delete-account`
 
 Requires authentication. The account identified by the auth cookie is deleted; no user ID is accepted from the request.
 
@@ -434,7 +435,84 @@ The backend selects without replacement from up to 50 popular games (ordered by 
 
 ---
 
-## 5. Favorites
+## 5. Prices
+
+Compares prices for a game across multiple platforms (Steam, GG.deals, etc.).
+
+### Types
+
+```ts
+interface PlatformPrice {
+  platform: string;           // e.g., "Steam", "GG.deals"
+  currentPrice: number | null;
+  historicalLow: number | null;
+  averagePrice: number | null;
+  currency: string | null;    // e.g., "USD", "EUR" for now set to it (italy)
+  url: string | null;         // platform-specific game page
+}
+
+interface GamePriceComparison {
+  gameId: number;
+  steamAppId: number;
+  platforms: PlatformPrice[];
+}
+```
+
+### `GET /api/prices/{gameId}`
+
+Returns price data for a game across available platforms. `gameId` must be a positive integer.
+
+- **200:** `GamePriceComparison`
+
+```json
+{
+  "gameId": 3498,
+  "steamAppId": 570,
+  "platforms": [
+    {
+      "platform": "Steam",
+      "currentPrice": 0.0,
+      "historicalLow": 0.0,
+      "averagePrice": null,
+      "currency": "USD",
+      "url": "https://store.steampowered.com/app/570"
+    },
+    {
+      "platform": "GG.deals",
+      "currentPrice": 5.99,
+      "historicalLow": 0.0,
+      "averagePrice": null,
+      "currency": "USD",
+      "url": "https://gg.deals/game/dota-2"
+    }
+  ]
+}
+```
+
+- **404:** Game not found (no Steam release or pricing data unavailable). Response body:
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+  "title": "No price data found.",
+  "status": 404,
+  "detail": "This game may not have a Steam release or pricing data is not available."
+}
+```
+
+- **503:** Price providers are unavailable. Response body:
+
+```json
+{
+  "title": "Price data is currently unavailable.",
+  "status": 503,
+  "detail": "Platform errors: GG.deals: [error details]"
+}
+```
+
+---
+
+## 6. Favorites
 
 A per-user bookmark. The server stores a **snapshot** of the game summary (name, image, release date, rating, Metacritic, genres, platforms) when saved. All of it comes from the game catalog, never from the request. The user always comes from the cookie.
 

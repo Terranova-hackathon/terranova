@@ -57,6 +57,7 @@ services:
             - Rawg__ApiKey=${RAWG_API_KEY}
             - Igdb__ClientId=${IGDB_CLIENT_ID}
             - Igdb__ApiSecret=${IGDB_API_SECRET}
+            - GgDeals__ApiKey=${GGDEALS_API_KEY}
         volumes:
             - ./backend:/app
             - /app/src/Lune.Api/bin
@@ -67,6 +68,8 @@ services:
             - /app/src/Lune.Games/obj
             - /app/src/Lune.Favorites/bin
             - /app/src/Lune.Favorites/obj
+            - /app/src/Lune.Prices/bin
+            - /app/src/Lune.Prices/obj
             - /app/src/Lune.Shared/bin
             - /app/src/Lune.Shared/obj
         networks:

@@ -30,6 +30,7 @@ public sealed record GameDetails(
     string? Description,
     string? StoryLine,
     string? Website,
+    IReadOnlyList<ExternalGameLink> ExternalGames,
     IReadOnlyList<string> Genres,
     IReadOnlyList<string> Platforms,
     IReadOnlyList<string> Developers,
@@ -41,7 +42,15 @@ public sealed record GameDetails(
 
 
 /// <summary>
-/// Filter Options the backend sends to the front end. 
+/// The game's id on another store or service. 
+/// </summary>
+public sealed record ExternalGameLink(
+    string Source, 
+    string Uid, 
+    string? Url);
+
+/// <summary>
+/// Filter Options the backend sends to the front end.
 /// </summary>
 public sealed record FilterOption(
     string Value, 
