@@ -20,9 +20,13 @@ public static class PriceEndPoint
         try
         {
             var comparison = await priceComparison.GetPriceComparisonAsync(gameId, cancellationToken);
-            return comparison is null
-                ? Results.NotFound()
-                : Results.Ok(comparison);
+            if (comparison is null)
+                return Results.Problem(
+                    title: "No price data found.",
+                    detail: "Pricing data is not available for this game yet.",
+                    statusCode: StatusCodes.Status404NotFound);
+
+            return Results.Ok(comparison);
         }
         catch (PricesUnavailableException ex)
         {

@@ -26,3 +26,11 @@ internal sealed class GgDealsPrices
     [JsonPropertyName("historicalKeyshops")] public decimal? HistoricalKeyshops { get; set; }
     [JsonPropertyName("currency")] public string? Currency { get; set; }
 }
+
+internal sealed class GgDealsPriceData
+{
+    public decimal? CurrentPrice { get; set; }
+    public decimal? HistoricalLow { get; set; }
+    public string? Currency { get; set; }
+    public string? Url { get; set; }
+}

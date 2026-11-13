@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Lune.Prices.Contracts;
 using Lune.Prices.Models;
 using Lune.Prices.Options;
 using Microsoft.Extensions.Caching.Memory;
@@ -82,13 +83,5 @@ internal sealed class GgDealsService(HttpClient http, IOptions<GgDealsOptions> o
         {
             throw new PricesUnavailableException($"GG.deals API response parsing failed: {ex.Message}", ex);
         }
-    }
-
-    private sealed class GgDealsPriceData
-    {
-        public decimal? CurrentPrice { get; set; }
-        public decimal? HistoricalLow { get; set; }
-        public string? Currency { get; set; }
-        public string? Url { get; set; }
     }
 }

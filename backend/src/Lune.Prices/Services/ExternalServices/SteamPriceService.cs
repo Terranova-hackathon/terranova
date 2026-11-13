@@ -1,7 +1,8 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using Lune.Prices.Contracts;
+using Lune.Prices.Models;
 using Lune.Prices.Options;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -10,7 +11,6 @@ namespace Lune.Prices.Services;
 
 internal sealed class SteamPriceService(HttpClient http, IOptions<SteamOptions> options, IMemoryCache cache) : IPlatformPriceService
 {
-    private const string BaseUrl = "https://store.steampowered.com/api/appdetails";
     private readonly SteamOptions _options = options.Value;
 
     public string PlatformName => "Steam";
@@ -32,12 +32,12 @@ internal sealed class SteamPriceService(HttpClient http, IOptions<SteamOptions> 
             HistoricalLow: priceData.HistoricalLow,
             AveragePrice: null,
             Currency: priceData.Currency,
-            Url: $"https://store.steampowered.com/app/{steamAppId}");
+            Url: $"{_options.BaseUrl}/{steamAppId}");
     }
 
     private async Task<SteamPriceData?> FetchAsync(int steamAppId, CancellationToken cancellationToken)
     {
-        var url = $"{BaseUrl}?appids={steamAppId}&cc={_options.CurrencyCode}";
+        var url = $"{_options.SteamApiUrlPath}?appids={steamAppId}&cc={_options.CurrencyCode}";
 
         try
         {
@@ -76,39 +76,5 @@ internal sealed class SteamPriceService(HttpClient http, IOptions<SteamOptions> 
         {
             throw new PricesUnavailableException($"Steam API response parsing failed: {ex.Message}", ex);
         }
-    }
-
-    private sealed class SteamPriceData
-    {
-        public decimal? CurrentPrice { get; set; }
-        public decimal? HistoricalLow { get; set; }
-        public string? Currency { get; set; }
-    }
-
-    private sealed class SteamAppResponse
-    {
-        [JsonPropertyName("success")]
-        public bool Success { get; set; }
-
-        [JsonPropertyName("data")]
-        public SteamAppData? Data { get; set; }
-    }
-
-    private sealed class SteamAppData
-    {
-        [JsonPropertyName("price_overview")]
-        public SteamPriceOverview? PriceOverview { get; set; }
-    }
-
-    private sealed class SteamPriceOverview
-    {
-        [JsonPropertyName("currency")]
-        public string? Currency { get; set; }
-
-        [JsonPropertyName("final")]
-        public int? FinalPrice { get; set; }
-
-        [JsonPropertyName("initial")]
-        public int? InitialPrice { get; set; }
     }
 }

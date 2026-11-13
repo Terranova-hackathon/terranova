@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Lune.Prices.Services;
 
 namespace Lune.Prices.Contracts;
 
@@ -33,3 +32,12 @@ public sealed record GamePriceComparison(
     int GameId,
     int SteamAppId,
     IReadOnlyList<PlatformPrice> Platforms);
+
+/// <summary>Price data from a single platform.</summary>
+public sealed record PlatformPrice(
+    string Platform,
+    decimal? CurrentPrice,
+    decimal? HistoricalLow,
+    decimal? AveragePrice,
+    string? Currency,
+    string? Url);
