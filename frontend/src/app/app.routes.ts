@@ -9,6 +9,7 @@ import { GameDetails } from './pages/game-details/game-details';
 import { Privacy } from './pages/privacy/privacy';
 import { UserAccount } from './pages/user-account/user-account';
 
+import { About } from './pages/about/about';
 
 export const routes: Routes = [
 	{
@@ -37,14 +38,18 @@ export const routes: Routes = [
 		path: 'games/:id',
 		component: GameDetails
 	},
-	{
-		path: 'privacy',
-		redirectTo: Privacy
-  },
   {
-		path: 'account',
+    path: 'account',
 		component: UserAccount,
-		canActivate: [authGuard]
+		canActivate: [authGuard],
+	},
+  {
+    path: 'privacy',
+    component: Privacy
+  },
+	{
+		path: 'about',
+		component: About
 	},
 	{
 		path: '**',
