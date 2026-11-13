@@ -91,21 +91,43 @@
 				<dl class="game-details__facts">
 				<dt>Genres</dt>
 					<dd>
-						@for (genre of g.genres; track genre) { <span class="chip">{{ genre }}</span> }
+						@for (genre of g.genres; track genre) { <span class="chip">{{ genre.name }}</span> }
 						@empty { Unknown }
 					</dd>
 
 					<dt>Platforms</dt>
 					<dd>
-						@for (platform of g.platforms; track platform) { <span class="chip">{{ platform }}</span> }
+						@for (platform of g.platforms; track platform) { <span class="chip">{{ platform.name }}</span> }
 						@empty { Unknown }
 					</dd>
 
 					<dt>{{ g.developers.length > 1 ? 'Developers' : 'Developer' }}</dt>
-					<dd>{{ g.developers.join(', ') || 'Unknown' }}</dd>
+					<dd>
+						@for (developer of g.developers; track developer.value) {
+							<a
+								class="chip"
+								[routerLink]="['/games']"
+								[queryParams]="{ developers: developer.value }"
+							>{{ developer.name }}</a>
+							@if (!$last) {, }
+						} @empty {
+							Unknown
+						}
+					</dd>
 
 					<dt>{{ g.publishers.length > 1 ? 'Publishers' : 'Publisher' }}</dt>
-					<dd>{{ g.publishers.join(', ') || 'Unknown' }}</dd>
+					<dd>
+						@for (publisher of g.publishers; track publisher.value) {
+							<a
+								class="chip"
+								[routerLink]="['/games']"
+								[queryParams]="{ publishers: publisher.value }"
+							>{{ publisher.name }}</a>
+							@if (!$last) {, }
+						} @empty {
+							Unknown
+						}
+					</dd>
 				</dl>
 
 				<div class="game-details__ratings-prices">
