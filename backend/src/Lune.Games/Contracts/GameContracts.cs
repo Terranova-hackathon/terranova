@@ -12,8 +12,8 @@ public sealed record GameSummary(
     string? BackgroundImage,
     double Rating,
     int? Metacritic,
-    IReadOnlyList<string> Genres,
-    IReadOnlyList<string> Platforms);
+    IReadOnlyList<FilterOption> Genres,
+    IReadOnlyList<FilterOption> Platforms);
 
 /// <summary>
 /// Represents detailed information about a game.
@@ -31,10 +31,10 @@ public sealed record GameDetails(
     string? StoryLine,
     string? Website,
     IReadOnlyList<ExternalGameLink> ExternalGames,
-    IReadOnlyList<string> Genres,
-    IReadOnlyList<string> Platforms,
-    IReadOnlyList<string> Developers,
-    IReadOnlyList<string> Publishers,
+    IReadOnlyList<FilterOption> Genres,
+    IReadOnlyList<FilterOption> Platforms,
+    IReadOnlyList<FilterOption> Developers,
+    IReadOnlyList<FilterOption> Publishers,
     IReadOnlyList<string> Screenshots,
     IReadOnlyList<string> Artworks,
     IReadOnlyList<string> Videos,
