@@ -15,7 +15,7 @@ public sealed record LoginRequest(
     [property: Required] string Email,
     [property: Required] string Password);
 
-public sealed record ChangeDisplayNameRequest(
+public sealed record UpdateProfileplayNameRequest(
     [property: Required] string DisplayName);
 
 /// <summary>
