@@ -88,4 +88,31 @@
   &__message {
     margin: 0;
   }
+
+  &__price {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    border: 1px solid transparent;
+  }
+
+  .price-cheapest {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+  }
+
+  .price-moderate {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+  }
+
+  .price-higher {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+  }
 }

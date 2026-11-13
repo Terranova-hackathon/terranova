@@ -386,8 +386,8 @@
 
   &__ratings-prices {
     display: grid;
-    grid-template-columns: minmax(180px, 1fr) minmax(0, 1.6fr);
-    align-items: start;
+    grid-template-columns: minmax(220px, 1fr) minmax(0, 1.6fr);
+    align-items: center;
     gap: 24px;
     margin-top: 28px;
   }
@@ -396,11 +396,27 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    justify-self: center;
+    align-self: center;
+    width: fit-content;
+    min-width: 180px;
 
     .game-details__rating,
     .game-details__metacritic {
       margin: 0;
     }
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__metacritic {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   // Related Pagination
@@ -693,5 +709,10 @@
   .game-details__ratings-prices {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .game-details__scores {
+    justify-self: start;
+    width: 100%;
   }
 }

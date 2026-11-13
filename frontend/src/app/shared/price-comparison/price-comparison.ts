@@ -1,5 +1,5 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { GamePriceComparison } from '../../core/models/game-price.model';
 import { GamePriceService } from '../../core/services/game-price-service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -7,7 +7,7 @@ import { catchError, distinctUntilChanged, of, switchMap, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe,NgClass],
   selector: 'app-price-comparison',
   styleUrl: './price-comparison.scss',
   templateUrl: './price-comparison.html',
@@ -53,4 +53,45 @@ export class PriceComparison {
 
     return /^https?:\/\//i.test(url) ? url : null;
   }
+
+readonly cheapestByCurrency = computed(() => {
+  const cheapest = new Map<string, number>();
+
+  for (const store of this.prices()?.platforms ?? []) {
+    if (store.currentPrice === null || !store.currency) {
+      continue;
+    }
+
+    const currency = store.currency.toUpperCase();
+    const previous = cheapest.get(currency);
+
+    if (previous === undefined || store.currentPrice < previous) {
+      cheapest.set(currency, store.currentPrice);
+    }
+  }
+
+  return cheapest;
+});
+
+priceClass(price: number | null, currency: string | null): string {
+  if (price === null || !currency) {
+    return '';
+  }
+
+  const cheapest = this.cheapestByCurrency().get(currency.toUpperCase());
+
+  if (cheapest === undefined) {
+    return '';
+  }
+
+  if (price === cheapest) {
+    return 'price-cheapest';
+  }
+
+  if (cheapest === 0 || price > cheapest * 1.25) {
+    return 'price-higher';
+  }
+
+  return 'price-moderate';
+}
 }
