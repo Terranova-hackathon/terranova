@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { ThemeService } from '../../core/services/theme-service';
@@ -9,6 +9,10 @@ import { GamesNavigationService } from '../../core/services/games-navigation-ser
   selector: 'app-navbar',
   styleUrl: './navbar.scss',
   templateUrl: './navbar.html',
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(document:keydown.escape)': 'closeAccountMenu()'
+  }
 })
 export class Navbar {
   private readonly router = inject(Router);
@@ -17,6 +21,7 @@ export class Navbar {
   readonly themeService = inject(ThemeService);
   readonly loggingOut = signal(false);
   readonly gamesNavigation = inject(GamesNavigationService);
+  readonly accountOpen = signal(false);
 
   logout(): void {
     if (this.loggingOut()) return;
@@ -31,4 +36,26 @@ export class Navbar {
       }
     });
   }
+
+  toggleAccountMenu(): void {
+    this.accountOpen.update(open => !open);
+  }
+
+  closeAccountMenu(): void {
+    this.accountOpen.set(false);
+  }
+
+  openAdvancedSettings(): void {
+    this.closeAccountMenu();
+    void this.router.navigate(['/account']);
+  }
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as Node;
+
+    if (!this.accountMenu()?.nativeElement.contains(target)) {
+      this.closeAccountMenu();
+    }
+  }
+  private readonly accountMenu =
+    viewChild<ElementRef<HTMLElement>>('accountMenu');
 }

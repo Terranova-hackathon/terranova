@@ -15,6 +15,8 @@ public sealed record LoginRequest(
     [property: Required] string Email,
     [property: Required] string Password);
 
+public sealed record UpdateProfileplayNameRequest(
+    [property: Required] string DisplayName);
 
 /// <summary>
 /// Represents the response structer to the frontend.

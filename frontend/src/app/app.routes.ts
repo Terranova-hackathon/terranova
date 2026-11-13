@@ -6,6 +6,7 @@ import { Register } from './pages/register/register';
 import { authGuard } from './core/guards/auth-guard';
 import { Favorites } from './pages/favorites/favorites';
 import { GameDetails } from './pages/game-details/game-details';
+import { UserAccount } from './pages/user-account/user-account';
 
 
 export const routes: Routes = [
@@ -34,6 +35,11 @@ export const routes: Routes = [
 	{
 		path: 'games/:id',
 		component: GameDetails
+	},
+	{
+		path: 'account',
+		component: UserAccount,
+		canActivate: [authGuard]
 	},
 	{
 		path: '**',

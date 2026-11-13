@@ -56,8 +56,17 @@ export class GameService {
 		);
 	}
 
-	fetchGameDetails(id: number): Observable<GameDetailsModel> {
-		return this.http.get<GameDetailsModel>(`${this.apiUrl}/${id}`);
+	fetchGameDetails(id: number, 
+		page = 1, 
+		pageSize = 6
+	): Observable<GameDetailsModel> {
+		const params = new HttpParams()
+		.set('page', page)
+		.set('pageSize', pageSize);
+		return this.http.get<GameDetailsModel>(
+			`${this.apiUrl}/${id}`,
+			{ params }
+		);
 	}
 
 	fetchFilterOptions(): Observable<GameFilter> {

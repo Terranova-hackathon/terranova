@@ -10,6 +10,7 @@ using Lune.Shared.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lune.Auth.Endpoints;
 
@@ -23,7 +24,8 @@ public static class AuthEndpoints
         group.MapPost("/login", Login);
         group.MapPost("/logout", Logout);
         group.MapGet("/me", GetCurrentUser).RequireAuthorization();
-        group.MapPost("/delete-account", DeleteAccount).RequireAuthorization();
+        group.MapDelete("/delete-account", DeleteAccount).RequireAuthorization();
+        group.MapPut("/profile", UpdateProfile).RequireAuthorization();
 
         //TODO: decide if we want to make add this end points as well.
         // group.MapPost("/forgot-password", ForgotPassword);
@@ -33,20 +35,29 @@ public static class AuthEndpoints
     /// these end points only do jwt for now, will need to make a new genaric interface and add the other Services like OAuth if we want to add other login methods. 
     /// </summary>
     private static async Task<IResult> Register(
-        RegisterRequest req, 
-        UserManager<AppUser> users, 
-        JwtTokenService tokens, 
-        IOptions<JwtOptions> jwtOptions, 
+        RegisterRequest req,
+        UserManager<AppUser> users,
+        JwtTokenService tokens,
+        IOptions<JwtOptions> jwtOptions,
         HttpContext context)
     {
         if(!RequestValidator.TryValidate(req, out var errors))
         {
             return Results.ValidationProblem(errors);
         }
-        
+
+        var existingDisplayName = await users.Users.AnyAsync(u => u.DisplayName == req.DisplayName);
+        if (existingDisplayName)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                { "DisplayName", new[] { "This display name is already in use." } }
+            });
+        }
+
         var user = new AppUser
         {
-            Email = req.Email, 
+            Email = req.Email,
             UserName = req.Email,
             DisplayName = req.DisplayName,
             PrivacyConsentedAtUtc = DateTime.UtcNow,
@@ -156,6 +167,48 @@ public static class AuthEndpoints
 
         AuthCookies.ClearAuthCookie(context, jwtOptions.Value);
         return Results.NoContent();
+    }
+
+    private static async Task<IResult> UpdateProfile(
+        UpdateProfileplayNameRequest req,
+        ClaimsPrincipal principal,
+        UserManager<AppUser> users)
+    {
+        if (!RequestValidator.TryValidate(req, out var errors))
+        {
+            return Results.ValidationProblem(errors);
+        }
+
+        var id = principal.GetUserId();
+        if (id is null)
+            return Results.Unauthorized();
+
+        var user = await users.FindByIdAsync(id);
+        if (user is null)
+            return Results.Unauthorized();
+
+        var existingUser = await users.Users.FirstOrDefaultAsync(u => u.DisplayName == req.DisplayName && u.Id != id);
+        if (existingUser is not null)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                { "DisplayName", new[] { "This display name is already in use." } }
+            });
+        }
+
+        user.DisplayName = req.DisplayName;
+        var result = await users.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            return Results.ValidationProblem(result.Errors
+                .GroupBy(error => error.Code)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(error => error.Description).ToArray()));
+        }
+
+        return Results.Ok(MakeResponse(user));
     }
 
     //     private static async Task ForgotPassword(HttpContext context)
