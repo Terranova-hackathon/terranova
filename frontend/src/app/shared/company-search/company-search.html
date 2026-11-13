@@ -1,0 +1,61 @@
+<!-- SELECTED CHIPS -->
+@if (selected().length) {
+  <ul class="company-search__chips">
+    @for (slug of selected(); track slug) {
+      <li>
+        <button
+          type="button"
+          class="company-search__chip"
+          [attr.aria-label]="'Remove ' + displayName(slug)"
+          (click)="toggled.emit(slug)"
+        >
+          {{ displayName(slug) }}
+          <i class="bi bi-x" aria-hidden="true"></i>
+        </button>
+      </li>
+    }
+  </ul>
+}
+
+<!-- SEARCH BOX -->
+<input
+  #box
+  type="search"
+  class="form-control"
+  [attr.aria-label]="'Search ' + kind() + 's'"
+  [placeholder]="'Search ' + kind() + 's...'"
+  maxlength="60"
+  autocomplete="off"
+  (input)="onType(box.value)"
+  (keydown.enter)="$event.preventDefault()"
+/>
+
+<!-- RESULTS -->
+@if (loading()) {
+  <p class="company-search__hint" role="status">Searching...</p>
+} @else if (error()) {
+  <p class="company-search__hint text-danger">{{ error() }}</p>
+} @else if (term().length >= 2) {
+  <div class="company-search__results">
+    @for (company of results(); track company.slug) {
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [id]="kind() + '-' + company.slug"
+          [checked]="isSelected(company.slug)"
+          [disabled]="!isSelected(company.slug) && isFull()"
+          (change)="pick(company)"
+        />
+        <label class="form-check-label" [for]="kind() + '-' + company.slug">
+          {{ company.name }}
+          <small class="company-search__count">({{ company.gamesCount }})</small>
+        </label>
+      </div>
+    } @empty {
+      <p class="company-search__hint mb-0">No {{ kind() }}s found.</p>
+    }
+  </div>
+} @else {
+  <p class="company-search__hint">Type at least 2 letters.</p>
+}
