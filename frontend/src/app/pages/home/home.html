@@ -44,7 +44,10 @@
 			</div>
 			<app-game-filters
 				class="hero__filters"
+				[initialState]="gamesNavigation.lastFilterState()"
+				[active]="gamesNavigation.hasActiveFilters()"
 				(applied)="submitSearch()"
+				(cleared)="resetFilters()"
 			/>
 		</div>
 	</section>
