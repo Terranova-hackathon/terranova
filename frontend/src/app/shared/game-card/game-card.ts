@@ -1,10 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { GameModel } from '../../core/models/game.model';
 import { RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, DecimalPipe],
   selector: 'app-game-card',
   styleUrl: './game-card.scss',
   templateUrl: './game-card.html',

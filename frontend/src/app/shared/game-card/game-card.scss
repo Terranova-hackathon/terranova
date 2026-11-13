@@ -82,8 +82,12 @@
 	}
 
 	&__rating {
-		color: var(--color-rating);
+		display: flex;
+		align-items: center;
+		gap: 6px;
 		font-weight: 600;
+
+		i { color: var(--color-rating);}
 	}
 
 	&__metacritic {
