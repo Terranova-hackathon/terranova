@@ -25,9 +25,71 @@
 					Favorites
 				</a>
 
-				<span class="navbar-user">
-					{{ auth.user()?.displayName || auth.user()?.email }}
-				</span>
+			<div class="navbar__account" #accountMenu>
+
+			<button
+				type="button"
+				class="navbar__user"
+				(click)="toggleAccountMenu()"
+				[attr.aria-expanded]="accountOpen()"
+				aria-controls="account-dropdown"
+				aria-haspopup="true"
+			>
+				<i class="bi bi-person-circle" aria-hidden="true"></i>
+
+				{{ auth.user()?.displayName || auth.user()?.email }}
+
+				<i
+				class="bi"
+				[class.bi-chevron-up]="accountOpen()"
+				[class.bi-chevron-down]="!accountOpen()"
+				aria-hidden="true"
+				></i>
+			</button>
+
+			@if (accountOpen()) {
+				<div
+				id="account-dropdown"
+				class="navbar__account-dropdown"
+				>
+
+				<h2>My Account</h2>
+
+				@if (auth.user(); as user) {
+					<div class="navbar__account-profile">
+					<i class="bi bi-person-circle" aria-hidden="true"></i>
+
+					<div>
+						<strong>{{ user.displayName || 'User' }}</strong>
+						<p>{{ user.email }}</p>
+					</div>
+					</div>
+				}
+
+				<hr />
+
+				<button
+					type="button"
+					class="navbar__account-manage"
+					(click)="openAdvancedSettings()"
+				>
+					<i class="bi bi-pencil-square" aria-hidden="true"></i>
+					Manage your account information
+					<i class="bi bi-chevron-right" aria-hidden="true"></i>
+				</button>
+
+				<button
+					type="button"
+					class="btn btn-primary w-100"
+					(click)="openAdvancedSettings()"
+				>
+					<i class="bi bi-gear me-2" aria-hidden="true"></i>
+					Advanced Settings
+				</button>
+
+				</div>
+			}
+			</div>
 
 				<button type="button" class="btn btn-outline-primary btn-sm"
 					[disabled]="loggingOut()" (click)="logout()"
