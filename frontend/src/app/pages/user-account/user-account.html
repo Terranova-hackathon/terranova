@@ -1,0 +1,107 @@
+
+<main class="account">
+  <div class="account__container">
+
+	<header class="account__header">
+	  <div class="account__avatar">
+		<i class="bi bi-person-circle" aria-hidden="true"></i>
+	  </div>
+
+	  <div>
+		<h1>My Account</h1>
+		<p>Manage your account settings</p>
+	  </div>
+	</header>
+
+	<section class="account__section">
+	  <h2>Profile information</h2>
+
+	  @if (user(); as currentUser) {
+		<dl class="account__details">
+		  <dt>Display name</dt>
+		  <dd>{{ currentUser.displayName || 'Not provided' }}</dd>
+
+		  <dt>Email address</dt>
+		  <dd>{{ currentUser.email }}</dd>
+		</dl>
+	  }
+	</section>
+
+	<section class="account__section account__danger">
+	  <h2>Danger Zone</h2>
+
+	  <p>
+		Permanently delete your account and its associated data.
+		This action cannot be undone.
+	  </p>
+
+	  <button
+		type="button"
+		class="btn btn-outline-danger"
+		(click)="openDeleteDialog()"
+	  >
+		<i class="bi bi-trash3" aria-hidden="true"></i>
+		Delete Account
+	  </button>
+	</section>
+
+  </div>
+</main>
+
+<dialog
+  #deleteDialog
+  class="account__dialog"
+  aria-labelledby="delete-dialog-title"
+  aria-describedby="delete-dialog-description"
+  (cancel)="onDialogCancel($event)"
+>
+  <div class="account__dialog-content">
+
+	<h2 id="delete-dialog-title">
+	  <i class="bi bi-exclamation-triangle-fill"
+		 aria-hidden="true"></i>
+	  Delete your account?
+	</h2>
+
+	<p id="delete-dialog-description">
+	  Are you sure you want to permanently delete your
+	  GameHub account and associated saved data?
+	  This action cannot be undone.
+	</p>
+
+	@if (error()) {
+	  <div class="alert alert-danger" role="alert">
+		{{ error() }}
+	  </div>
+	}
+
+	<div class="account__dialog-actions">
+	  <button
+		type="button"
+		class="btn btn-outline-secondary"
+		[disabled]="deleting()"
+		(click)="closeDeleteDialog()"
+	  >
+		Cancel
+	  </button>
+
+	  <button
+		type="button"
+		class="btn btn-danger"
+		[disabled]="deleting()"
+		(click)="confirmDeletion()"
+	  >
+		@if (deleting()) {
+		  <span
+			class="spinner-border spinner-border-sm me-2"
+			aria-hidden="true"
+		  ></span>
+		  Deleting…
+		} @else {
+		  Yes, delete account
+		}
+	  </button>
+	</div>
+
+  </div>
+</dialog>
