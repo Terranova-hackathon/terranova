@@ -49,11 +49,20 @@ export class AuthService {
 	}
 
 	deleteAccount(): Observable<void> {
-		return this.http.post<void>(
+		return this.http.delete<void>(
 			`${this.apiUrl}/delete-account`,
 			{}
 		).pipe(
 		tap(() => this.currentUser.set(null))
 		);
+	}
+
+	updateDisplayName(displayName: string): Observable<User> {
+	return this.http.put<User>(
+		`${this.apiUrl}/profile`,
+		{ displayName }
+	).pipe(
+		tap(user => this.currentUser.set(user))
+	);
 	}
 }

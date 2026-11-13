@@ -68,9 +68,15 @@
 
 				<hr />
 
-				<p class="navbar__account-description">
-					Manage your account information and privacy settings.
-				</p>
+				<button
+					type="button"
+					class="navbar__account-manage"
+					(click)="openAdvancedSettings()"
+				>
+					<i class="bi bi-pencil-square" aria-hidden="true"></i>
+					Manage your account information
+					<i class="bi bi-chevron-right" aria-hidden="true"></i>
+				</button>
 
 				<button
 					type="button"

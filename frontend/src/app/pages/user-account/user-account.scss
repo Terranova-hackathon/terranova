@@ -147,6 +147,38 @@
 
     margin-top: 28px;
   }
+
+	&__name-display {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		flex-wrap: wrap;
+	}
+
+	&__name-form {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+
+		input {
+			max-width: 360px;
+			background: var(--color-background);
+			color: var(--color-text);
+			border-color: var(--color-border);
+
+			&:focus {
+			border-color: var(--color-primary);
+			box-shadow: 0 0 0 3px rgba(100, 110, 255, 0.15);
+			}
+		}
+	}
+
+	&__name-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
 }
 
 @media (max-width: 576px) {

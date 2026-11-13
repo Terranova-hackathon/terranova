@@ -18,11 +18,81 @@
 
 	  @if (user(); as currentUser) {
 		<dl class="account__details">
-		  <dt>Display name</dt>
-		  <dd>{{ currentUser.displayName || 'Not provided' }}</dd>
+		<dt>Display name</dt>
+		<dd>
+		@if (editingName()) {
+			<form
+			class="account__name-form"
+			(ngSubmit)="saveDisplayName()"
+			>
+			<input
+				type="text"
+				class="form-control"
+				name="displayName"
+				[ngModel]="displayNameDraft()"
+				(ngModelChange)="displayNameDraft.set($event)"
+				minlength="2"
+				maxlength="50"
+				required
+				autocomplete="nickname"
+				[disabled]="savingName()"
+			/>
 
-		  <dt>Email address</dt>
-		  <dd>{{ currentUser.email }}</dd>
+			<div class="account__name-actions">
+				<button
+				type="submit"
+				class="btn btn-primary btn-sm"
+				[disabled]="
+					savingName() ||
+					displayNameDraft().trim().length < 2
+				"
+				>
+				@if (savingName()) {
+					Saving…
+				} @else {
+					Save changes
+				}
+				</button>
+
+				<button
+				type="button"
+				class="btn btn-outline-secondary btn-sm"
+				[disabled]="savingName()"
+				(click)="cancelEditingName()"
+				>
+				Cancel
+				</button>
+			</div>
+			</form>
+		} @else {
+			<div class="account__name-display">
+			<span>
+				{{ currentUser.displayName || 'Not provided' }}
+			</span>
+
+			<button
+				type="button"
+				class="btn btn-outline-primary btn-sm"
+				(click)="startEditingName()"
+			>
+				<i class="bi bi-pencil" aria-hidden="true"></i>
+				Edit
+			</button>
+			</div>
+		}
+
+		@if (nameError()) {
+			<p class="text-danger mt-2" role="alert">
+			{{ nameError() }}
+			</p>
+		}
+
+		@if (nameSuccess()) {
+			<p class="text-success mt-2" role="status">
+			{{ nameSuccess() }}
+			</p>
+		}
+		</dd>
 		</dl>
 	  }
 	</section>
