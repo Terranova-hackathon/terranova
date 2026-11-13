@@ -31,6 +31,14 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
             .ToList() ?? [];
 
     /// <summary>
+    /// Extracts the ID/name pairs from a list of IGDB named items (for platforms), so the frontend can query by ID.
+    /// </summary>
+    internal static IReadOnlyList<FilterOption> IdOptions(List<IgdbNamed>? items) =>
+        items?.Where(i => i.Id.HasValue)
+            .Select(i => new FilterOption(i.Id!.Value.ToString(CultureInfo.InvariantCulture), i.Name))
+            .ToList() ?? [];
+
+    /// <summary>
     /// Extracts the slug/name pairs of the companies that have the given role (developer or publisher).
     /// </summary>
     internal static IReadOnlyList<FilterOption> CompanyOptions(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
@@ -161,7 +169,7 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         Website: ToWebsiteUrl(g.Websites),
         ExternalGames: ToExternalGames(g.ExternalGames),
         Genres: Options(g.Genres),
-        Platforms: Names(g.Platforms),
+        Platforms: IdOptions(g.Platforms),
         Developers: CompanyOptions(g.InvolvedCompanies, c => c.Developer),
         Publishers: CompanyOptions(g.InvolvedCompanies, c => c.Publisher),
         Screenshots: ToImageUrls(g.Screenshots, "t_1080p"),

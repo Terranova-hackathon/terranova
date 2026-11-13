@@ -59,6 +59,7 @@ internal sealed class IgdbExternalSource
 /// </summary>
 internal sealed class IgdbNamed
 {
+    [JsonPropertyName("id")] public int? Id { get; set; }
     [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
     [JsonPropertyName("slug")] public string? Slug { get; set; }
 }

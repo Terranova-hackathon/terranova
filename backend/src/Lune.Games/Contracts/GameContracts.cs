@@ -32,7 +32,7 @@ public sealed record GameDetails(
     string? Website,
     IReadOnlyList<ExternalGameLink> ExternalGames,
     IReadOnlyList<FilterOption> Genres,
-    IReadOnlyList<string> Platforms,
+    IReadOnlyList<FilterOption> Platforms,
     IReadOnlyList<FilterOption> Developers,
     IReadOnlyList<FilterOption> Publishers,
     IReadOnlyList<string> Screenshots,
