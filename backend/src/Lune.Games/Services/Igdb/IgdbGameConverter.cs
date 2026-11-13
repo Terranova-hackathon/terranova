@@ -23,10 +23,21 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         items?.Select(i => i.Name).ToList() ?? [];
 
     /// <summary>
-    /// Extracts the names of the companies that have the given role (developer or publisher).
+    /// Extracts the slug/name pairs from a list of IGDB named items, so the frontend can query by slug.
     /// </summary>
-    internal static IReadOnlyList<string> Companies(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
-        items?.Where(c => role(c) && c.Company is not null).Select(c => c.Company!.Name).Distinct().ToList() ?? [];
+    internal static IReadOnlyList<FilterOption> Options(List<IgdbNamed>? items) =>
+        items?.Where(i => !string.IsNullOrWhiteSpace(i.Slug))
+            .Select(i => new FilterOption(i.Slug!, i.Name))
+            .ToList() ?? [];
+
+    /// <summary>
+    /// Extracts the slug/name pairs of the companies that have the given role (developer or publisher).
+    /// </summary>
+    internal static IReadOnlyList<FilterOption> CompanyOptions(List<IgdbInvolvedCompany>? items, Func<IgdbInvolvedCompany, bool> role) =>
+        items?.Where(c => role(c) && c.Company is not null && !string.IsNullOrWhiteSpace(c.Company.Slug))
+            .Select(c => new FilterOption(c.Company!.Slug!, c.Company!.Name))
+            .Distinct()
+            .ToList() ?? [];
 
     /// <summary>
     /// Converts IGDB's Unix timestamp to the YYYY-MM-DD string the API contract uses.
@@ -149,10 +160,10 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         StoryLine: g.Storyline,
         Website: ToWebsiteUrl(g.Websites),
         ExternalGames: ToExternalGames(g.ExternalGames),
-        Genres: Names(g.Genres),
+        Genres: Options(g.Genres),
         Platforms: Names(g.Platforms),
-        Developers: Companies(g.InvolvedCompanies, c => c.Developer),
-        Publishers: Companies(g.InvolvedCompanies, c => c.Publisher),
+        Developers: CompanyOptions(g.InvolvedCompanies, c => c.Developer),
+        Publishers: CompanyOptions(g.InvolvedCompanies, c => c.Publisher),
         Screenshots: ToImageUrls(g.Screenshots, "t_1080p"),
         Artworks: ToImageUrls(g.Artworks, "t_1080p"),
         Videos: ToVideoUrls(g.Videos),
