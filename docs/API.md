@@ -458,9 +458,9 @@ interface GamePriceComparison {
 }
 ```
 
-### `GET /api/prices/{steamAppId}`
+### `GET /api/prices/{gameId}`
 
-Returns price data for a game across available platforms. `steamAppId` must be a positive integer.
+Returns price data for a game across available platforms. `gameId` must be a positive integer.
 
 - **200:** `GamePriceComparison`
 
