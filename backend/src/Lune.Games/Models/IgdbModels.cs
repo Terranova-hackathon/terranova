@@ -59,18 +59,8 @@ internal sealed class IgdbExternalSource
 /// </summary>
 internal sealed class IgdbNamed
 {
+    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
     [JsonPropertyName("id")] public int? Id { get; set; }
-    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
-    [JsonPropertyName("slug")] public string? Slug { get; set; }
-}
-
-/// <summary>
-/// A genre or platform from IGDB's lookup endpoints. Genres have a slug, platforms do not need one.
-/// </summary>
-internal sealed class IgdbFilterItem
-{
-    [JsonPropertyName("id")] public int Id { get; set; }
-    [JsonPropertyName("name")] public string Name { get; set; } = string.Empty;
     [JsonPropertyName("slug")] public string? Slug { get; set; }
 }
 
