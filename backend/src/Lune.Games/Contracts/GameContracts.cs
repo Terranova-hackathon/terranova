@@ -12,8 +12,8 @@ public sealed record GameSummary(
     string? BackgroundImage,
     double Rating,
     int? Metacritic,
-    IReadOnlyList<string> Genres,
-    IReadOnlyList<string> Platforms);
+    IReadOnlyList<FilterOption> Genres,
+    IReadOnlyList<FilterOption> Platforms);
 
 /// <summary>
 /// Represents detailed information about a game.

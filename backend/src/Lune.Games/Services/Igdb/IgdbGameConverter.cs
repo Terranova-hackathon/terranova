@@ -150,8 +150,8 @@ internal sealed class IgdbGameConverter(IgdbServiceOptions options)
         ToImageUrl(g.Cover),
         ToRating(g.TotalRating),
         ToMetacritic(g.AggregatedRating),
-        Names(g.Genres),
-        Names(g.Platforms));
+        Options(g.Genres),
+        IdOptions(g.Platforms));
 
     /// <summary>
     /// Converts an IGDB game object to full game details.

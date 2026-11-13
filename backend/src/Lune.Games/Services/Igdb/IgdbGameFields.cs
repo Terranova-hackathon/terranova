@@ -3,7 +3,7 @@ namespace Lune.Games.Services;
 internal static class IgdbGameFields
 {
     public const string Summary =
-        "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,platforms.name";
+        "id,name,first_release_date,cover.image_id,total_rating,aggregated_rating,genres.name,genres.slug,platforms.id,platforms.name";
 
     public const string Detail =
         Summary + ",summary,storyline,url,websites.url,artworks.image_id,screenshots.image_id,videos.video_id,videos.name,similar_games,external_games.uid,external_games.url,external_games.external_game_source.name,genres.slug,platforms.id,involved_companies.developer,involved_companies.publisher,involved_companies.company.name,involved_companies.company.slug";
