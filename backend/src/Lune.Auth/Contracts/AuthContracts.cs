@@ -15,11 +15,11 @@ public sealed record LoginRequest(
     [property: Required] string Email,
     [property: Required] string Password);
 
-public sealed record UpdateProfileplayNameRequest(
+public sealed record UpdateProfileDisplayNameRequest(
     [property: Required] string DisplayName);
 
 /// <summary>
-/// Represents the response structer to the frontend.
+/// Represents the response structure to the frontend.
 /// </summary>
 public sealed record UserResponse(
     [property: Required] string Id,

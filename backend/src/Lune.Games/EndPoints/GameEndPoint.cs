@@ -15,13 +15,34 @@ public static class GameEndPoint
     {
         var group = endpoints.MapGroup("/api/games").WithTags("Games");
 
-        //can add OpenApi metat data here if we want. 
-        group.MapGet("/", Search);
-        group.MapGet("/{id:int}", GetById);
-        group.MapGet("/filters", GetFilters);
-        group.MapGet("/companies", SearchCompanies);
-        group.MapGet("/featured", GetFeatured);
-
+        group.MapGet("/", Search)
+            .WithName("Main Search")
+            .WithDescription("Search for games here with or without search parameters")
+            .Accepts<string>("query")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
+        group.MapGet("/{id:int}", GetById)
+            .WithName("Get Game By ID")
+            .WithDescription("Retrieve a game by its ID")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
+        group.MapGet("/filters", GetFilters)
+            .WithName("Get Filter Options")
+            .WithDescription("Retrieve all available filter options for games")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
+        group.MapGet("/companies", SearchCompanies)
+            .WithName("Search Companies")
+            .WithDescription("Search for game companies")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
+        group.MapGet("/featured", GetFeatured)
+            .WithName("Get Featured Games")
+            .WithDescription("Retrieve featured games")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status503ServiceUnavailable);
     }
 
     private static async Task<IResult> Search(

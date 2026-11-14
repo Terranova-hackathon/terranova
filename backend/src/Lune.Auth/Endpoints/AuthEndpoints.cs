@@ -170,7 +170,7 @@ public static class AuthEndpoints
     }
 
     private static async Task<IResult> UpdateProfile(
-        UpdateProfileplayNameRequest req,
+        UpdateProfileDisplayNameRequest req,
         ClaimsPrincipal principal,
         UserManager<AppUser> users)
     {
