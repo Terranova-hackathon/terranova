@@ -25,7 +25,7 @@ public sealed class GamesModule : IModule
         //     client.BaseAddress = new Uri(opts.BaseUrl);
         // });
         
-        // this is the new Igdb intigration. old rawgio should also work if we decide to add the service. 
+        // This is the new Igdb intigration. old rawgio is deprecated for now but can implemnt later if we decide to add the service. 
         services.Configure<IgdbServiceOptions>(configuration.GetSection(IgdbServiceOptions.SectionName));
         services.AddMemoryCache(); // caches the filter options
         services.AddHttpClient(); // lets IgdbTokenProvider use IHttpClientFactory

@@ -40,7 +40,10 @@ internal sealed class IgdbGamesService(
     //Converts the out search params into a IGDB readale parameter. 
     private static string BuildCriteria(string? search, GameSearchFilters? filters)
     {
+        // This actually just make the search faster and doesnt change results significantly.
         var conditions = new List<string> { "first_release_date != null", "total_rating != null" };
+        // var conditions = new List<string> { "first_release_date != null" };
+
         if (filters is not null)
         {
             if (filters.Genres.Count > 0)
@@ -49,17 +52,20 @@ internal sealed class IgdbGamesService(
             if (filters.Platforms.Count > 0)
                 conditions.Add($"platforms = ({string.Join(",", filters.Platforms)})");
 
-            if (filters.Developers.Count > 0)
-            {
-                conditions.Add(
-                    $"involved_companies.developer = true & involved_companies.company.slug = ({QuotedValues(filters.Developers)})");
-            }
+            string? developerClause = filters.Developers.Count > 0
+                ? $"involved_companies.developer = true & involved_companies.company.slug = ({QuotedValues(filters.Developers)})"
+                : null;
 
-            if (filters.Publishers.Count > 0)
-            {
-                conditions.Add(
-                    $"involved_companies.publisher = true & involved_companies.company.slug = ({QuotedValues(filters.Publishers)})");
-            }
+            string? publisherClause = filters.Publishers.Count > 0
+                ? $"involved_companies.publisher = true & involved_companies.company.slug = ({QuotedValues(filters.Publishers)})"
+                : null;
+
+            if (developerClause is not null && publisherClause is not null)
+                conditions.Add($"({developerClause} | {publisherClause})");
+            else if (developerClause is not null)
+                conditions.Add(developerClause);
+            else if (publisherClause is not null)
+                conditions.Add(publisherClause);
 
             if (filters.MetacriticMin is not null)
                 conditions.Add($"aggregated_rating >= {filters.MetacriticMin.Value}");
