@@ -34,3 +34,9 @@
     }
   }
 }
+
+@media (width < 1200px) {
+  .scroll-controls {
+    display: none;
+  }
+}
