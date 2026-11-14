@@ -1,5 +1,7 @@
 namespace Lune.Favorites.Data;
 
+using Lune.Shared.Games.Contracts;
+
 /// <summary>One user's bookmark of one game. The pair (UserId, RawgId) is the key, so duplicates are impossible.</summary>
 public class Favorite
 {
@@ -21,9 +23,9 @@ public class Favorite
 
     public int? Metacritic { get; set; }
 
-    public List<string> Genres { get; set; } = [];
+    public List<FilterOption> Genres { get; set; } = [];
 
-    public List<string> Platforms { get; set; } = [];
+    public List<FilterOption> Platforms { get; set; } = [];
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 

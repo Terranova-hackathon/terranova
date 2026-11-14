@@ -11,29 +11,35 @@
 					/>
 				}
 
-				<a
-					class="featured__details"
-					routerLink="/games"
-					[queryParams]="{ search: game.name }"
-				>
-					<h3 class="featured__name">{{ game.name }}</h3>
+				<div class="featured__details">
+					<a
+						class="featured__link"
+						routerLink="/games"
+						[queryParams]="{ search: game.name }"
+					>
+						<h3 class="featured__name">{{ game.name }}</h3>
 
-					<p class="featured__meta">
-						@if (releaseYear(game.released)) {
-							<span>{{ releaseYear(game.released) }}</span>
-						}
-						<span class="featured__rating">★ {{ game.rating }}</span>
-						@if (game.metacritic !== null) {
-							<span>Metacritic {{ game.metacritic }}</span>
-						}
-					</p>
+						<p class="featured__meta">
+							@if (releaseYear(game.released)) {
+								<span>{{ releaseYear(game.released) }}</span>
+							}
+							<span class="featured__rating">★ {{ game.rating }}</span>
+							@if (game.metacritic !== null) {
+								<span>Metacritic {{ game.metacritic }}</span>
+							}
+						</p>
+					</a>
 
 					<div class="featured__genres">
-						@for (genre of game.genres.slice(0, 3); track genre) {
-							<span>{{ genre }}</span>
+						@for (genre of game.genres.slice(0, 3); track genre.value) {
+							<a
+								class="featured__genre"
+								routerLink="/games"
+								[queryParams]="{ genres: genre.value }"
+							>{{ genre.name }}</a>
 						}
 					</div>
-				</a>
+				</div>
 			</li>
 		}
 	</ul>
