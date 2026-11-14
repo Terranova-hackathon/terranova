@@ -28,6 +28,7 @@ export class Navbar {
     this.loggingOut.set(true);
     this.auth.logout().subscribe({
       next: () => {
+        this.closeAccountMenu();
         this.loggingOut.set(false);
         this.router.navigateByUrl('/login');
       },
