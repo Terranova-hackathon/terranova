@@ -15,15 +15,16 @@ internal static class FavoritesEndpoints
 
     public static void Map(IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/favorites");
+        var group = endpoints.MapGroup("/api/favorites")
+            .WithTags("Favorites");
 
         group.MapGet("/", List);
         group.MapGet("/ids", async (HttpContext http, FavoritesService favorites, CancellationToken cancellationToken) =>
             http.User.GetUserId() is { } userId
                 ? Results.Ok(await favorites.IdsAsync(userId, cancellationToken))
                 : Results.Unauthorized());
-        group.MapPut("/{igdbId:int}", Add);
-        group.MapDelete("/{igdbId:int}", Remove);
+        group.MapPut("/{Id:int}", Add);
+        group.MapDelete("/{Id:int}", Remove);
     }
 
     private static async Task<IResult> List(
@@ -45,21 +46,21 @@ internal static class FavoritesEndpoints
     }
 
     private static async Task<IResult> Add(
-        int igdbId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
+        int Id, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
     {
         if (http.User.GetUserId() is not { } userId)
         {
             return Results.Unauthorized();
         }
 
-        if (igdbId <= 0)
+        if (Id <= 0)
         {
             return Results.NotFound();
         }
 
         try
         {
-            return await favorites.AddAsync(userId, igdbId, cancellationToken) switch
+            return await favorites.AddAsync(userId, Id, cancellationToken) switch
             {
                 AddFavoriteResult.GameNotFound => Results.NotFound(),
                 AddFavoriteResult.LimitReached => Results.Problem(
@@ -79,14 +80,14 @@ internal static class FavoritesEndpoints
     }
 
     private static async Task<IResult> Remove(
-        int igdbId, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
+        int Id, HttpContext http, FavoritesService favorites, CancellationToken cancellationToken)
     {
         if (http.User.GetUserId() is not { } userId)
         {
             return Results.Unauthorized();
         }
 
-        await favorites.RemoveAsync(userId, igdbId, cancellationToken);
+        await favorites.RemoveAsync(userId, Id, cancellationToken);
         return Results.NoContent();
     }
 }

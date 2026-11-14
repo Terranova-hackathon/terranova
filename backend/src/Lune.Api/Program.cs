@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/health", () => "ok");
+app.MapGet("/health", () => "ok").WithTags("Health");
 Lune.Api.LandingPage.Map(app);
 
 foreach (var m in modules) m.MapEndpoints(app);
