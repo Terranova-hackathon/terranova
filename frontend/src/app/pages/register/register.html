@@ -1,7 +1,7 @@
 <main class="auth-page">
 	<section class="auth-card">
 		<h1>Create an account</h1>
-		<p>Join GameHub and start your collction.</p>
+		<p>Join LunaNova and start your Collection.</p>
 
 		<form [formGroup]="form" (ngSubmit)="onSubmit()">
 			<div class="mb-3">
@@ -86,7 +86,7 @@
 					[attr.aria-describedby]="form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid ? 'privacy-consent-error' : null"
 				/>
 				<label class="form-check-label" for="privacy-consent">
-					I agree to the privacy policy.
+					I have read the <a [routerLink]="['/privacy']" target="_blank">privacy policy</a>.
 				</label>
 				@if (form.controls.acceptedPrivacyPolicy.touched && form.controls.acceptedPrivacyPolicy.invalid) {
 					<div id="privacy-consent-error" class="invalid-feedback">

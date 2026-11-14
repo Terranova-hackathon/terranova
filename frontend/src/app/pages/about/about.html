@@ -1,0 +1,66 @@
+<main class="about">
+  <div class="about__container">
+
+	<header class="about__header">
+	  <div class="about__icon">
+		<i class="luna-icon luna-icon--eclipse"></i>
+	  </div>
+
+	  <div>
+		<h1>About LunaNova</h1>
+		<p>Find your next game, keep track of prices and decide what and when to buy.</p>
+	  </div>
+	</header>
+
+	<section class="info-card" aria-labelledby="about-summary">
+	  <h2 id="about-summary">What is LunaNova?</h2>
+	  <p>
+		LunaNova is a game discovery site. Anyone can search thousands of games,
+		filter by genre, platform, developer or publisher, and compare prices
+		across stores. Create a free account to save games to your favorites.
+	  </p>
+	  <p>
+		Game information comes from IGDB and prices from GG.deals and Steam.
+		LunaNova is open source and was built during the Terranova hackathon with
+		ASP.NET Core and Angular.
+	  </p>
+	</section>
+
+	<section class="info-card" aria-labelledby="about-authors">
+	  <h2 id="about-authors">Authors</h2>
+
+	  <ul class="about__authors">
+		@for (author of authors; track author.name) {
+      <li class="about__author">
+			<h3>{{ author.name }}</h3>
+			<p class="about__role"> <i class="luna-icon luna-icon--helmet"></i>
+{{ author.role }}</p>
+			<p>{{ author.blurb }}</p>
+
+			<div class="about__links">
+			  <a
+				[href]="author.githubUrl"
+				target="_blank"
+				rel="noopener noreferrer"
+				[attr.aria-label]="author.name + ' on GitHub'"
+			  >
+				<i class="bi bi-github" aria-hidden="true"></i>
+				GitHub
+			  </a>
+			  <a
+				[href]="author.linkedinUrl"
+				target="_blank"
+				rel="noopener noreferrer"
+				[attr.aria-label]="author.name + ' on LinkedIn'"
+			  >
+				<i class="bi bi-linkedin" aria-hidden="true"></i>
+				LinkedIn
+			  </a>
+			</div>
+		  </li>
+		}
+	  </ul>
+	</section>
+
+  </div>
+</main>
