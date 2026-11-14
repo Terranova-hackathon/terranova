@@ -6,96 +6,100 @@
 		</a>
 
 		<div class="navbar__links">
-			<a
-				routerLink="/"
-				routerLinkActive="active"
-				[routerLinkActiveOptions]="{exact: true}">
-				Home
-			</a>
+		<a
+			routerLink="/"
+			routerLinkActive="active"
+			[routerLinkActiveOptions]="{exact: true}"
+		>
+			Home
+		</a>
 
-			<a
-				[routerLink]="gamesNavigation.gamesUrl()"
-				routerLinkActive="active"
-			>
-				Games
-			</a>
+		<a
+			[routerLink]="gamesNavigation.gamesUrl()"
+			routerLinkActive="active"
+		>
+			Games
+		</a>
 
-			@if (auth.isLoggedIn()) {
-				<a routerLink="/favorites" routerLinkActive="active">
-					Favorites
-				</a>
+		@if (auth.isLoggedIn()) {
+			<a routerLink="/favorites" routerLinkActive="active">
+				Favorites
+			</a>
 
 			<div class="navbar__account" #accountMenu>
 
-			<button
-				type="button"
-				class="navbar__user"
-				(click)="toggleAccountMenu()"
-				[attr.aria-expanded]="accountOpen()"
-				aria-controls="account-dropdown"
-				aria-haspopup="true"
-			>
-				<i class="luna-icon luna-icon--helmet" aria-hidden="true"></i>
-
-				{{ auth.user()?.displayName || auth.user()?.email }}
-
-				<i
-				class="bi"
-				[class.bi-chevron-up]="accountOpen()"
-				[class.bi-chevron-down]="!accountOpen()"
-				aria-hidden="true"
-				></i>
-			</button>
-
-			@if (accountOpen()) {
-				<div
-				id="account-dropdown"
-				class="navbar__account-dropdown"
+				<button
+					type="button"
+					class="navbar__user"
+					(click)="toggleAccountMenu()"
+					[attr.aria-expanded]="accountOpen()"
+					aria-controls="account-dropdown"
+					aria-haspopup="true"
 				>
-
-				<h2>My Account</h2>
-
-				@if (auth.user(); as user) {
-					<div class="navbar__account-profile">
 					<i class="luna-icon luna-icon--helmet" aria-hidden="true"></i>
 
-					<div>
-						<strong>{{ user.displayName || 'User' }}</strong>
-						<p>{{ user.email }}</p>
-					</div>
+						{{ auth.user()?.displayName || auth.user()?.email }}
+
+					<i
+						class="bi"
+						[class.bi-chevron-up]="accountOpen()"
+						[class.bi-chevron-down]="!accountOpen()"
+						aria-hidden="true"
+					></i>
+				</button>
+
+				@if (accountOpen()) {
+					<div
+						id="account-dropdown"
+						class="navbar__account-dropdown"
+					>
+						<h2>My Account</h2>
+
+						@if (auth.user(); as user) {
+							<div class="navbar__account-profile">
+								<i class="luna-icon luna-icon--helmet" aria-hidden="true"></i>
+
+								<div>
+									<strong>{{ user.displayName || 'User' }}</strong>
+									<p>{{ user.email }}</p>
+								</div>
+							</div>
+						}
+						<hr />
+
+						<button
+							type="button"
+							class="navbar__account-manage"
+							(click)="openAdvancedSettings()"
+						>
+							<i class="bi bi-pencil-square" aria-hidden="true"></i>
+							Manage your account information
+							<i class="bi bi-chevron-right" aria-hidden="true"></i>
+						</button>
+
+						<button
+							type="button"
+							class="btn btn-primary w-100"
+							(click)="openAdvancedSettings()"
+						>
+							<i class="bi bi-gear me-2" aria-hidden="true"></i>
+							Advanced Settings
+						</button>
+						<hr />
+
+						<button
+							type="button"
+							class="btn btn-outline-danger w-100"
+							[disabled]="loggingOut()"
+							(click)="logout()"
+						>
+							<i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>
+							{{ loggingOut() ? 'Logging out...' : 'Log out' }}
+						</button>
 					</div>
 				}
-
-				<hr />
-
-				<button
-					type="button"
-					class="navbar__account-manage"
-					(click)="openAdvancedSettings()"
-				>
-					<i class="bi bi-pencil-square" aria-hidden="true"></i>
-					Manage your account information
-					<i class="bi bi-chevron-right" aria-hidden="true"></i>
-				</button>
-
-				<button
-					type="button"
-					class="btn btn-primary w-100"
-					(click)="openAdvancedSettings()"
-				>
-					<i class="bi bi-gear me-2" aria-hidden="true"></i>
-					Advanced Settings
-				</button>
-
-				</div>
-			}
 			</div>
 
-				<button type="button" class="btn btn-outline-primary btn-sm"
-					[disabled]="loggingOut()" (click)="logout()"
-				>
-					Log out
-				</button>
 			} @else {
 				<a routerLink="/login" routerLinkActive="active">
 					Log in
@@ -110,7 +114,7 @@
 				class="navbar__theme-toggle"
 				(click)="themeService.toggleTheme()"
 				[attr.aria-label]="themeService.theme() === 'dark'
-					? 'Light mode' : 'Dark mode'"
+				? 'Light mode' : 'Dark mode'"
 			>
 				@if (themeService.theme() === 'dark') {
 					<i class="bi bi-sun-fill" aria-hidden="true"></i>
