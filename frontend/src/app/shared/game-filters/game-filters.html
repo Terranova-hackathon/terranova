@@ -1,8 +1,8 @@
   <!-- ADVANCED FILTERS -->
 
-<details class="advanced-filters">
+<details #filtersPanel class="advanced-filters">
 
-  <summary class="advanced-filters__summary">
+  <summary #filtersPanel class="advanced-filters__summary">
     <span class="advanced-filters__summary-title">
       <i class="bi bi-sliders" aria-hidden="true"></i>
       Advanced Filters
@@ -14,10 +14,21 @@
       }
     </span>
 
-    <i
-      class="bi bi-chevron-down advanced-filters__chevron"
-      aria-hidden="true"
-    ></i>
+    <span class="advanced-filters__summary-actions">
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm advanced-filters__quick-reset"
+        (click)="resetFromSummary($event)"
+      >
+        <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+        Reset Filters
+      </button>
+
+      <i
+        class="bi bi-chevron-down advanced-filters__chevron"
+        aria-hidden="true"
+      ></i>
+    </span>
   </summary>
 
   <div class="advanced-filters__content">

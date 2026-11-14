@@ -1,6 +1,7 @@
-namespace Lune.Games.Contracts;
-
 using Lune.Shared.Paging;
+
+namespace Lune.Shared.Games.Contracts;
+
 
 /// <summary>
 /// Contains contract definitions for game-related data.
@@ -22,7 +23,6 @@ public sealed record GameDetails(
     int Id,
     string Name,
     string? Released,
-    //background image is just a first screen_shot from the game
     string? BackgroundImage,
     string? Cover,
     double Rating,
@@ -40,38 +40,39 @@ public sealed record GameDetails(
     IReadOnlyList<string> Videos,
     PagedResult<GameSummary> RelatedGames);
 
-
 /// <summary>
-/// The game's id on another store or service. 
+/// The game's id on another store or service.
 /// </summary>
 public sealed record ExternalGameLink(
-    string Source, 
-    string Uid, 
+    string Source,
+    string Uid,
     string? Url);
 
 /// <summary>
-/// Filter Options the backend sends to the front end.
+/// Represents a filterable option (genre, platform, etc) with value and display name.
 /// </summary>
 public sealed record FilterOption(
-    string Value, 
+    string Value,
     string Name);
 
+/// <summary>
+/// Filter options available for game search.
+/// </summary>
 public sealed record GameFilterOptions(
     IReadOnlyList<FilterOption> Genres,
     IReadOnlyList<FilterOption> Platforms,
     IReadOnlyList<FilterOption> Orderings);
 
-
 /// <summary>
-/// Filter Options the backend sends to the frontend.
+/// A developer or publisher company option for search.
 /// </summary>
 public sealed record CompanyOption(
-    string Slug, 
-    string Name, 
+    string Slug,
+    string Name,
     int GamesCount);
 
 /// <summary>
-/// For internal use only. 
+/// For internal use only.
 /// </summary>
 public enum CompanyKind
 {
@@ -99,7 +100,7 @@ public static class GameOrderings
 
 /// <summary>
 /// Already-validated search filters. Lists are OR-ed together within one filter (any selected genre matches);
-/// different filters are AND-ed (genre AND platform AND ...). frontend -> backend. 
+/// different filters are AND-ed (genre AND platform AND ...). frontend -> backend.
 /// </summary>
 public sealed record GameSearchFilters(
     IReadOnlyList<string> Genres,

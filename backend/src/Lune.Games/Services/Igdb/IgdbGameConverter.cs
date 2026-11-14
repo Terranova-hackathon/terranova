@@ -1,5 +1,5 @@
 using System.Globalization;
-using Lune.Games.Contracts;
+using Lune.Shared.Games.Contracts;
 using Lune.Games.Igdb;
 using Lune.Games.Options;
 using Lune.Shared.Paging;

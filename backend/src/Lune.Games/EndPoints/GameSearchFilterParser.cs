@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Lune.Games.Contracts;
+using Lune.Shared.Games.Contracts;
 
 namespace Lune.Games.EndPoints;
 

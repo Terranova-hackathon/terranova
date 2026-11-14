@@ -1,4 +1,4 @@
-using Lune.Favorites.Contracts;
+using Lune.Shared.Games.Contracts;
 using Lune.Favorites.Data;
 using Lune.Shared.Games;
 using Lune.Shared.Paging;
@@ -17,7 +17,7 @@ public enum AddFavoriteResult
 internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catalog)
 {
     public const int MaxFavorites = 1000;
-    public async Task<PagedResult<FavoriteResponse>> ListAsync(
+    public async Task<PagedResult<GameSummary>> ListAsync(
         string userId, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = db.Favorites
@@ -37,12 +37,11 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
 
         // SQL Server returns Kind=Unspecified; mark it UTC so the JSON gets a "Z" suffix.
         var items = rows
-            .Select(f => new FavoriteResponse(
-                f.IgdbId, f.Name, f.BackgroundImage, f.Released, f.Rating, f.Metacritic, f.Genres, f.Platforms,
-                DateTime.SpecifyKind(f.CreatedAtUtc, DateTimeKind.Utc)))
+            .Select(f => new GameSummary(
+                f.IgdbId, f.Name, f.Released, f.BackgroundImage, f.Rating, f.Metacritic, f.Genres, f.Platforms))
             .ToList();
 
-        return new PagedResult<FavoriteResponse>(items, page, pageSize, totalCount);
+        return new PagedResult<GameSummary>(items, page, pageSize, totalCount);
     }
 
     /// <summary>Just the game ids, so list pages can draw a filled or empty heart cheaply.</summary>
@@ -66,7 +65,6 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
             return AddFavoriteResult.LimitReached;
         }
 
-        // The snapshot comes from our own catalog, never from the request, so clients cannot store arbitrary values.
         var game = await catalog.FindAsync(igdbId, cancellationToken);
         if (game is null)
         {
@@ -77,7 +75,6 @@ internal sealed class FavoritesService(FavoritesDbContext db, IGameCatalog catal
         db.Favorites.Add(new Favorite
         {
             UserId = userId,
-            // This is set to Igdb for now but if we wanted to add both rawg we would have to build a separet system to handle both.
             IgdbId = game.Id,
             Name = Truncate(game.Name, FavoriteLimits.NameLength),
             BackgroundImage = game.BackgroundImage is { Length: <= FavoriteLimits.BackgroundImageLength } ? game.BackgroundImage : null,

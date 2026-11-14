@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameService } from '../../core/services/game-service';
@@ -12,10 +12,16 @@ import { CompanySearch } from '../company-search/company-search';
   imports: [FormsModule, CompanySearch],
   templateUrl: './game-filters.html',
   styleUrl: './game-filters.scss',
+  host: {
+    '(document:keydown.escape)': 'closeOnEscape()',
+    '(document:click)': 'closeOnOutsideClick($event)',
+  },
 })
 export class GameFilters {
   private readonly gameService = inject(GameService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly panel = viewChild<ElementRef<HTMLDetailsElement>>('filtersPanel');
+  private readonly summary = viewChild<ElementRef<HTMLElement>>('filtersSummary');
 
   // INPUTS: data the parent page passes in
   initialState = input<FilterState>(emptyFilterState());
@@ -78,21 +84,49 @@ export class GameFilters {
     this.filterState = emptyFilterState();
     this.cleared.emit();
   }
-// Moving min above max pushes max up with it
-setMetacriticMin(value: number): void {
-  this.filterState.metacriticMin = value;
-  const max = this.filterState.metacriticMax;
-  if (max !== null && value > max) {
-    this.filterState.metacriticMax = value;
-  }
-}
-
-// Moving max below min pushes min down with it
-setMetacriticMax(value: number): void {
-  this.filterState.metacriticMax = value;
-  const min = this.filterState.metacriticMin;
-  if (min !== null && value < min) {
+  // Moving min above max pushes max up with it
+  setMetacriticMin(value: number): void {
     this.filterState.metacriticMin = value;
+    const max = this.filterState.metacriticMax;
+    if (max !== null && value > max) {
+      this.filterState.metacriticMax = value;
+    }
   }
-}
+
+  // Moving max below min pushes min down with it
+  setMetacriticMax(value: number): void {
+    this.filterState.metacriticMax = value;
+    const min = this.filterState.metacriticMin;
+    if (min !== null && value < min) {
+      this.filterState.metacriticMin = value;
+    }
+  }
+
+  closeOnEscape(): void {
+    const panel = this.panel()?.nativeElement;
+    if (!panel?.open) return;
+
+    const focusWasInside = panel.contains(
+      panel.ownerDocument.activeElement
+    );
+
+    panel.open = false;
+
+    if (focusWasInside) {
+      this.summary()?.nativeElement.focus();
+    }
+  }
+
+  closeOnOutsideClick(event: MouseEvent): void {
+    const panel = this.panel()?.nativeElement;
+    if (!panel?.open || event.composedPath().includes(panel)) return;
+
+    panel.open = false;
+  }
+
+  resetFromSummary(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.resetFilters();
+  }
 }
