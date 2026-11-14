@@ -12,7 +12,7 @@ http:
     type: json
     data: |-
       {
-        "displayName": "New Display Name"
+        "displayName": "{{$randomUserName}}"
       }
   auth: inherit
 

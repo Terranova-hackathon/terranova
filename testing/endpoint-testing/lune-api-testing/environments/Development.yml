@@ -18,3 +18,7 @@ variables:
     value: Nintendo
   - secret: true
     name: token
+  - name: displayName2
+    value: tester2
+  - name: email2
+    value: test2@test.com

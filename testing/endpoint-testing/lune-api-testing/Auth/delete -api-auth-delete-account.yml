@@ -8,7 +8,17 @@ info:
 http:
   method: DELETE
   url: "{{baseUrl}}/api/auth/delete-account"
+  params:
+    - name: ""
+      value: "{{email2}}"
+      type: query
   auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "204"
 
 settings:
   encodeUrl: true
