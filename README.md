@@ -80,6 +80,14 @@ sudo apt install ng-common
 NOTE: If your bash terminal stops working after installing ng-common follow this guid line [stackoverflow](https://stackoverflow.com/questions/76179315/terminal-not-working-after-installing-ng-common).
 
 
+To run forntend tests after intalling ng-common and the right node versions:
+```
+cd frontend/
+npm test
+```
+
+TODO: later we can add these test to CI/CD pipe line so we dont break anything. 
+
 ## Testing
 
 For API testing, we use [Bruno](https://docs.usebruno.com/) which works with an opensource test collection format `opencollection.yaml`. These collections that can be imported to other testing suites such as Postman.
