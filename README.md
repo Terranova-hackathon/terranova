@@ -77,6 +77,8 @@ Install with:
 sudo apt install ng-common
 ```
 
+NOTE: If your bash terminal stops working after installing ng-common follow this guid line [stackoverflow](https://stackoverflow.com/questions/76179315/terminal-not-working-after-installing-ng-common).
+
 
 ## Testing
 
