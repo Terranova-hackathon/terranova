@@ -1,8 +1,8 @@
 <header class="navbar">
 	<nav class="navbar__container" aria-label="Main navigation">
 		<a class="navbar__brand" routerLink="/">
-			<span class="navbar__icon"><i class="bi bi-controller"></i></span>
-			<span>GameHub</span>
+			<span class="navbar__icon"><i class="luna-icon luna-icon--eclipse"></i></span>
+			<span>LunaNova</span>
 		</a>
 
 		<div class="navbar__links">
@@ -13,8 +13,8 @@
 				Home
 			</a>
 
-			<a 
-				[routerLink]="gamesNavigation.gamesUrl()" 
+			<a
+				[routerLink]="gamesNavigation.gamesUrl()"
 				routerLinkActive="active"
 			>
 				Games
@@ -35,7 +35,7 @@
 				aria-controls="account-dropdown"
 				aria-haspopup="true"
 			>
-				<i class="bi bi-person-circle" aria-hidden="true"></i>
+				<i class="luna-icon luna-icon--helmet" aria-hidden="true"></i>
 
 				{{ auth.user()?.displayName || auth.user()?.email }}
 
@@ -57,7 +57,7 @@
 
 				@if (auth.user(); as user) {
 					<div class="navbar__account-profile">
-					<i class="bi bi-person-circle" aria-hidden="true"></i>
+					<i class="luna-icon luna-icon--helmet" aria-hidden="true"></i>
 
 					<div>
 						<strong>{{ user.displayName || 'User' }}</strong>
