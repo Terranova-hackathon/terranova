@@ -1,0 +1,42 @@
+.scroll-controls {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 25%);
+
+    font-size: 1.2rem;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-button-bg);
+      color: var(--color-button-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+  }
+}
+
+@media (width < 1200px) {
+  .scroll-controls {
+    display: none;
+  }
+}

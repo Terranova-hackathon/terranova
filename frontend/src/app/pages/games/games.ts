@@ -13,9 +13,10 @@ import { GamesNavigationService } from '../../core/services/games-navigation-ser
 import { emptyFilterState, FilterState, toFilterParams, toFilterState } from '../../core/models/game-filter.model';
 import { GameFilters } from '../../shared/game-filters/game-filters';
 import { readGameQuery } from '../../core/utils/game-query';
+import { ScrollControls } from '../../shared/scroll-controls/scroll-controls';
 
 @Component({
-  imports: [GameCard, FormsModule, GameFilters],
+  imports: [GameCard, FormsModule, GameFilters, ScrollControls],
   selector: 'app-games',
   styleUrl: './games.scss',
   templateUrl: './games.html',
@@ -202,6 +203,37 @@ export class Games implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  readonly pageNumbers = computed<(number | '...')[]>(() => {
+    const current = this.currentPage();
+    const total = this.totalPages();
+
+    const pages = new Set<number>([1, total]);
+
+    for (let page = current - 2; page <= current + 2; page++) {
+      if (page >= 1 && page <= total) {
+        pages.add(page);
+      }
+    }
+
+    const sorted = [...pages]
+      .filter(page => page >= 1 && page <= total)
+      .sort((a, b) => a - b);
+
+    const result: (number | '...')[] = [];
+
+    sorted.forEach((page, index) => {
+      const previous = sorted[index - 1];
+
+      if (index > 0 && page - previous > 1) {
+        result.push('...');
+      }
+
+      result.push(page);
+    });
+
+    return result;
+  });
   // Guests are sent to login with a returnUrl that brings them back to this
   // search, page and card (through the #game-<id> fragment)
   toggleFavorite(id: number): void {

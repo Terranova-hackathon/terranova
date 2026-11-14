@@ -120,9 +120,24 @@
         Previous
       </button>
 
-      <span aria-live="polite">
-        Page {{ currentPage() }} of {{ totalPages() }}
-      </span>
+      @for (page of pageNumbers(); track $index) {
+        @if (page === '...') {
+          <span class="pagination-ellipsis" aria-hidden="true">…</span>
+        } @else {
+          <button
+            type="button"
+            class="btn pagination-number"
+            [class.btn-primary]="page === currentPage()"
+            [class.btn-outline-secondary]="page !== currentPage()"
+            [attr.aria-current]="page === currentPage() ? 'page' : null"
+            [attr.aria-label]="'Go to page ' + page"
+            [disabled]="loading()"
+            (click)="changePage(page)"
+          >
+            {{ page }}
+          </button>
+        }
+      }
 
       <button
         type="button"
@@ -134,12 +149,18 @@
       </button>
     </nav>
 
-    <p class="text-center games-page__total mt-3">
-      {{ totalGames() }}
-      {{ searchTerm() || hasActiveFilters()
-        ? 'matching games'
-        : 'total games' }}
-    </p>
+    <div class="games-page__summary mt-3" aria-live="polite">
+      <p class="games-page__total">
+        Page {{ currentPage() }} of {{ totalPages() }}
+      </p>
+
+      <p class="games-page__total">
+        {{ totalGames() }}
+        {{ searchTerm() || hasActiveFilters()
+          ? 'matching games'
+          : 'total games' }}
+      </p>
+    </div>
   }
 
   <dialog #loginDialog class="login-prompt">
@@ -151,3 +172,5 @@
   </dialog>
 
 </main>
+
+<app-scroll-controls />

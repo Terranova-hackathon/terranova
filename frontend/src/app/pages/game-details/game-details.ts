@@ -11,9 +11,10 @@ import { PagedResult } from '../../core/models/paged-result.model';
 import { AuthService } from '../../core/services/auth-service';
 import { FavoriteService } from '../../core/services/favorite-service';
 import { PriceComparison } from '../../shared/price-comparison/price-comparison';
+import { ScrollControls } from '../../shared/scroll-controls/scroll-controls';
 
 @Component({
-  imports: [RouterLink, DecimalPipe, PriceComparison],
+  imports: [RouterLink, DecimalPipe, PriceComparison, ScrollControls],
   selector: 'app-game-details',
   styleUrl: './game-details.scss',
   templateUrl: './game-details.html',
