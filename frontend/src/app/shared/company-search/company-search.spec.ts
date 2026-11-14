@@ -11,6 +11,7 @@ describe('CompanySearch', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(CompanySearch);
+    fixture.componentRef.setInput('kind', 'developer');
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

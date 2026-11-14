@@ -52,7 +52,7 @@ Frontend (Node.js 22):
 cd frontend && npm install && npm start
 ```
 
-## Dev Dependencies
+## Backend Dev Dependencies
 
 Backend development requires Microsoft's dotnet SDK
 
@@ -67,6 +67,16 @@ Install (in Lune.Api project directory) with:
 ```
 dotnet add package Scalar.AspNetCore
 ```
+
+## Frontend Dev Dependencies
+
+The Angular CLI requires a minimum Node.js version of v22.22.3 or v24.15.0 or v26.0.0.
+
+Install with:
+```
+sudo apt install ng-common
+```
+
 
 ## Testing
 
