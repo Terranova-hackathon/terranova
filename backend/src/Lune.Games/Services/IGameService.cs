@@ -1,6 +1,7 @@
-using Lune.Games.Contracts;
+using Lune.Shared.Games.Contracts;
 using Lune.Shared.Games;
 using Lune.Shared.Paging;
+
 
 namespace Lune.Games.Services;
 

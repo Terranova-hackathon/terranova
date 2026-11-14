@@ -18,7 +18,7 @@ namespace Lune.Favorites.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("favorites")
-                .HasAnnotation("ProductVersion", "9.0.22")
+                .HasAnnotation("ProductVersion", "10.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -39,7 +39,7 @@ namespace Lune.Favorites.Data.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.PrimitiveCollection<string>("Genres")
+                    b.Property<string>("Genres")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -51,7 +51,7 @@ namespace Lune.Favorites.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.PrimitiveCollection<string>("Platforms")
+                    b.Property<string>("Platforms")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

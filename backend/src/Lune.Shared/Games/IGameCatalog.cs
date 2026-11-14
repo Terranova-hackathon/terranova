@@ -1,3 +1,5 @@
+using Lune.Shared.Games.Contracts;
+
 namespace Lune.Shared.Games;
 
 /// <summary>The part of a game other modules may copy and store.</summary>
@@ -8,8 +10,8 @@ public sealed record GameSnapshot(
     string? BackgroundImage,
     double Rating,
     int? Metacritic,
-    IReadOnlyList<string> Genres,
-    IReadOnlyList<string> Platforms);
+    IReadOnlyList<FilterOption> Genres,
+    IReadOnlyList<FilterOption> Platforms);
 
 /// <summary>Lets modules look up a game without referencing the Games module.</summary>
 public interface IGameCatalog
