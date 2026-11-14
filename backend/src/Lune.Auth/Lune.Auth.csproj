@@ -14,8 +14,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-    <!-- TODO: Auth Module testing -->
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.*" />

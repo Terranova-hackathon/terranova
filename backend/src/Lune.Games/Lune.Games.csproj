@@ -14,7 +14,4 @@
     <EnableConfigurationBindingGenerator>false</EnableConfigurationBindingGenerator>
   </PropertyGroup>
 
-    <!-- TODO: Adding Game Module testing -->
-    
-
 </Project>

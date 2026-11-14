@@ -52,7 +52,7 @@ Frontend (Node.js 22):
 cd frontend && npm install && npm start
 ```
 
-## Dev Dependencies
+## Backend Dev Dependencies
 
 Backend development requires Microsoft's dotnet SDK
 
@@ -67,6 +67,26 @@ Install (in Lune.Api project directory) with:
 ```
 dotnet add package Scalar.AspNetCore
 ```
+
+## Frontend Dev Dependencies
+
+The Angular CLI requires a minimum Node.js version of v22.22.3 or v24.15.0 or v26.0.0.
+
+Install with:
+```
+sudo apt install ng-common
+```
+
+NOTE: If your bash terminal stops working after installing ng-common follow this guid line [stackoverflow](https://stackoverflow.com/questions/76179315/terminal-not-working-after-installing-ng-common).
+
+
+To run forntend tests after intalling ng-common and the right node versions:
+```
+cd frontend/
+npm test
+```
+
+TODO: later we can add these test to CI/CD pipe line so we dont break anything. 
 
 ## Testing
 

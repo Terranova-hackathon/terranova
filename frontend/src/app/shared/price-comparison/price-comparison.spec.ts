@@ -11,6 +11,7 @@ describe('PriceComparison', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PriceComparison);
+    fixture.componentRef.setInput('gameId', 1);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
