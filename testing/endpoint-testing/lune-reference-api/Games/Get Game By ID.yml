@@ -1,0 +1,95 @@
+info:
+  name: Get Game By ID
+  type: http
+  seq: 2
+  tags:
+    - Games
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/games/:id"
+  params:
+    - name: id
+      value: ""
+      type: path
+    - name: page
+      value: "1"
+      type: query
+    - name: pageSize
+      value: "6"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+examples:
+  - name: 200 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/games/:id"
+      method: GET
+      params:
+        - name: id
+          value: ""
+          type: path
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "6"
+          type: query
+    response:
+      status: 200
+      statusText: OK
+      body:
+        type: text
+        data: ""
+  - name: 404 Response
+    description: Not Found
+    request:
+      url: "{{baseUrl}}/api/games/:id"
+      method: GET
+      params:
+        - name: id
+          value: ""
+          type: path
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "6"
+          type: query
+    response:
+      status: 404
+      statusText: Not Found
+      body:
+        type: text
+        data: ""
+  - name: 503 Response
+    description: Service Unavailable
+    request:
+      url: "{{baseUrl}}/api/games/:id"
+      method: GET
+      params:
+        - name: id
+          value: ""
+          type: path
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "6"
+          type: query
+    response:
+      status: 503
+      statusText: Service Unavailable
+      body:
+        type: text
+        data: ""
+
+docs: Retrieve a game by its ID

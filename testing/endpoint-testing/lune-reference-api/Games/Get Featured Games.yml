@@ -1,5 +1,5 @@
 info:
-  name: get /api/games/featured
+  name: Get Featured Games
   type: http
   seq: 5
   tags:
@@ -29,3 +29,16 @@ examples:
       body:
         type: text
         data: ""
+  - name: 503 Response
+    description: Service Unavailable
+    request:
+      url: "{{baseUrl}}/api/games/featured"
+      method: GET
+    response:
+      status: 503
+      statusText: Service Unavailable
+      body:
+        type: text
+        data: ""
+
+docs: Retrieve featured games

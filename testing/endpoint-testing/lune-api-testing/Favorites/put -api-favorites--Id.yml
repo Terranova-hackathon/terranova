@@ -1,0 +1,52 @@
+info:
+  name: put /api/favorites/:Id
+  type: http
+  seq: 1
+  tags:
+    - Favorites
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/favorites/:Id"
+  params:
+    - name: ""
+      value: "{{username}}"
+      type: query
+    - name: Id
+      value: "{{gameId}}"
+      type: path
+  auth: inherit
+
+runtime:
+  variables:
+    - name: gameid
+      value: "123"
+    - name: gamid
+      value: "123"
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "201"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: 201 Response
+    description: OK
+    request:
+      url: "{{baseUrl}}/api/favorites/:Id"
+      method: PUT
+      params:
+        - name: Id
+          value: ""
+          type: path
+    response:
+      status: 201
+      statusText: OK
+      body:
+        type: text
+        data: ""

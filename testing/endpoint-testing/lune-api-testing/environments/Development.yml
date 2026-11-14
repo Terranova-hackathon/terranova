@@ -2,7 +2,7 @@ name: Development
 variables:
   - name: baseUrl
     value: http://localhost:3001
-  - name: username
+  - name: displayName
     value: tester
   - name: email
     value: test@test.com
@@ -10,6 +10,8 @@ variables:
     value: Password1!
   - name: gameId
     value: "1020"
+  - name: steamId
+    value: "362003"
   - name: publisher
     value: EA_games
   - name: developer

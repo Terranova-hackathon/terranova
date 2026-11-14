@@ -1,5 +1,5 @@
 info:
-  name: get /api/games/filters
+  name: Get Filter Options
   type: http
   seq: 3
   tags:
@@ -29,3 +29,16 @@ examples:
       body:
         type: text
         data: ""
+  - name: 503 Response
+    description: Service Unavailable
+    request:
+      url: "{{baseUrl}}/api/games/filters"
+      method: GET
+    response:
+      status: 503
+      statusText: Service Unavailable
+      body:
+        type: text
+        data: ""
+
+docs: Retrieve all available filter options for games

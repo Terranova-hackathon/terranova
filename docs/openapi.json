@@ -13,7 +13,7 @@
     "/health": {
       "get": {
         "tags": [
-          "Lune.Api"
+          "Health"
         ],
         "responses": {
           "200": {
@@ -34,6 +34,8 @@
         "tags": [
           "Games"
         ],
+        "description": "Search for games here with or without search parameters",
+        "operationId": "Main Search",
         "parameters": [
           {
             "name": "search",
@@ -118,9 +120,25 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "query": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -130,6 +148,8 @@
         "tags": [
           "Games"
         ],
+        "description": "Retrieve a game by its ID",
+        "operationId": "Get Game By ID",
         "parameters": [
           {
             "name": "id",
@@ -140,11 +160,43 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 6
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -154,9 +206,14 @@
         "tags": [
           "Games"
         ],
+        "description": "Retrieve all available filter options for games",
+        "operationId": "Get Filter Options",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -166,6 +223,8 @@
         "tags": [
           "Games"
         ],
+        "description": "Search for game companies",
+        "operationId": "Search Companies",
         "parameters": [
           {
             "name": "kind",
@@ -185,6 +244,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -194,9 +256,14 @@
         "tags": [
           "Games"
         ],
+        "description": "Retrieve featured games",
+        "operationId": "Get Featured Games",
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         }
       }
@@ -269,10 +336,72 @@
         }
       }
     },
+    "/api/auth/delete-account": {
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/auth/profile": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDisplayNameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/favorites": {
       "get": {
         "tags": [
           "Favorites"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32",
+              "default": 20
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -293,14 +422,14 @@
         }
       }
     },
-    "/api/favorites/{igdbId}": {
+    "/api/favorites/{Id}": {
       "put": {
         "tags": [
           "Favorites"
         ],
         "parameters": [
           {
-            "name": "igdbId",
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -322,7 +451,31 @@
         ],
         "parameters": [
           {
-            "name": "igdbId",
+            "name": "Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/prices/{Id}": {
+      "get": {
+        "tags": [
+          "Prices"
+        ],
+        "parameters": [
+          {
+            "name": "Id",
             "in": "path",
             "required": true,
             "schema": {
@@ -380,8 +533,21 @@
             ]
           },
           "acceptedPrivacyPolicy": {
-            "type": "boolean",
-            "enum": [true]
+            "type": [
+              "null",
+              "boolean"
+            ]
+          }
+        }
+      },
+      "UpdateProfileDisplayNameRequest": {
+        "required": [
+          "displayName"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
           }
         }
       }
@@ -389,7 +555,7 @@
   },
   "tags": [
     {
-      "name": "Lune.Api"
+      "name": "Health"
     },
     {
       "name": "Games"
@@ -399,6 +565,9 @@
     },
     {
       "name": "Favorites"
+    },
+    {
+      "name": "Prices"
     }
   ]
 }

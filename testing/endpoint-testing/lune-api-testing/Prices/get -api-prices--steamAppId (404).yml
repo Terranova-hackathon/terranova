@@ -1,5 +1,5 @@
 info:
-  name: get /api/prices/:steamAppId (404 Not Found)
+  name: get /api/prices/:invalid(404 Not Found)
   type: http
   seq: 2
   tags:
@@ -7,10 +7,10 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/api/prices/:steamAppId"
+  url: "{{baseUrl}}/api/prices/:invalidId"
   params:
-    - name: steamAppId
-      value: ""
+    - name: invalidId
+      value: "000000"
       type: path
   auth: inherit
 
@@ -41,8 +41,10 @@ examples:
       statusText: Not Found
       body:
         type: json
-        data:
-          type: "https://tools.ietf.org/html/rfc9110#section-15.6.4"
-          title: "No price data found."
-          status: 404
-          detail: "This game may not have a Steam release or pricing data is not available."
+        data: |-
+          {
+            "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+            "title": "No price data found.",
+            "status": 404,
+            "detail": "This game may not have a Steam release or pricing data is not available."
+          }

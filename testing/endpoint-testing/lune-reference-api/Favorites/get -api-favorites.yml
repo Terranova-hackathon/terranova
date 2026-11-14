@@ -8,6 +8,13 @@ info:
 http:
   method: GET
   url: "{{baseUrl}}/api/favorites"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: pageSize
+      value: "20"
+      type: query
   auth: inherit
 
 settings:
@@ -23,6 +30,13 @@ examples:
     request:
       url: "{{baseUrl}}/api/favorites"
       method: GET
+      params:
+        - name: page
+          value: "1"
+          type: query
+        - name: pageSize
+          value: "20"
+          type: query
     response:
       status: 200
       statusText: OK

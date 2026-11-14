@@ -1,5 +1,5 @@
 info:
-  name: get /api/games/companies
+  name: Search Companies
   type: http
   seq: 4
   tags:
@@ -47,3 +47,25 @@ examples:
       body:
         type: text
         data: ""
+  - name: 503 Response
+    description: Service Unavailable
+    request:
+      url: "{{baseUrl}}/api/games/companies"
+      method: GET
+      params:
+        - name: kind
+          value: ""
+          type: query
+          disabled: true
+        - name: search
+          value: ""
+          type: query
+          disabled: true
+    response:
+      status: 503
+      statusText: Service Unavailable
+      body:
+        type: text
+        data: ""
+
+docs: Search for game companies

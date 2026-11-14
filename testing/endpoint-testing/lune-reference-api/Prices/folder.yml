@@ -1,7 +1,6 @@
 info:
-  name: Lune_Api
+  name: Prices
   type: folder
-  seq: 1
 
 request:
   auth: inherit
