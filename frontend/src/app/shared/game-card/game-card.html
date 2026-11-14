@@ -4,6 +4,7 @@
 			class="game-card__image"
 			[src]="game().backgroundImage || 'images/placeholder.jpg'"
 			[alt]="game().name"
+			(error)="onImageError($event)"
 		/>
 	</a>
 
