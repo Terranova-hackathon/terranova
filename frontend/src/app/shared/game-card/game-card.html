@@ -2,7 +2,7 @@
 	<a [routerLink]="['/games', game().id]" class="game-card__link">
 		<img
 			class="game-card__image"
-			[src]="game().backgroundImage || 'images/placeholder.jpg'"
+			[src]="game().backgroundImage || 'images/placeholder.png'"
 			[alt]="game().name"
 			(error)="onImageError($event)"
 		/>

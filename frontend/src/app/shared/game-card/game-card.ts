@@ -20,7 +20,7 @@ export class GameCard {
   }
   onImageError(event: Event): void {
     const image = event.target as HTMLImageElement;
-    const fallback = new URL('/images/placeholder.jpg', image.baseURI).href;
+    const fallback = new URL('/images/placeholder.png', image.baseURI).href;
 
     if (image.src !== fallback) {
       image.src = fallback;
